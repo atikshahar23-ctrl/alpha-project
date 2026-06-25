@@ -200,6 +200,14 @@ h2{font-family:'Orbitron';font-size:clamp(26px,4vw,42px);font-weight:900;color:v
 .trust-badge .tb-t{font-family:'Orbitron';font-weight:700;font-size:14px;color:var(--gold);letter-spacing:.5px}
 .trust-badge .tb-s{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45}
 @media(max-width:760px){.trust-row{grid-template-columns:1fr 1fr}}
+/* risk-reversal guarantees */
+.guar-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.guar{display:flex;gap:10px;align-items:flex-start;padding:14px;border:1px solid rgba(74,222,128,.25);border-radius:12px;background:rgba(74,222,128,.05)}
+.guar .gck{flex:none;width:22px;height:22px;border-radius:50%;background:rgba(74,222,128,.18);color:#4ade80;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;margin-top:1px}
+.guar b{display:block;font-size:13px;color:var(--white);margin-bottom:2px}
+.guar small{color:var(--muted);font-size:11px;line-height:1.4}
+@media(max-width:760px){.guar-row{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.guar-row{grid-template-columns:1fr}}
 
 /* ── COMPARISON TABLE ── */
 .holo{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:40px;background:rgba(232,181,61,.03);backdrop-filter:blur(6px)}
@@ -895,6 +903,12 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     </div>
   </div>
   <p class="price-note">* המחירים הם נקודת פתיחה וכוללים התקנה. הצעת מחיר סופית תלויה בסוג המשאית, כמות ותצורה.</p>
+  <div class="guar-row reveal">
+    <div class="guar"><span class="gck">✓</span><div><b>הצעת מחיר חינם</b><small>ללא התחייבות ובלי אותיות קטנות</small></div></div>
+    <div class="guar"><span class="gck">✓</span><div><b>בלי להשבית עבודה</b><small>התקנה בתיאום — גם בלילה או בסופ"ש</small></div></div>
+    <div class="guar"><span class="gck">✓</span><div><b>אחריות ותמיכה מקומית</b><small>שירות אנושי בעברית, מולנו ישירות</small></div></div>
+    <div class="guar"><span class="gck">✓</span><div><b>מחזיר את עצמו</b><small>תאונה אחת שמזוכה מכסה את העלות</small></div></div>
+  </div>
   </div>
 </section>
 
@@ -996,10 +1010,14 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 
 <section class="cta-sec">
   <div class="wrap">
-    <div class="eyebrow center reveal">READY?</div>
-    <h2 class="reveal center">בחרת תצורה? <span class="gold">שלח לנו.</span></h2>
-    <p class="lead center reveal" style="margin-bottom:28px">שלח את הבחירה שלך ישירות בוואטסאפ — נחזור עם הצעת מחיר.</p>
-    <div style="text-align:center"><a class="wa-btn reveal" id="waBtn2" href="#" target="_blank">💬 שליחת הבחירה בוואטסאפ</a></div>
+    <div class="eyebrow center reveal">בוא נתחיל</div>
+    <h2 class="reveal center">כל יום בלי מצלמה <span class="gold">הוא סיכון מיותר.</span></h2>
+    <p class="lead center reveal" style="margin-bottom:28px;margin-inline:auto">בנה את התצורה למשאית שלך בסימולטור — תקבל הצעת מחיר חינם, ללא התחייבות. או דבר איתנו עכשיו ישירות בוואטסאפ.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-gold reveal" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">🚛 בנה את המשאית שלי</button>
+      <a class="wa-btn reveal" id="waBtn2" href="#" target="_blank">💬 דבר איתנו עכשיו</a>
+    </div>
+    <p class="reveal" style="text-align:center;color:var(--muted);font-size:12px;margin-top:16px">⚡ תגובה מהירה · הצעת מחיר תוך 24 שעות · התקנה בכל הארץ</p>
   </div>
 </section>
 
@@ -1061,7 +1079,22 @@ Object.assign(I18N,{
 "ניהול צי בזמן אמת":{"en":"Real-time fleet management","ar":"إدارة الأسطول في الوقت الفعلي"},
 "🔗 שתף תצורה":{"en":"🔗 Share build","ar":"🔗 مشاركة التهيئة"},
 "הקישור הועתק ✓":{"en":"Link copied ✓","ar":"تم نسخ الرابط ✓"},
-"העתק את הקישור:":{"en":"Copy the link:","ar":"انسخ الرابط:"}
+"העתק את הקישור:":{"en":"Copy the link:","ar":"انسخ الرابط:"},
+"הצעת מחיר חינם":{"en":"Free quote","ar":"عرض سعر مجاني"},
+"ללא התחייבות ובלי אותיות קטנות":{"en":"No obligation, no fine print","ar":"دون التزام ودون شروط خفية"},
+"בלי להשבית עבודה":{"en":"Zero downtime","ar":"دون تعطيل العمل"},
+"התקנה בתיאום — גם בלילה או בסופ\"ש":{"en":"Installed by appointment — even nights or weekends","ar":"تركيب بموعد مسبق — حتى ليلاً أو في عطلة نهاية الأسبوع"},
+"אחריות ותמיכה מקומית":{"en":"Warranty & local support","ar":"ضمان ودعم محلي"},
+"שירות אנושי בעברית, מולנו ישירות":{"en":"Real human service, directly with us","ar":"خدمة بشرية حقيقية، معنا مباشرةً"},
+"מחזיר את עצמו":{"en":"Pays for itself","ar":"يسترد تكلفته"},
+"תאונה אחת שמזוכה מכסה את העלות":{"en":"One cleared accident covers the cost","ar":"حادث واحد تُثبَت فيه براءتك يغطّي التكلفة"},
+"כל יום בלי מצלמה":{"en":"Every day without a camera","ar":"كل يوم بدون كاميرا"},
+"הוא סיכון מיותר.":{"en":"is a needless risk.","ar":"هو مخاطرة لا داعي لها."},
+"בנה את התצורה למשאית שלך בסימולטור — תקבל הצעת מחיר חינם, ללא התחייבות. או דבר איתנו עכשיו ישירות בוואטסאפ.":{"en":"Build your truck's configuration in the simulator — get a free, no-obligation quote. Or talk to us right now on WhatsApp.","ar":"ابنِ تهيئة شاحنتك في المحاكي — واحصل على عرض سعر مجاني دون التزام. أو تحدّث معنا الآن عبر واتساب."},
+"🚛 בנה את המשאית שלי":{"en":"🚛 Build my truck","ar":"🚛 ابنِ شاحنتي"},
+"💬 דבר איתנו עכשיו":{"en":"💬 Talk to us now","ar":"💬 تحدّث معنا الآن"},
+"⚡ תגובה מהירה · הצעת מחיר תוך 24 שעות · התקנה בכל הארץ":{"en":"⚡ Fast response · quote within 24 hours · nationwide installation","ar":"⚡ استجابة سريعة · عرض سعر خلال 24 ساعة · تركيب في كل البلاد"},
+"בוא נתחיל":{"en":"Let's start","ar":"لنبدأ"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
