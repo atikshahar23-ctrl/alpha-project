@@ -1501,11 +1501,42 @@ function fitCamerasToTruck(halfW, topY, halfD){
   buildCamMarkers();
   if(activeCamId) renderCamCtrl(activeCamId);
 }
+// Cargo body / trailer built behind the cab of a real truck, shaped by the selected body type.
+let trailerNode=null;
+function buildTrailer(bodyId){
+  if(trailerNode){ try{trailerNode.dispose(false,true);}catch(e){} trailerNode=null; }
+  const D=window.__truckDims;
+  if(!D || !realTruckNode) return;          // only on real trucks
+  if(bodyId==='tractor') return;            // bobtail — no trailer
+  const {halfW,topY,halfD}=D;
+  const T=new BABYLON.TransformNode('trailer',scene); T.parent=truckRoot;
+  const w=Math.min(halfW*1.9, 2.55);
+  const deckY=topY*0.30;
+  const len=halfD*1.9;
+  const cz=-halfD*0.15 - len/2;             // sits behind the cab, extends rearward
+  const grey=pbr('trgrey',0.80,0.82,0.86,0.35,0.5);
+  const dark=pbr('trdark',0.10,0.11,0.13,0.3,0.7);
+  const tyre=pbr('trtyre',0.04,0.04,0.05,0,0.92);
+  const tank=pbr('trtank',0.84,0.87,0.92,0.9,0.16);
+  box(T, w, 0.20, len, dark, 0, deckY, cz);                 // chassis/deck
+  [-1,1].forEach(sx=>[0,1].forEach(i=>cyl(T,0.95,0.95,0.30,tyre, sx*(w/2-0.05), deckY-0.42, cz-len/2+1.1+i*1.15, 0,0,Math.PI/2)));
+  if(bodyId==='tanker'){
+    cyl(T, topY*0.8, topY*0.8, len*0.9, tank, 0, deckY+topY*0.45, cz, 0,0,Math.PI/2);
+  } else if(bodyId==='flatbed'){
+    box(T, w, 0.14, len, grey, 0, deckY+0.18, cz);
+  } else if(bodyId==='tipper'){
+    const h=topY*0.55; box(T, w, h, len*0.9, grey, 0, deckY+h/2+0.12, cz+len*0.03, -0.04,0,0);
+  } else {                                                   // box / hooklift / default
+    const h=topY*0.95; box(T, w, h, len, grey, 0, deckY+h/2+0.12, cz);
+  }
+  trailerNode=T;
+}
 function applyTruckModel(brandId){
   if(appliedBrand===brandId) return;          // already applied this brand
   appliedBrand=brandId;
   const token=++realTruckToken;
   if(realTruckNode){ try{realTruckNode.dispose(false,true);}catch(e){} realTruckNode=null; }
+  if(trailerNode){ try{trailerNode.dispose(false,true);}catch(e){} trailerNode=null; }
   const cfg=TRUCK_MODELS[brandId];
   if(!cfg || !window.BABYLON || !BABYLON.SceneLoader){ showProceduralTruck(true); return; }
   showProceduralTruck(false);                 // hide schematic while the real one loads
@@ -1526,8 +1557,13 @@ function applyTruckModel(brandId){
       const len=Math.max(mx.x-mn.x, mx.z-mn.z)||1, s=(11/len)*(cfg.scale||1);
       wrap.scaling.setAll(s);
       wrap.position.set(-((mn.x+mx.x)/2)*s, -mn.y*s+(cfg.yOff||0), -((mn.z+mx.z)/2)*s);
-      // auto-fit the cameras to this truck's real proportions (default mounting positions)
-      try{ fitCamerasToTruck((mx.x-mn.x)*s/2, (mx.y-mn.y)*s, (mx.z-mn.z)*s/2); }catch(e){}
+      // auto-fit the cameras + attach a cargo body/trailer behind the cab
+      try{
+        const hw=(mx.x-mn.x)*s/2, ty=(mx.y-mn.y)*s, hd=(mx.z-mn.z)*s/2;
+        window.__truckDims={halfW:hw,topY:ty,halfD:hd};
+        fitCamerasToTruck(hw,ty,hd);
+        buildTrailer(curBody.id);
+      }catch(e){}
     }
     wrap.parent=truckRoot;
     realTruckNode=wrap;
@@ -2102,7 +2138,8 @@ function buildPanels(){
   BODIES.forEach(b=>{
     const el=document.createElement('div');el.className='bbtn'+(b.id===curBody.id?' on':'');el.textContent=TR(b.name);
     el.onclick=()=>{curBody=b;document.querySelectorAll('#bodyGrid .bbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
-      buildTruck();buildCamMarkers();updateTruckImg();updateSel();};
+      buildTruck();buildCamMarkers();updateTruckImg();updateSel();
+      if(typeof realTruckNode!=='undefined'&&realTruckNode){ try{buildTrailer(b.id);}catch(e){} }};
     bg.appendChild(el);
   });
   // brands
