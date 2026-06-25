@@ -600,7 +600,10 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
         <div class="sp-section">
           <div class="spt" style="justify-content:space-between">
             <span>מצלמות פעילות</span>
-            <button id="mirrorBtn" onclick="toggleMirror()" style="font-size:8px;font-family:'Orbitron';background:rgba(95,210,224,.08);border:1px solid rgba(95,210,224,.3);color:var(--cyan);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">⟺ מראה</button>
+            <div style="display:flex;gap:5px">
+              <button id="camDragBtn" onclick="toggleCamDrag()" style="font-size:8px;font-family:'Orbitron';background:rgba(95,210,224,.08);border:1px solid rgba(95,210,224,.3);color:var(--cyan);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">✋ הזז</button>
+              <button id="mirrorBtn" onclick="toggleMirror()" style="font-size:8px;font-family:'Orbitron';background:rgba(95,210,224,.08);border:1px solid rgba(95,210,224,.3);color:var(--cyan);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">⟺ מראה</button>
+            </div>
           </div>
           <div class="cam-rows" id="camRows"></div>
         </div>
@@ -890,6 +893,7 @@ Object.assign(I18N,{"בחר את":{"en":"Choose your","ar":"اختر"},"המצל
 Object.assign(I18N,{"כל מה שהמערכת":{"en":"Everything the system","ar":"كل ما يفعله"},"עושה בשבילך.":{"en":"does for you.","ar":"النظام من أجلك."},"מערכת צפייה מרחוק חכמה ופשוטה לתפעול — שליטה מלאה בצי מהנייד, בכל רגע ומכל מקום.":{"en":"A smart, easy-to-use remote-viewing system — full control of your fleet from your phone, anytime, anywhere.","ar":"نظام مراقبة عن بُعد ذكي وسهل الاستخدام — تحكّم كامل بأسطولك من هاتفك، في أي وقت ومن أي مكان."},"צפייה מרחוק בזמן אמת":{"en":"Real-time remote viewing","ar":"مشاهدة مباشرة عن بُعد"},"צפייה חיה בכל מצלמה מהנייד או מהמחשב — רואים בדיוק מה קורה בכל משאית, בכל רגע.":{"en":"Watch any camera live from your phone or computer — see exactly what's happening in every truck, at any moment.","ar":"شاهد أي كاميرا مباشرةً من هاتفك أو حاسوبك — اعرف بالضبط ما يحدث في كل شاحنة، في أي لحظة."},"היסטוריית נסיעה ומעקב":{"en":"Trip history & tracking","ar":"سجل الرحلات والتتبّع"},"שחזור מלא של מסלול הנסיעה עם מעקב GPS — בודקים בדיוק איפה הרכב היה ומתי.":{"en":"Full playback of the trip route with GPS tracking — check exactly where the vehicle was and when.","ar":"إعادة تشغيل كاملة لمسار الرحلة مع تتبّع GPS — تحقّق بالضبط أين كانت المركبة ومتى."},"שמירה בענן":{"en":"Cloud storage","ar":"تخزين سحابي"},"גיבוי אוטומטי בענן — מ-10 עד 14 ימים אחורה, ובחבילות מורחבות עד 4 חודשים.":{"en":"Automatic cloud backup — from 10 to 14 days back, and up to 4 months on extended plans.","ar":"نسخ احتياطي تلقائي على السحابة — من 10 إلى 14 يوماً، وحتى 4 أشهر في الباقات الموسّعة."},"עד 8 ערוצים FHD":{"en":"Up to 8 FHD channels","ar":"حتى 8 قنوات FHD"},"תמיכה ב-4 או 8 ערוצי מצלמה ברזולוציית Full HD 1080P — כיסוי מלא לכל זוויות הרכב.":{"en":"Supports 4 or 8 camera channels at Full HD 1080P — complete coverage of every angle of the vehicle.","ar":"يدعم 4 أو 8 قنوات كاميرا بدقة Full HD 1080P — تغطية كاملة لكل زوايا المركبة."},"התראות גם בחנייה":{"en":"Alerts even when parked","ar":"تنبيهات حتى أثناء الوقوف"},"אופציה לקבלת התראות בזמן אמת גם כשהרכב חונה — שמירה על המשאית גם כשלא נוהגים בה.":{"en":"Option for real-time alerts even while the vehicle is parked — protecting the truck even when no one is driving it.","ar":"خيار لتلقّي تنبيهات فورية حتى أثناء وقوف المركبة — حماية الشاحنة حتى عندما لا يقودها أحد."},"אפליקציה פשוטה":{"en":"Simple app","ar":"تطبيق بسيط"},"אפליקציה ותוכנה ידידותיות וקלות לתפעול — שליטה מלאה בלי כאב ראש טכני.":{"en":"Friendly, easy-to-use app and software — full control with no technical headaches.","ar":"تطبيق وبرنامج سهلان وودودان — تحكّم كامل دون أي تعقيدات تقنية."},"חיבור למסך ברכב":{"en":"Connect to a vehicle screen","ar":"توصيل بشاشة المركبة"},"אופציה לחיבור למסך חיצוני או למולטימדיה הקיימת ברכב (בכפוף לתאימות).":{"en":"Option to connect to an external screen or the vehicle's existing multimedia (subject to compatibility).","ar":"خيار التوصيل بشاشة خارجية أو بنظام الوسائط المتعددة الموجود في المركبة (حسب التوافق)."},"עדכוני גרסה ואבטחה":{"en":"Version & security updates","ar":"تحديثات الإصدار والأمان"},"עדכוני תוכנה ואבטחה שוטפים לשמירה על יציבות המערכת ועל אבטחת המידע לאורך זמן.":{"en":"Regular software and security updates that keep the system stable and your data secure over time.","ar":"تحديثات منتظمة للبرامج والأمان تحافظ على استقرار النظام وأمان بياناتك مع مرور الوقت."}});
 Object.assign(I18N,{"מ-₪4,500":{"en":"From ₪4,500","ar":"من ₪4,500"},"שבוע הקלטה לאחור (ניתן להרחבה)":{"en":"A week of footage history (expandable)","ar":"أسبوع من سجل التسجيلات (قابل للتمديد)"},"ממשאית בודדת ועד צי גדול — בוחרים את הרמה שמתאימה. המחירים הם נקודת פתיחה, וההצעה הסופית מותאמת אישית.":{"en":"From a single truck to a large fleet — choose the level that fits. Prices are a starting point, and the final offer is tailored to you.","ar":"من شاحنة واحدة إلى أسطول كبير — اختر المستوى المناسب. الأسعار نقطة بداية، والعرض النهائي مُصمّم خصيصاً لك."},"* המחירים הם נקודת פתיחה וכוללים התקנה. הצעת מחיר סופית תלויה בסוג המשאית, כמות ותצורה.":{"en":"* Prices are a starting point and include installation. The final quote depends on the truck type, quantity and configuration.","ar":"* الأسعار نقطة بداية وتشمل التركيب. يعتمد العرض النهائي على نوع الشاحنة والكمية والتهيئة."},"/ משאית":{"en":"/ truck","ar":"/ شاحنة"}});
 Object.assign(I18N,{"מערכת DVR מקצועית":{"en":"Professional DVR system","ar":"نظام DVR احترافي"},"3 מצלמות: קדמית + 2 צדדיות":{"en":"3 cameras: front + 2 sides","ar":"3 كاميرات: أمامية + جانبيتان"},"שבוע הקלטה לאחור":{"en":"A week of footage history","ar":"أسبوع من سجل التسجيلات"},"ראיית לילה Sony AHD":{"en":"Sony AHD night vision","ar":"رؤية ليلية Sony AHD"},"מצלמה אחורית":{"en":"Rear camera","ar":"كاميرا خلفية"},"GPS ושידור חי":{"en":"GPS & live streaming","ar":"GPS وبث مباشر"}});
+Object.assign(I18N,{"✋ הזז":{"en":"✋ Move","ar":"✋ تحريك"}});
 const RTL_LANGS=['he','ar'];
 let LANG='he';
 function TR(s){ if(s==null)return s; if(LANG==='he')return s; const k=(''+s).trim(); const e=I18N[k]; const v=(e&&e[LANG]!=null&&e[LANG]!=='')?e[LANG]:null; return v==null?s:(''+s).replace(k,v); }
@@ -1860,6 +1864,16 @@ function buildBody(g,M){
 //  CAM MARKERS
 // ───────────────────────────────────────────────────────────────────────
 let camLenses=[];
+let _camDragMode=false;
+function toggleCamDrag(){
+  _camDragMode=!_camDragMode;
+  Object.values(camMarkers).forEach(m=>{ if(m._dragBehavior) m._dragBehavior.enabled=_camDragMode; });
+  const btn=document.getElementById('camDragBtn');
+  if(btn){
+    if(_camDragMode){ btn.style.background='rgba(232,181,61,.18)'; btn.style.borderColor='var(--gold)'; btn.style.color='var(--gold)'; }
+    else { btn.style.background='rgba(95,210,224,.08)'; btn.style.borderColor='rgba(95,210,224,.3)'; btn.style.color='var(--cyan)'; }
+  }
+}
 function buildCamMarkers(){
   Object.values(camMarkers).forEach(m=>m.dispose());
   Object.values(camCones).forEach(m=>m&&m.dispose());
@@ -1873,6 +1887,22 @@ function buildCamMarkers(){
     m.position.copyFrom(camPos[id]);
     m.parent=truckRoot;
     camMarkers[id]=m;
+    // drag-on-truck: grab the camera marker and move it directly in the 3D view
+    try{
+      const db=new BABYLON.PointerDragBehavior();
+      db.enabled=_camDragMode;
+      db.useObjectOrientationForDragging=false;
+      db.onDragStartObservable.add(()=>selectCam(id));
+      db.onDragObservable.add(()=>{
+        camPos[id].copyFrom(m.position);
+        if(camCones[id]) orientCone(camCones[id],camPos[id],camDir[id]);
+        const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
+        if(_mirrorActive && id==='right') mirrorRightToLeft();
+      });
+      db.onDragEndObservable.add(()=>{ if(activeCamId===id) renderCamCtrl(id); });
+      m.addBehavior(db);
+      m._dragBehavior=db;
+    }catch(e){}
 
     if(camOn[id]){
       const cone=BABYLON.MeshBuilder.CreateCylinder('cone_'+id,{diameterTop:3.2,diameterBottom:0,height:6.5,tessellation:18},scene);
@@ -1913,7 +1943,7 @@ function setupDrag(){
   el.addEventListener('pointerdown',e=>{dragging=true;autoRot=false;lx=e.clientX;ly=e.clientY;});
   window.addEventListener('pointerup',()=>dragging=false);
   window.addEventListener('pointermove',e=>{
-    if(!dragging)return;
+    if(!dragging || _camDragMode)return;   // in camera-drag mode, don't orbit the view
     theta-=(e.clientX-lx)*0.007; phi-=(e.clientY-ly)*0.007;
     phi=Math.max(0.15,Math.min(1.52,phi));
     lx=e.clientX; ly=e.clientY;
