@@ -708,9 +708,9 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
           <button class="stbtn"     id="driveBtn" onclick="toggleDrive()" style="background:rgba(74,222,128,.12);border-color:#4ade80;color:#4ade80">🚦 הפעל נסיעה</button>
           <button class="stbtn"     id="saveBtnTop" onclick="saveCamSetup()" style="background:rgba(232,181,61,.16);border-color:var(--gold);color:var(--gold);font-weight:700">💾 שמור מיקומים</button>
           <div style="width:1px;height:16px;background:rgba(255,255,255,.1);margin:0 4px"></div>
-          <button class="stbtn"     id="bNight" onclick="setTOD('night')">🌙</button>
-          <button class="stbtn"     id="bDusk"  onclick="setTOD('dusk')">🌅</button>
-          <button class="stbtn on"  id="bDay"   onclick="setTOD('day')">☀️</button>
+          <button class="stbtn"     id="bNight" onclick="setTOD('night')" aria-label="לילה / Night">🌙</button>
+          <button class="stbtn"     id="bDusk"  onclick="setTOD('dusk')" aria-label="דמדומים / Dusk">🌅</button>
+          <button class="stbtn on"  id="bDay"   onclick="setTOD('day')" aria-label="יום / Day">☀️</button>
           <div class="st-rec"><div class="st-recdot"></div>REC</div>
           <span id="simClock">00:00:00</span>
         </div>
@@ -2770,7 +2770,7 @@ const FLEET=[
   {id:'HG-11',name:'משאית 11 · מערבל בטון',driver:'נסים',status:'driving',x:520,y:150,spd:51,body:'🚧',lat:32.610,lng:35.290,home:[32.610,35.290]}, // עפולה
   {id:'HG-12',name:'משאית 12 · מכולה',driver:'רמי',status:'driving',x:250,y:380,spd:62,body:'📦',lat:31.670,lng:34.610,home:[31.670,34.610]}, // אשקלון
 ];
-let dashActiveId=null;
+let dashActiveId=null, _dashVis=true;
 const STATUS_TXT={driving:'בנסיעה',idle:'בהמתנה',stopped:'חונה'};
 const STATUS_COL={driving:'#4ade80',idle:'#e8b53d',stopped:'#9aa1ad'};
 
@@ -2872,6 +2872,7 @@ function drawBlips(){
 
 // animate driving trucks — each bounces inside a small land box around its home
 function animateDash(){
+  if(!_dashVis) return;                 // skip work while the dashboard is off-screen
   let moved=false;
   FLEET.forEach(t=>{
     if(t.status==='driving'){
@@ -2971,6 +2972,11 @@ window.addEventListener('load',()=>{
 
   // Dashboard
   buildDashboard();
+  // Only animate the fleet (12 trucks + 4 canvas feeds) while the dashboard is on-screen.
+  const dashEl=document.getElementById('dashboard');
+  if(dashEl && 'IntersectionObserver' in window){
+    new IntersectionObserver(es=>{ _dashVis=es[0].isIntersecting; },{threshold:0.04}).observe(dashEl);
+  } else { _dashVis=true; }
   setInterval(animateDash, 80);
 });
 </script>
