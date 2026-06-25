@@ -1,0 +1,11 @@
+Model Information:
+* title:	2008 Iveco Stralis 560 8x4
+* source:	https://sketchfab.com/3d-models/2008-iveco-stralis-560-8x4-9ed39193aca54850bfbf143208389cf7
+* author:	tonielpro520 (https://sketchfab.com/tonielpro520)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "2008 Iveco Stralis 560 8x4" (https://sketchfab.com/3d-models/2008-iveco-stralis-560-8x4-9ed39193aca54850bfbf143208389cf7) by tonielpro520 (https://sketchfab.com/tonielpro520) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
