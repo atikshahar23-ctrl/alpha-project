@@ -1643,12 +1643,14 @@ function buildTrailer(bodyId){
   if(bodyId==='tractor') return;            // bobtail — no trailer
   const {halfW,topY,halfD}=D;
   const T=new BABYLON.TransformNode('trailer',scene); T.parent=truckRoot;
-  const w=halfW*1.74;                        // body width ~ truck width
-  const deckY=topY*0.34;                     // floor sits on the chassis
-  const len=halfD*1.78;
-  const frontZ=-halfD*0.24;                  // starts just behind the cab
-  const cz=frontZ - len/2;                   // body centre, extends rearward
-  const rearZ=cz-len/2;                       // rear-most edge
+  // Body sits ON the truck's own chassis. Cab faces +Z, rear is -Z, base at y=0.
+  // The truck already provides the wheels, so the body adds none (no floating axles).
+  const w=halfW*1.55;                        // body a touch narrower than the cab
+  const frontZ=halfD*0.06;                   // just behind the cab
+  const rearZ=-halfD*0.96;                   // about the rear of the chassis
+  const len=frontZ-rearZ;                    // body length over the chassis
+  const cz=(frontZ+rearZ)/2;                 // body centre
+  const deckY=topY*0.42;                     // floor height on the chassis
   const grey =pbr('trgrey',0.82,0.84,0.88,0.30,0.45);
   const greyD=pbr('trgryd',0.34,0.37,0.42,0.45,0.5);
   const dark =pbr('trdark',0.09,0.10,0.12,0.30,0.7);
@@ -1672,17 +1674,12 @@ function buildTrailer(bodyId){
   function ribs(x0,x1,y,z,h,n,thick,mat){
     for(let i=0;i<n;i++){ const x=x0+(x1-x0)*i/(n-1); box(T,thick,h,0.05,mat,x,y,z); }
   }
-  // shared chassis: frame + twin/▢ rear bogie with mudguards, underrun bars, tail lights
-  function chassis(axles){
-    box(T, w*0.60, 0.22, len, dark, 0, deckY-0.07, cz);                          // main frame
-    const ax=axles||2;
-    for(let i=0;i<ax;i++){ const z=rearZ+1.0+i*1.25;
-      [-1,1].forEach(sx=>wheel(sx*w*0.47, deckY-0.56, z));
-      [-1,1].forEach(sx=>box(T, 0.10, 0.46, 1.18, greyD, sx*w*0.52, deckY-0.06, z));   // mudguard
-    }
-    [-1,1].forEach(sx=>box(T, 0.05, 0.26, len*0.78, steel, sx*(w*0.5+0.03), deckY-0.32, cz)); // side underrun bar
-    box(T, w*0.94, 0.10, 0.10, steel, 0, deckY-0.46, rearZ-0.08);                 // rear underrun bar
-    [-1,1].forEach(sx=>box(T, 0.20,0.11,0.06, redL, sx*w*0.42, deckY-0.18, rearZ-0.12)); // tail lights
+  // shared sub-frame the body rests on (no wheels — the truck has its own)
+  function chassis(){
+    box(T, w*0.60, 0.14, len*0.99, dark, 0, deckY-0.11, cz);                      // chassis sub-rail
+    [-1,1].forEach(sx=>box(T, 0.05, 0.18, len*0.82, steel, sx*(w*0.5+0.02), deckY-0.18, cz)); // side skirt
+    box(T, w*0.9, 0.10, 0.08, steel, 0, deckY-0.24, rearZ+0.04);                  // rear bar
+    [-1,1].forEach(sx=>box(T, 0.20,0.11,0.05, redL, sx*w*0.40, deckY-0.10, rearZ+0.03)); // tail lights
   }
 
   switch(bodyId){
@@ -1790,24 +1787,19 @@ function buildTrailer(bodyId){
         box(T,0.55,0.08,0.55,steel, sx*(w*0.5+0.9), deckY-1.0, frontZ-0.1); });   // stabilizers + pads
       break;
     }
-    case'lowloader':{                                                             // רמסע — gooseneck + low planked deck + ramps
-      const lowY=deckY*0.42;
-      box(T, w*0.6, 0.22, len*0.5, dark, 0, lowY, cz+len*0.06);                   // low frame
-      [-1,1].forEach(sx=>[0,1,2].forEach(i=>wheel(sx*w*0.47, lowY-0.34, rearZ+0.8+i*1.05)));
-      for(let i=0;i<7;i++){ const x=-w*0.5+ w*(i+0.5)/7; box(T, w/7.6, 0.12, len*0.6, wood, x, lowY+0.2, cz+0.02); } // deck planks
-      box(T, w, topY*0.62, len*0.26, dark, 0, deckY+0.06+topY*0.24, frontZ+0.12); // gooseneck rises to cab height
-      box(T, w*0.5, topY*0.5, 0.5, steel, 0, deckY+topY*0.2, frontZ+0.0);         // gooseneck neck
-      [-1,1].forEach(sx=>box(T, w*0.44, 0.10, 1.7, steel, sx*w*0.26, lowY+0.04, rearZ-0.8, DEG(20),0,0)); // twin rear ramps
-      [-1,1].forEach(sx=>box(T,0.05,0.18,len*0.58,greyD, sx*w*0.5, lowY+0.22, cz+0.02)); // side rails
-      loadCargoGLB(T,'excavator.glb', cz+0.1, lowY+0.28, len*0.5, null, true);   // real excavator as machinery cargo
+    case'lowloader':{                                                             // הובלת ציוד — flatbed carrying the excavator
+      chassis();
+      for(let i=0;i<7;i++){ const x=-w*0.5+ w*(i+0.5)/7; box(T, w/7.6, 0.12, len, wood, x, deckY+0.18, cz); } // planked deck
+      box(T, w, topY*0.36, 0.16, greyD, 0, deckY+0.18+topY*0.18, frontZ);         // headboard
+      [-1,1].forEach(sx=>box(T,0.05,0.14,len*0.96,greyD, sx*w*0.5, deckY+0.24, cz)); // side rave rails
+      loadCargoGLB(T,'excavator.glb', cz, deckY+0.26, len*0.66, null, true);      // real excavator
       break;
     }
-    case'container':{                                                            // מכולה 40 רגל — real GLB container on a flatbed semi
-      chassis(3);
-      box(T, w, 0.18, len, steel, 0, deckY+0.18, cz);                            // flatbed deck
-      [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(([sx,sz])=>box(T,0.18,0.14,0.18,yellow, sx*w*0.44, deckY+0.30, cz+sz*len*0.44)); // twist-locks
-      cyl(T,0.5,0.5,0.25,steel,0,deckY+0.1,frontZ+0.2,Math.PI/2,0,0);            // kingpin plate
-      loadContainerBody(T, cz, deckY+0.36, len*1.02);                            // real container model on top
+    case'container':{                                                            // מכולה 40 רגל — real GLB container on the bed
+      chassis();
+      box(T, w, 0.16, len, steel, 0, deckY+0.16, cz);                            // flatbed deck
+      [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(([sx,sz])=>box(T,0.16,0.12,0.16,yellow, sx*w*0.42, deckY+0.28, cz+sz*len*0.42)); // twist-locks
+      loadContainerBody(T, cz, deckY+0.30, len*0.98);                            // real container model on top
       break;
     }
     default:{
