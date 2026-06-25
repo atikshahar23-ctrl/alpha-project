@@ -872,7 +872,10 @@ function loadBabylon(){
   if(window.__babylonPromise)return window.__babylonPromise;
   const V='7.34.0';
   window.__babylonPromise=__loadScript('https://cdn.jsdelivr.net/npm/babylonjs@'+V+'/babylon.js')
-    .catch(()=>__loadScript('https://unpkg.com/babylonjs@'+V+'/babylon.js'));
+    .catch(()=>__loadScript('https://unpkg.com/babylonjs@'+V+'/babylon.js'))
+    .then(()=>__loadScript('https://cdn.jsdelivr.net/npm/babylonjs-loaders@'+V+'/babylonjs.loaders.min.js')
+      .catch(()=>__loadScript('https://unpkg.com/babylonjs-loaders@'+V+'/babylonjs.loaders.min.js'))
+      .catch(()=>{}));   /* loaders are optional — without them the sim falls back to the procedural truck */
   return window.__babylonPromise;
 }
 </script>
@@ -1461,10 +1464,51 @@ function buildInterior(g, M){
   [dx-0.13,dx+0.13].forEach(lx=>box(g,0.16,0.16,0.62,cloth,lx,2.40,1.5,DEG(8),0,0));    // legs
 }
 
+// ─── REAL TRUCK GLB MODELS (per brand) ───────────────────────────────────
+// rotY / scale / yOff are per-model tuning knobs (models come from different authors).
+const TRUCK_MODELS={
+  volvo:{file:'volvo.glb',  rotY:0},
+  scania:{file:'scania.glb',rotY:0},
+  daf:{file:'daf.glb',      rotY:0},
+  merc:{file:'mercedes.glb',rotY:0},
+  man:{file:'man.glb',      rotY:0},
+  iveco:{file:'iveco.glb',  rotY:0},
+};
+let realTruckNode=null, realTruckToken=0, appliedBrand=null;
+function showProceduralTruck(show){ if(window.truckBody && !window.truckBody.isDisposed()) window.truckBody.setEnabled(show); }
+function applyTruckModel(brandId){
+  if(appliedBrand===brandId) return;          // already applied this brand
+  appliedBrand=brandId;
+  const token=++realTruckToken;
+  if(realTruckNode){ try{realTruckNode.dispose(false,true);}catch(e){} realTruckNode=null; }
+  const cfg=TRUCK_MODELS[brandId];
+  if(!cfg || !window.BABYLON || !BABYLON.SceneLoader){ showProceduralTruck(true); return; }
+  showProceduralTruck(false);                 // hide schematic while the real one loads
+  BABYLON.SceneLoader.ImportMeshAsync(null,'assets/models/',cfg.file,scene).then(res=>{
+    if(token!==realTruckToken){ res.meshes.forEach(m=>m.dispose&&m.dispose()); return; }  // superseded
+    const wrap=new BABYLON.TransformNode('realTruck',scene);
+    res.meshes.forEach(m=>{ if(!m.parent) m.parent=wrap; });
+    // auto-normalize: scale to ~11 units long, center on X/Z, sit on the ground
+    let mn=null,mx=null;
+    res.meshes.forEach(m=>{ if(!m.getBoundingInfo)return; try{m.computeWorldMatrix(true);}catch(e){return;}
+      const bb=m.getBoundingInfo().boundingBox,a=bb.minimumWorld,b=bb.maximumWorld;
+      if(!mn){mn=a.clone();mx=b.clone();}else{mn=BABYLON.Vector3.Minimize(mn,a);mx=BABYLON.Vector3.Maximize(mx,b);} });
+    if(mn&&mx){
+      const len=Math.max(mx.x-mn.x, mx.z-mn.z)||1, s=(11/len)*(cfg.scale||1);
+      wrap.scaling.setAll(s);
+      wrap.rotation.y=cfg.rotY||0;
+      wrap.position.set(-((mn.x+mx.x)/2)*s, -mn.y*s+(cfg.yOff||0), -((mn.z+mx.z)/2)*s);
+    }
+    wrap.parent=truckRoot;
+    realTruckNode=wrap;
+  }).catch(e=>{ if(token===realTruckToken){ console.error('truck model load failed:',e); showProceduralTruck(true); } });
+}
+
 function buildTruck(){
-  // dispose old
-  truckRoot.getChildMeshes().forEach(m=>m.dispose());
-  truckRoot.getChildTransformNodes && truckRoot.getChildTransformNodes().forEach(n=>n.dispose());
+  // procedural truck lives in its own node so the real GLB model + camera markers survive a rebuild
+  if(!window.truckBody || window.truckBody.isDisposed()){ window.truckBody=new BABYLON.TransformNode('truckBody',scene); window.truckBody.parent=truckRoot; }
+  window.truckBody.getChildMeshes().forEach(m=>m.dispose());
+  window.truckBody.getChildTransformNodes && window.truckBody.getChildTransformNodes().forEach(n=>n.dispose());
 
   const col=curBrand.col;
   const M={
@@ -1485,7 +1529,7 @@ function buildTruck(){
     rl:    emissive('rl',1,0.1,0,3),
     amber: emissive('amber',1,0.63,0.1,2),
   };
-  const g=truckRoot;
+  const g=window.truckBody;
 
   // ═══ CAB ═══
   box(g,2.74,2.05,2.62,M.body,0,2.05,1.30);
@@ -2011,7 +2055,7 @@ function buildPanels(){
     const el=document.createElement('div');el.className='brbtn'+(b.id===curBrand.id?' on':'');
     el.innerHTML=`<span class="brspot" style="background:${b.hex}"></span>${b.name}`;
     el.onclick=()=>{curBrand=b;document.querySelectorAll('#brandGrid .brbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
-      buildTruck();buildCamMarkers();updateSel();updateBrandInfo();};
+      buildTruck();buildCamMarkers();updateSel();updateBrandInfo();applyTruckModel(b.id);};
     brg.appendChild(el);
   });
   rebuildCamRows();
@@ -2287,6 +2331,7 @@ function startSimulator(){
     init3D();
     buildPanels();
     animate();
+    try{ applyTruckModel(curBrand.id); }catch(e){}   // load the real GLB model for the current brand
     // resize a few times as layout settles / section becomes visible
     setTimeout(onResize,60);
     setTimeout(onResize,300);
