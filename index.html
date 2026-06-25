@@ -628,6 +628,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
           <button class="stbtn"     id="bDriver" onclick="setView('driver')">נהג</button>
           <button class="stbtn"     id="bBird"   onclick="setView('bird')">מלמעלה</button>
           <button class="stbtn"     id="bChase"  onclick="setView('chase')">מאחור</button>
+          <button class="stbtn"     id="driveBtn" onclick="toggleDrive()" style="background:rgba(74,222,128,.12);border-color:#4ade80;color:#4ade80">🚦 הפעל נסיעה</button>
           <div style="width:1px;height:16px;background:rgba(255,255,255,.1);margin:0 4px"></div>
           <button class="stbtn"     id="bNight" onclick="setTOD('night')">🌙</button>
           <button class="stbtn"     id="bDusk"  onclick="setTOD('dusk')">🌅</button>
@@ -899,6 +900,7 @@ Object.assign(I18N,{"מערכת DVR מקצועית":{"en":"Professional DVR syst
 Object.assign(I18N,{"✋ הזז":{"en":"✋ Move","ar":"✋ تحريك"}});
 Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night vision","ar":"خلفية · رؤية ليلية"},"מצלמה אחורית Sony AHD 2MP עם 18 נורות LED לראיית לילה (עד 20 מטר), עדשה רחבה וטכנולוגיות D-WDR ו-Smart IR לתמונה חדה.":{"en":"A rear Sony AHD 2MP camera with 18 LED night-vision lights (up to 20 m), a wide lens and D-WDR + Smart IR technologies for a sharp image.","ar":"كاميرا خلفية Sony AHD 2MP مع 18 مصباح LED للرؤية الليلية (حتى 20 متراً)، عدسة واسعة وتقنيتا D-WDR و Smart IR لصورة واضحة."}});
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
+Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
 const RTL_LANGS=['he','ar'];
 let LANG='he';
 function TR(s){ if(s==null)return s; if(LANG==='he')return s; const k=(''+s).trim(); const e=I18N[k]; const v=(e&&e[LANG]!=null&&e[LANG]!=='')?e[LANG]:null; return v==null?s:(''+s).replace(k,v); }
@@ -1012,7 +1014,18 @@ let tod='day', curView='free';
 let camOn={front:true,right:true,left:true,rear:true};
 let camPos={}, camDir={};
 let activeCamId='front';
-let truckSpeed=0, truckSpeedTarget=62, truckDist=0;
+let truckSpeed=0, truckSpeedTarget=0, truckDist=0;
+let _driving=false;
+function toggleDrive(){
+  _driving=!_driving;
+  truckSpeedTarget=_driving?62:0;
+  const btn=document.getElementById('driveBtn');
+  if(btn){
+    btn.textContent=_driving?('⏸ '+TR('עצור')):('🚦 '+TR('הפעל נסיעה'));
+    if(_driving){ btn.style.background='rgba(74,222,128,.22)'; btn.style.borderColor='#4ade80'; btn.style.color='#4ade80'; }
+    else { btn.style.background='rgba(74,222,128,.12)'; btn.style.borderColor='#4ade80'; btn.style.color='#4ade80'; }
+  }
+}
 let crashActive=false;
 // orbit
 let theta=0.7, phi=1.15, radius=20, autoRot=true;
@@ -1281,10 +1294,11 @@ function buildRoad(){
   const yellow=emissive('ym',1,0.8,0.13,0.3);
   [-13,13].forEach(x=>{const e=BABYLON.MeshBuilder.CreateBox('edge',{width:0.2,height:0.06,depth:600},scene);e.material=white;e.position.set(x,0.07,0);e.parent=root;});
   [-0.15,0.15].forEach(x=>{const c=BABYLON.MeshBuilder.CreateBox('ctr',{width:0.13,height:0.06,depth:600},scene);c.material=yellow;c.position.set(x,0.08,0);c.parent=root;});
+  const dashN=new BABYLON.TransformNode('dashScroll',scene); dashN.parent=root; window.__dashNode=dashN;
   [-6.5,6.5].forEach(x=>{
     for(let z=-280;z<=280;z+=14){
       const d=BABYLON.MeshBuilder.CreateBox('dash',{width:0.18,height:0.06,depth:7},scene);
-      d.material=white; d.position.set(x,0.08,z); d.parent=root;
+      d.material=white; d.position.set(x,0.08,z); d.parent=dashN;
     }
   });
 
@@ -2031,11 +2045,15 @@ function updateFrame(){
   const gps=document.getElementById('vGpsBadge');
   if(gps)gps.innerHTML=`GPS · ${(32.081+truckDist*0.0001).toFixed(4)}°N 34.780°E<br>${Math.round(truckSpeed)} km/h`;
 
-  // env cars
+  // road appears to move past the (stationary) truck while driving
+  const scroll=truckSpeed*0.012;
+  if(window.__dashNode){ let z=window.__dashNode.position.z-scroll; if(z<=-14)z+=14; window.__dashNode.position.z=z; }
+
+  // env cars — move with their own speed minus the road scroll (relative motion)
   envCars.forEach(c=>{
-    c.root.position.z+=c.spd;
-    if(c.spd>0&&c.root.position.z>140)c.root.position.z=-140;
-    if(c.spd<0&&c.root.position.z<-140)c.root.position.z=140;
+    c.root.position.z+=c.spd-scroll;
+    if(c.root.position.z>140)c.root.position.z=-140;
+    if(c.root.position.z<-140)c.root.position.z=140;
   });
 
   // orbit
@@ -2131,7 +2149,7 @@ function doCrash(){
     `<div style="color:#ff6060;font-weight:700;margin-bottom:3px">⚡ ${ts}</div>`+
     ['front','right','left','rear'].map(id=>{const on=camOn[id],l=LCAM()[id];return`<div style="color:${on?'#c8ccd4':'#444'}">${on?'📹':'⬜'} ${l}: ${on?'<span style="color:#4ade80">✓</span>':'<span style="color:#555">'+TR('כבוי')+'</span>'}</div>`;}).join('')+
     `<div style="margin-top:4px;color:${active.length>=3?'#4ade80':'#ff9944'};font-weight:700">${active.length}/4 · ${active.length>=3?('🛡 '+TR('ראיה מלאה')):('⚠ '+TR('כיסוי חלקי'))}</div>`;
-  setTimeout(()=>{crashActive=false;truckSpeedTarget=62;btn.classList.remove('active');btn.textContent=TR('💥 הפעל תאונה');},5000);
+  setTimeout(()=>{crashActive=false;truckSpeedTarget=_driving?62:0;btn.classList.remove('active');btn.textContent=TR('💥 הפעל תאונה');},5000);
 }
 
 // animate() kept for compatibility (Babylon uses runRenderLoop)
@@ -2297,7 +2315,7 @@ function doCrash(){
     `<div style="color:#ff6060;font-weight:700;margin-bottom:3px">⚡ ${ts}</div>`+
     ['front','right','left','rear'].map(id=>{const on=camOn[id],l=LCAM()[id];return`<div style="color:${on?'#c8ccd4':'#444'}">${on?'📹':'⬜'} ${l}: ${on?'<span style="color:#4ade80">✓</span>':'<span style="color:#555">'+TR('כבוי')+'</span>'}</div>`;}).join('')+
     `<div style="margin-top:4px;color:${active.length>=3?'#4ade80':'#ff9944'};font-weight:700">${active.length}/4 · ${active.length>=3?('🛡 '+TR('ראיה מלאה')):('⚠ '+TR('כיסוי חלקי'))}</div>`;
-  setTimeout(()=>{crashActive=false;truckSpeedTarget=62;btn.classList.remove('active');btn.textContent=TR('💥 הפעל תאונה');},5000);
+  setTimeout(()=>{crashActive=false;truckSpeedTarget=_driving?62:0;btn.classList.remove('active');btn.textContent=TR('💥 הפעל תאונה');},5000);
 }
 
 // ─── MISC ─────────────────────────────────────────────────────────────
