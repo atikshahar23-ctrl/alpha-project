@@ -2897,7 +2897,6 @@ function buildDashboard(){
 }
 
 function drawBlips(){
-  ensureFleetMap();
   if(LMAP){ drawFleetMarkers(); return; }   // satellite map active → markers, skip SVG
   const g=document.getElementById('blips');
   if(!g)return;
@@ -3028,8 +3027,9 @@ window.addEventListener('load',()=>{
   // Only animate the fleet (12 trucks + 4 canvas feeds) while the dashboard is on-screen.
   const dashEl=document.getElementById('dashboard');
   if(dashEl && 'IntersectionObserver' in window){
-    new IntersectionObserver(es=>{ _dashVis=es[0].isIntersecting; },{threshold:0.04}).observe(dashEl);
-  } else { _dashVis=true; }
+    // also lazy-load the satellite map only when the dashboard nears the viewport
+    new IntersectionObserver(es=>{ const vis=es[0].isIntersecting; _dashVis=vis; if(vis) ensureFleetMap(); },{rootMargin:'300px 0px',threshold:0}).observe(dashEl);
+  } else { _dashVis=true; ensureFleetMap(); }
   setInterval(animateDash, 80);
 });
 </script>
