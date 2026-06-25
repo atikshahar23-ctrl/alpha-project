@@ -2808,21 +2808,24 @@ function updateSel(){
     : LANG==='ar'
     ? `مرحباً Heavy Guard! 👋\nالتهيئة: ${TR(curBody.name)} (${curBrand.name})\nالكاميرات:\n${cams}\nأرغب بالحصول على عرض سعر 🚛`
     : `היי Heavy Guard! 👋\nתצורה: ${curBody.name} (${curBrand.name})\nמצלמות:\n${cams}\nאשמח להצעת מחיר 🚛`;
-  const ref=cfgRef();
-  const link=shareLink();
-  const tail = LANG==='en' ? `\nQuote ref: ${ref}\nMy build: ${link}` : LANG==='ar' ? `\nمرجع العرض: ${ref}\nتهيئتي: ${link}` : `\nמס' הצעה: ${ref}\nהתצורה שלי: ${link}`;
+  let tail='';
+  try{ const ref=cfgRef(), link=shareLink();
+    tail = LANG==='en' ? `\nQuote ref: ${ref}\nMy build: ${link}` : LANG==='ar' ? `\nمرجع العرض: ${ref}\nتهيئتي: ${link}` : `\nמס' הצעה: ${ref}\nהתצורה שלי: ${link}`;
+  }catch(e){}
   const href=`https://wa.me/${WA}?text=${encodeURIComponent(msg+tail)}`;
-  document.getElementById('waBtn').href=href;document.getElementById('waBtn2').href=href;
+  const b1=document.getElementById('waBtn'), b2=document.getElementById('waBtn2');
+  if(b1)b1.href=href; if(b2)b2.href=href;
 }
 
 // ── Shareable configuration links (turns a build into a sendable URL + quote ref) ──
 function cfgFromState(){
   const r2=n=>Math.round(n*100)/100;
   const cams={};
-  ['front','right','left','rear'].forEach(id=>{ cams[id]={on:!!camOn[id],
-    p:[r2(camPos[id].x),r2(camPos[id].y),r2(camPos[id].z)],
-    d:[r2(camDir[id].x),r2(camDir[id].y),r2(camDir[id].z)]}; });
-  return {b:curBrand.id, y:curBody.id, m:_mirrorActive, c:cams};
+  ['front','right','left','rear'].forEach(id=>{ const p=camPos[id], d=camDir[id];
+    cams[id]={on:!!camOn[id],
+      p:p?[r2(p.x),r2(p.y),r2(p.z)]:null,
+      d:d?[r2(d.x),r2(d.y),r2(d.z)]:null}; });
+  return {b:(curBrand&&curBrand.id)||'volvo', y:(curBody&&curBody.id)||'box', m:!!_mirrorActive, c:cams};
 }
 function encodeCfg(o){ try{ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }catch(e){ return ''; } }
 function decodeCfg(s){ try{ s=s.replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; } }
