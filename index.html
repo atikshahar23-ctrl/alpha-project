@@ -790,7 +790,10 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     </div>
     <div style="margin-top:14px;text-align:center">
       <div style="font-size:11px;color:var(--muted);margin-bottom:10px" id="selLabel">ארגז · <b style="color:var(--gold)">Scania</b> · 4 מצלמות פעילות</div>
-      <a class="wa-btn" id="waBtn" href="#" target="_blank" style="font-size:13px;padding:12px 24px">💬 שלח את הבחירה שלי בוואטסאפ</a>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="wa-btn" id="waBtn" href="#" target="_blank" style="font-size:13px;padding:12px 24px">💬 שלח את הבחירה שלי בוואטסאפ</a>
+        <button class="btn-out" id="shareBtn" onclick="shareConfig()" style="font-size:13px;padding:12px 20px">🔗 שתף תצורה</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1055,7 +1058,10 @@ Object.assign(I18N,{
 "גיבוי בענן":{"en":"Cloud backup","ar":"نسخ احتياطي سحابي"},
 "עד 4 חודשים אחורה":{"en":"Up to 4 months back","ar":"حتى 4 أشهر للوراء"},
 "GPS חי":{"en":"Live GPS","ar":"GPS مباشر"},
-"ניהול צי בזמן אמת":{"en":"Real-time fleet management","ar":"إدارة الأسطول في الوقت الفعلي"}
+"ניהול צי בזמן אמת":{"en":"Real-time fleet management","ar":"إدارة الأسطول في الوقت الفعلي"},
+"🔗 שתף תצורה":{"en":"🔗 Share build","ar":"🔗 مشاركة التهيئة"},
+"הקישור הועתק ✓":{"en":"Link copied ✓","ar":"تم نسخ الرابط ✓"},
+"העתק את הקישור:":{"en":"Copy the link:","ar":"انسخ الرابط:"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
@@ -2802,9 +2808,56 @@ function updateSel(){
     : LANG==='ar'
     ? `مرحباً Heavy Guard! 👋\nالتهيئة: ${TR(curBody.name)} (${curBrand.name})\nالكاميرات:\n${cams}\nأرغب بالحصول على عرض سعر 🚛`
     : `היי Heavy Guard! 👋\nתצורה: ${curBody.name} (${curBrand.name})\nמצלמות:\n${cams}\nאשמח להצעת מחיר 🚛`;
-  const href=`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+  const ref=cfgRef();
+  const link=shareLink();
+  const tail = LANG==='en' ? `\nQuote ref: ${ref}\nMy build: ${link}` : LANG==='ar' ? `\nمرجع العرض: ${ref}\nتهيئتي: ${link}` : `\nמס' הצעה: ${ref}\nהתצורה שלי: ${link}`;
+  const href=`https://wa.me/${WA}?text=${encodeURIComponent(msg+tail)}`;
   document.getElementById('waBtn').href=href;document.getElementById('waBtn2').href=href;
 }
+
+// ── Shareable configuration links (turns a build into a sendable URL + quote ref) ──
+function cfgFromState(){
+  const r2=n=>Math.round(n*100)/100;
+  const cams={};
+  ['front','right','left','rear'].forEach(id=>{ cams[id]={on:!!camOn[id],
+    p:[r2(camPos[id].x),r2(camPos[id].y),r2(camPos[id].z)],
+    d:[r2(camDir[id].x),r2(camDir[id].y),r2(camDir[id].z)]}; });
+  return {b:curBrand.id, y:curBody.id, m:_mirrorActive, c:cams};
+}
+function encodeCfg(o){ try{ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }catch(e){ return ''; } }
+function decodeCfg(s){ try{ s=s.replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; } }
+function shareLink(){ return location.origin+location.pathname+'#cfg='+encodeCfg(cfgFromState()); }
+function cfgRef(){ // short, stable-ish reference from the build
+  const s=encodeCfg(cfgFromState()); let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  return 'HG-'+('000000'+(h%1000000)).slice(-6);
+}
+function shareConfig(){
+  const link=shareLink();
+  const done=()=>{ try{ if(typeof toastMsg==='function') toastMsg(TR('הקישור הועתק ✓')); }catch(e){} };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(done,()=>prompt(TR('העתק את הקישור:'),link)); }
+  else { prompt(TR('העתק את הקישור:'),link); }
+  try{ history.replaceState(null,'','#cfg='+encodeCfg(cfgFromState())); }catch(e){}
+}
+let _pendingCfg=null;
+// set brand/body/mirror BEFORE the sim initialises (so the right model loads once)
+function applyCfgPre(o){
+  if(!o) return;
+  const br=BRANDS.find(x=>x.id===o.b), bo=BODIES.find(x=>x.id===o.y);
+  if(br) curBrand=br; if(bo) curBody=bo;
+  if(typeof o.m==='boolean') _mirrorActive=o.m;
+}
+// apply the camera state AFTER the sim is up
+function applyCfgCams(o){
+  if(!o||!o.c) return;
+  ['front','right','left','rear'].forEach(id=>{ const c=o.c[id]; if(!c)return;
+    if(typeof c.on==='boolean') camOn[id]=c.on;
+    if(c.p) camPos[id]=V3(c.p[0],c.p[1],c.p[2]);
+    if(c.d) camDir[id]=V3(c.d[0],c.d[1],c.d[2]).normalize();
+    const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); } });
+  try{ buildCamMarkers(); rebuildCamRows&&rebuildCamRows(); updateSel(); }catch(e){}
+}
+// read a shared build from the URL on first load
+(function(){ const m=(location.hash||'').match(/cfg=([^&]+)/); if(m){ _pendingCfg=decodeCfg(m[1]); } })();
 
 // ─── ROI ──────────────────────────────────────────────────────────────
 function doCalc(){
@@ -3036,10 +3089,12 @@ function startSimulator(){
   if(simStarted)return;
   simStarted=true;
   loadBabylon().then(()=>{
+    applyCfgPre(_pendingCfg);                         // restore a shared build (brand/body) before init
     init3D();
     buildPanels();
     animate();
     try{ applyTruckModel(curBrand.id); }catch(e){}   // load the real GLB model for the current brand
+    if(_pendingCfg){ applyCfgCams(_pendingCfg); _pendingCfg=null; }   // restore shared camera aim
     // resize a few times as layout settles / section becomes visible
     setTimeout(onResize,60);
     setTimeout(onResize,300);
@@ -3058,6 +3113,8 @@ window.addEventListener('load',()=>{
   new IntersectionObserver((es)=>{
     es.forEach(e=>{ if(e.isIntersecting){ startSimulator(); if(simStarted) onResize(); } });
   },{rootMargin:'600px 0px'}).observe(simEl);
+  // shared build link → jump straight to the simulator and load that exact config
+  if(_pendingCfg){ startSimulator(); setTimeout(()=>{ try{ simEl.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){} },400); }
 
   // Dashboard
   buildDashboard();
