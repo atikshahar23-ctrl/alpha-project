@@ -963,6 +963,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     <div class="frow"><label>קטגוריה</label>
       <select id="fFleet"><option>נהג עצמאי · משאית אחת</option><option>2–5 משאיות</option><option>6–15 משאיות</option><option>16+ משאיות</option><option>ציוד כבד / אחר</option></select></div>
     <div class="ferr" id="fErr">נא למלא שם וטלפון</div>
+    <div id="fOk" style="display:none;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.4);color:#86efac;border-radius:10px;padding:13px 14px;margin-bottom:10px;font-size:13px;line-height:1.5">✅ תודה! פתחנו עבורך וואטסאפ עם הפרטים — שלח את ההודעה ונחזור אליך עם הצעת מחיר בהקדם.</div>
     <button class="btn-gold" style="width:100%;margin-top:6px" onclick="sendLead()">💬 שליחה בוואטסאפ</button>
   </div></div>
 </section>
@@ -1023,7 +1024,8 @@ Object.assign(I18N,{
 "מכוון ✓":{"en":"Aimed ✓","ar":"مضبوط ✓"},
 "קדמית · דרך":{"en":"Front · road","ar":"أمامية · الطريق"},
 "דברו איתנו בוואטסאפ":{"en":"Chat with us on WhatsApp","ar":"تحدّث معنا عبر واتساب"},
-"פותח וואטסאפ…":{"en":"Opening WhatsApp…","ar":"جارٍ فتح واتساب…"}
+"פותח וואטסאפ…":{"en":"Opening WhatsApp…","ar":"جارٍ فتح واتساب…"},
+"✅ תודה! פתחנו עבורך וואטסאפ עם הפרטים — שלח את ההודעה ונחזור אליך עם הצעת מחיר בהקדם.":{"en":"✅ Thank you! We've opened WhatsApp with your details — send the message and we'll get back to you with a quote shortly.","ar":"✅ شكراً لك! فتحنا واتساب مع تفاصيلك — أرسل الرسالة وسنعود إليك بعرض سعر قريباً."}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
@@ -1525,6 +1527,25 @@ function buildRoad(){
     const rail=BABYLON.MeshBuilder.CreateBox('rail',{width:0.1,height:0.34,depth:600},scene);
     rail.material=railMat; rail.position.set(x,0.7,0); rail.parent=root;
     for(let z=-150;z<=150;z+=6){ cyl(root,0.07,0.07,0.95,railMat,x,0.48,z); }
+  });
+
+  // roadside traffic signs (static, like the light poles) — speed-limit discs + blue boards
+  const signPole=pbr('signpole',0.55,0.57,0.60,0.5,0.5);
+  const signWhite=pbr('signw',0.93,0.94,0.96,0,0.4);
+  const signRed=pbr('signr',0.80,0.10,0.12,0,0.5);
+  const signBlue=pbr('signb',0.10,0.28,0.62,0,0.5);
+  [[-18,-90,'speed'],[18,42,'blue'],[-18,150,'speed'],[18,-32,'blue'],[18,118,'speed']].forEach(([x,z,kind])=>{
+    cyl(root,0.10,0.10,4.2,signPole,x,2.1,z);
+    if(kind==='speed'){
+      const d=BABYLON.MeshBuilder.CreateCylinder('signd',{diameter:1.4,height:0.07,tessellation:24},scene);
+      d.material=signWhite; d.rotation.x=Math.PI/2; d.position.set(x,4.2,z); d.parent=root;
+      const ring=BABYLON.MeshBuilder.CreateTorus('signring',{diameter:1.42,thickness:0.18,tessellation:24},scene);
+      ring.material=signRed; ring.rotation.x=Math.PI/2; ring.position.set(x,4.2,z); ring.parent=root;
+    } else {
+      box(root,1.8,1.1,0.08,signBlue,x,4.3,z);
+      box(root,1.5,0.18,0.10,signWhite,x,4.5,z);    // text strip hint
+      box(root,1.5,0.18,0.10,signWhite,x,4.1,z);
+    }
   });
 }
 
@@ -2767,6 +2788,7 @@ function sendLead(){
     ? `مرحباً Heavy Guard! 👋\nالاسم: ${n}\nالهاتف: ${p}\nالشاحنات: ${q||'—'}\nالفئة: ${TR(f)}\nيرجى إرسال التفاصيل 🚛`
     : `היי Heavy Guard! 👋\nשם: ${n}\nטלפון: ${p}\nמשאיות: ${q||'—'}\nקטגוריה: ${f}\nאשמח לפרטים 🚛`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+  const ok=document.getElementById('fOk'); if(ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
 }
 
 
