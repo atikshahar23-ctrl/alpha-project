@@ -1421,6 +1421,7 @@ function init3D(){
 function applyTOD(){
   lightsGroup.forEach(l=>l.dispose());
   lightsGroup=[];
+  window.__irLights=[];          // camera IR illuminators (night only) — cleared each TOD change
 
   if(tod==='day'){
     scene.clearColor=new BABYLON.Color4(0.62,0.80,0.93,1);
@@ -1457,7 +1458,21 @@ function applyTOD(){
     shadowGen=new BABYLON.ShadowGenerator(1024,moon);
     shadowGen.useBlurExponentialShadowMap=true;
     addStreetLamps();
+    addCamIR();                  // each camera lights its own field of view with IR
   }
+}
+
+// IR illuminators mounted on each camera (night vision) — they track the cameras live via updateFrame
+function addCamIR(){
+  if(!truckRoot) return;
+  ['front','right','left','rear'].forEach(id=>{
+    if(!camOn[id] || !camPos[id] || !camDir[id]) return;
+    const sp=new BABYLON.SpotLight('ir_'+id, camPos[id].clone(), camDir[id].clone(), 1.7, 8, scene);
+    sp.diffuse=new BABYLON.Color3(0.55,0.74,0.95); sp.specular=new BABYLON.Color3(0.3,0.4,0.5);
+    sp.intensity=2.6; sp.range=22; sp.parent=truckRoot;
+    lightsGroup.push(sp);
+    window.__irLights.push({id:id, light:sp});
+  });
 }
 
 function addStreetLamps(){
@@ -2516,6 +2531,12 @@ function updateFrame(){
   const clockEl=document.getElementById('simClock');
   if(clockEl){const t=(dtClock/1000)|0;clockEl.textContent=new Date(dtClock).toISOString().substr(11,8);}
 
+  // keep the IR illuminators aimed exactly where each camera looks
+  if(window.__irLights && window.__irLights.length){
+    window.__irLights.forEach(o=>{ const L=o.light; if(L && !L.isDisposed() && camPos[o.id] && camDir[o.id]){
+      L.position.copyFrom(camPos[o.id]); L.direction.copyFrom(camDir[o.id]); } });
+  }
+
   truckSpeed+=(truckSpeedTarget-truckSpeed)*0.025;
   truckDist+=truckSpeed*0.003;
   const gps=document.getElementById('vGpsBadge');
@@ -2579,11 +2600,17 @@ function drawFeeds(){
       if(!pixels) return;
       const rw=rtt.getSize().width, rh=rtt.getSize().height;
       const img=ctx.createImageData(rw,rh);
+      const night=(typeof tod!=='undefined' && tod==='night');
       for(let y=0;y<rh;y++){
         const sy=rh-1-y;                          // RTT is bottom-up; flip vertically
         for(let x=0;x<rw;x++){
           const si=(sy*rw+x)*4, di=(y*rw+x)*4;
-          img.data[di]=pixels[si];img.data[di+1]=pixels[si+1];img.data[di+2]=pixels[si+2];img.data[di+3]=255;
+          let r=pixels[si],g=pixels[si+1],b=pixels[si+2];
+          if(night){                              // IR night-vision look: brighten + green monochrome
+            let l=r*0.30+g*0.59+b*0.11; l=l*1.9+20; if(l>255)l=255;
+            r=l*0.22; g=l; b=l*0.30;
+          }
+          img.data[di]=r;img.data[di+1]=g;img.data[di+2]=b;img.data[di+3]=255;
         }
       }
       if(!rtt._tmp){rtt._tmp=document.createElement('canvas');rtt._tmp.width=rw;rtt._tmp.height=rh;}
