@@ -395,6 +395,15 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 .dash-map{position:relative;background:linear-gradient(135deg,#0a1018,#0d1622);overflow:hidden}
 .dash-map svg{width:100%;height:100%;display:block}
 .truck-blip{cursor:pointer}
+#fleetMap{position:absolute;inset:0;z-index:1;background:#0a1018}
+#fleetMap .leaflet-control-attribution{background:rgba(6,8,15,.7);color:#7c8493;font-size:9px}
+#fleetMap .leaflet-control-attribution a{color:#9aa1ad}
+#fleetMap .leaflet-bar a{background:#0d1622;color:#9aa1ad;border-color:rgba(255,255,255,.1)}
+#fleetMap .leaflet-bar a:hover{background:#15202e;color:#fff}
+.fm{position:relative;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid #04060a;box-shadow:0 2px 8px rgba(0,0,0,.6);cursor:pointer}
+.fm-driving{background:#4ade80}.fm-idle{background:#e8b53d}.fm-stopped{background:#9aa1ad}
+.fm-act{box-shadow:0 0 0 4px rgba(232,181,61,.35),0 2px 10px rgba(0,0,0,.7);border-color:var(--gold)}
+.fm-lbl{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:9px;font-weight:700;color:var(--gold);white-space:nowrap;text-shadow:0 1px 3px #000}
 .dash-side{border-right:1px solid rgba(255,255,255,.06);padding:16px;overflow-y:auto;max-height:420px}
 .dash-side::-webkit-scrollbar{width:4px}.dash-side::-webkit-scrollbar-thumb{background:rgba(232,181,61,.2);border-radius:2px}
 .dstat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -817,6 +826,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     </div>
     <div class="dash-body">
       <div class="dash-map" id="dashMap">
+        <div id="fleetMap" style="display:none"></div>
         <svg viewBox="0 0 600 420" id="dashSvg">
           <!-- map grid -->
           <defs>
@@ -2543,16 +2553,67 @@ new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!counted){count
 
 // ─── FLEET DASHBOARD ──────────────────────────────────────────────────
 const FLEET=[
-  {id:'HG-01',name:'משאית 01 · ארגז',driver:'דוד',status:'driving',x:180,y:160,spd:64,body:'📦'},
-  {id:'HG-02',name:'משאית 02 · מיכלית',driver:'רונן',status:'driving',x:340,y:240,spd:52,body:'🛢'},
-  {id:'HG-03',name:'משאית 03 · קיפר',driver:'אבי',status:'idle',x:300,y:210,spd:0,body:'🏗'},
-  {id:'HG-04',name:'משאית 04 · ראש-סוס',driver:'משה',status:'driving',x:420,y:120,spd:78,body:'🚛'},
-  {id:'HG-05',name:'משאית 05 · מנוף',driver:'יוסי',status:'stopped',x:480,y:340,spd:0,body:'🏗'},
-  {id:'HG-06',name:'משאית 06 · משאבת בטון',driver:'עמי',status:'driving',x:240,y:300,spd:43,body:'🚧'},
+  {id:'HG-01',name:'משאית 01 · ארגז',driver:'דוד',status:'driving',x:180,y:160,spd:64,body:'📦',lat:32.075,lng:34.801},   // איילון ת"א
+  {id:'HG-02',name:'משאית 02 · מיכלית',driver:'רונן',status:'driving',x:340,y:240,spd:52,body:'🛢',lat:31.804,lng:34.650}, // נמל אשדוד
+  {id:'HG-03',name:'משאית 03 · קיפר',driver:'אבי',status:'idle',x:300,y:210,spd:0,body:'🏗',lat:31.899,lng:35.010},      // כביש 1 / מודיעין
+  {id:'HG-04',name:'משאית 04 · ראש-סוס',driver:'משה',status:'driving',x:420,y:120,spd:78,body:'🚛',lat:32.434,lng:34.949},// כביש 6 חדרה
+  {id:'HG-05',name:'משאית 05 · מנוף',driver:'יוסי',status:'stopped',x:480,y:340,spd:0,body:'🏗',lat:31.790,lng:35.197},   // ירושלים
+  {id:'HG-06',name:'משאית 06 · משאבת בטון',driver:'עמי',status:'driving',x:240,y:300,spd:43,body:'🚧',lat:31.252,lng:34.791}, // באר שבע
 ];
 let dashActiveId=null;
 const STATUS_TXT={driving:'בנסיעה',idle:'בהמתנה',stopped:'חונה'};
 const STATUS_COL={driving:'#4ade80',idle:'#e8b53d',stopped:'#9aa1ad'};
+
+// ── Real satellite map (Leaflet + Esri World Imagery, no API key) ──
+let LMAP=null, LMARKERS={}, _leafletTried=false;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  return new Promise((resolve,reject)=>{
+    const css=document.createElement('link'); css.rel='stylesheet';
+    css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    css.onerror=()=>{ css.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'; };
+    document.head.appendChild(css);
+    const s=document.createElement('script');
+    s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    s.onload=()=>resolve();
+    s.onerror=()=>{ const s2=document.createElement('script');
+      s2.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+      s2.onload=()=>resolve(); s2.onerror=()=>reject(new Error('leaflet')); document.head.appendChild(s2); };
+    document.head.appendChild(s);
+  });
+}
+function ensureFleetMap(){
+  if(_leafletTried) return; _leafletTried=true;
+  loadLeaflet().then(initFleetMap).catch(()=>{ /* keep SVG fallback */ });
+}
+function initFleetMap(){
+  const el=document.getElementById('fleetMap'); if(!el||!window.L||LMAP) return;
+  el.style.display='block';
+  const svg=document.getElementById('dashSvg'); if(svg) svg.style.display='none';
+  LMAP=L.map(el,{center:[31.85,34.92],zoom:8,zoomControl:true,scrollWheelZoom:false,
+    attributionControl:true,minZoom:7,maxZoom:17});
+  LMAP.setMaxBounds([[29.3,33.9],[33.5,36.1]]);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {attribution:'Tiles © Esri',maxZoom:17}).addTo(LMAP);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    {maxZoom:17,opacity:0.9}).addTo(LMAP);
+  setTimeout(()=>{ try{LMAP.invalidateSize();}catch(e){} },200);
+  drawFleetMarkers();
+}
+function drawFleetMarkers(){
+  if(!LMAP||!window.L) return;
+  FLEET.forEach(t=>{
+    const act=t.id===dashActiveId;
+    const html=`<div class="fm fm-${t.status}${act?' fm-act':''}">${t.body}${act?`<span class="fm-lbl">${t.id}</span>`:''}</div>`;
+    const icon=L.divIcon({className:'',html,iconSize:[30,30],iconAnchor:[15,15]});
+    if(LMARKERS[t.id]){ LMARKERS[t.id].setLatLng([t.lat,t.lng]).setIcon(icon); }
+    else{
+      const mk=L.marker([t.lat,t.lng],{icon}).addTo(LMAP);
+      mk.on('click',()=>{ dashActiveId=t.id; buildDashboard(); });
+      LMARKERS[t.id]=mk;
+    }
+  });
+}
 
 function buildDashboard(){
   // fleet list
@@ -2572,6 +2633,8 @@ function buildDashboard(){
 }
 
 function drawBlips(){
+  ensureFleetMap();
+  if(LMAP){ drawFleetMarkers(); return; }   // satellite map active → markers, skip SVG
   const g=document.getElementById('blips');
   if(!g)return;
   g.innerHTML='';
@@ -2601,14 +2664,23 @@ function animateDash(){
   let moved=false;
   FLEET.forEach(t=>{
     if(t.status==='driving'){
+      // SVG fallback coords
       t.x+=Math.cos(t.id.charCodeAt(4))*0.25+0.15;
       t.y+=Math.sin(t.id.charCodeAt(4))*0.2;
       if(t.x>580)t.x=20; if(t.x<20)t.x=580;
       if(t.y>400)t.y=20; if(t.y<20)t.y=400;
+      // real map: drift gently along a per-truck heading, kept within Israel
+      if(LMAP){
+        const seed=t.id.charCodeAt(4);
+        t.lat+=Math.cos(seed)*0.0009;
+        t.lng+=Math.sin(seed)*0.0009;
+        if(t.lat>33.2||t.lat<29.6){ t.lat=Math.min(33.2,Math.max(29.6,t.lat)); }
+        if(t.lng>35.9||t.lng<34.2){ t.lng=Math.min(35.9,Math.max(34.2,t.lng)); }
+      }
       moved=true;
     }
   });
-  if(moved)drawBlips();
+  if(moved){ if(LMAP) drawFleetMarkers(); else drawBlips(); }
 }
 
 
