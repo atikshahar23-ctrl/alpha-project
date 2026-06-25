@@ -1478,7 +1478,7 @@ function buildInterior(g, M){
 // rotY / scale / yOff are per-model tuning knobs (models come from different authors).
 const TRUCK_MODELS={
   volvo:{file:'volvo.glb',  rotY:0},
-  scania:{file:'scania.glb',rotZ:Math.PI/2},
+  scania:{file:'scania.glb',rotX:-Math.PI/2},
   daf:{file:'daf.glb',      rotY:0},
   merc:{file:'mercedes.glb',rotY:0},
   man:{file:'man.glb',      rotY:0},
@@ -1515,24 +1515,25 @@ function buildTrailer(bodyId){
   if(bodyId==='tractor') return;            // bobtail — no trailer
   const {halfW,topY,halfD}=D;
   const T=new BABYLON.TransformNode('trailer',scene); T.parent=truckRoot;
-  const w=Math.min(halfW*1.9, 2.55);
-  const deckY=topY*0.30;
-  const len=halfD*1.9;
-  const cz=-halfD*0.15 - len/2;             // sits behind the cab, extends rearward
-  const grey=pbr('trgrey',0.80,0.82,0.86,0.35,0.5);
+  const w=halfW*1.8;                         // trailer width ~ truck width
+  const deckY=topY*0.34;                     // floor sits on the chassis
+  const len=halfD*1.7;
+  const frontZ=-halfD*0.30;                  // starts behind the cab
+  const cz=frontZ - len/2;                   // centre, extends rearward
+  const grey=pbr('trgrey',0.82,0.84,0.88,0.35,0.5);
   const dark=pbr('trdark',0.10,0.11,0.13,0.3,0.7);
   const tyre=pbr('trtyre',0.04,0.04,0.05,0,0.92);
-  const tank=pbr('trtank',0.84,0.87,0.92,0.9,0.16);
-  box(T, w, 0.20, len, dark, 0, deckY, cz);                 // chassis/deck
-  [-1,1].forEach(sx=>[0,1].forEach(i=>cyl(T,0.95,0.95,0.30,tyre, sx*(w/2-0.05), deckY-0.42, cz-len/2+1.1+i*1.15, 0,0,Math.PI/2)));
+  const tank=pbr('trtank',0.85,0.88,0.93,0.92,0.15);
+  box(T, w*0.55, 0.18, len, dark, 0, deckY-0.05, cz);       // chassis beam
+  [-1,1].forEach(sx=>[0,1].forEach(i=>cyl(T,0.95,0.95,0.28,tyre, sx*w*0.5, deckY-0.5, cz-len*0.5+0.9+i*1.1, 0,0,Math.PI/2))); // rear bogie
   if(bodyId==='tanker'){
-    cyl(T, topY*0.8, topY*0.8, len*0.9, tank, 0, deckY+topY*0.45, cz, 0,0,Math.PI/2);
+    const r=topY*0.42; cyl(T, r*2, r*2, len*0.92, tank, 0, deckY+r+0.1, cz, 0,0,Math.PI/2);
   } else if(bodyId==='flatbed'){
-    box(T, w, 0.14, len, grey, 0, deckY+0.18, cz);
+    box(T, w, 0.16, len, grey, 0, deckY+0.18, cz);
   } else if(bodyId==='tipper'){
-    const h=topY*0.55; box(T, w, h, len*0.9, grey, 0, deckY+h/2+0.12, cz+len*0.03, -0.04,0,0);
-  } else {                                                   // box / hooklift / default
-    const h=topY*0.95; box(T, w, h, len, grey, 0, deckY+h/2+0.12, cz);
+    const h=topY*0.50; box(T, w, h, len*0.85, grey, 0, deckY+h*0.5+0.12, cz);
+  } else {                                                   // box / reefer / hooklift / default
+    const h=topY*0.72; box(T, w, h, len, grey, 0, deckY+h*0.5+0.12, cz);
   }
   trailerNode=T;
 }
