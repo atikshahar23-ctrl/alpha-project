@@ -167,6 +167,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .ctr .n{font-family:'Orbitron';font-weight:900;font-size:clamp(28px,4vw,44px);background:linear-gradient(120deg,var(--gold),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 .ctr .l{font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:3px}
 
+/* ── REAL-DATA STAT STRIP ── */
+.statstrip{background:linear-gradient(180deg,rgba(178,34,34,.10),rgba(6,8,15,.5));border-top:1px solid rgba(232,181,61,.18);border-bottom:1px solid rgba(232,181,61,.18);padding:42px 0}
+.statstrip .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:34px 56px}
+.statfig{text-align:center;flex:0 0 auto}
+.statfig .sn{font-family:'Orbitron';font-weight:900;font-size:clamp(40px,7vw,68px);line-height:1;background:linear-gradient(120deg,#ff5a4d,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.statfig .sl{font-size:13px;color:var(--white);opacity:.92;margin-top:8px;max-width:230px;line-height:1.5}
+.stattext{max-width:340px;text-align:start}
+.stattext h3{font-family:'Orbitron';font-size:clamp(18px,2.6vw,24px);font-weight:900;color:var(--white);line-height:1.25;margin:0}
+.stattext h3 .gold{color:var(--gold)}
+.stattext .src{font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.3px}
+@media(max-width:640px){.statstrip .wrap{gap:24px}.stattext{text-align:center;max-width:100%}}
+
 /* ── SECTIONS ── */
 .sec{padding:100px 0}
 .eyebrow{font-family:'Orbitron';color:var(--gold);letter-spacing:4px;font-size:11px;margin-bottom:12px;font-weight:700}
@@ -459,6 +471,24 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
       <div class="ctr"><div class="n" data-t="24" data-s="/7">0</div><div class="l">תיעוד רציף</div></div>
       <div class="ctr"><div class="n" data-t="100" data-s="%">0</div><div class="l">ראיה קבילה</div></div>
       <div class="ctr"><div class="n" data-t="0" data-p="₪">0</div><div class="l">השתתפות כשמזוכים</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL-DATA STAT STRIP -->
+<section class="statstrip">
+  <div class="wrap">
+    <div class="stattext">
+      <h3>רכב כבד מעורב בתאונות הקטלניות <span class="gold">פי 6.3</span> מחלקו בכביש.</h3>
+      <div class="src">מקור: הרשות הלאומית לבטיחות בדרכים — סיכום שנת 2024</div>
+    </div>
+    <div class="statfig">
+      <div class="sn">5.0%</div>
+      <div class="sl">מתאונות הדרכים הקטלניות בישראל מעורב בהן רכב כבד (16 טון ומעלה)</div>
+    </div>
+    <div class="statfig">
+      <div class="sn">×6.3</div>
+      <div class="sl">מעבר לחלקו של רכב כבד בצי הרכב — המשמעות: כל שנייה מתועדת חשובה</div>
     </div>
   </div>
 </section>
@@ -901,6 +931,7 @@ Object.assign(I18N,{"✋ הזז":{"en":"✋ Move","ar":"✋ تحريك"}});
 Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night vision","ar":"خلفية · رؤية ليلية"},"מצלמה אחורית Sony AHD 2MP עם 18 נורות LED לראיית לילה (עד 20 מטר), עדשה רחבה וטכנולוגיות D-WDR ו-Smart IR לתמונה חדה.":{"en":"A rear Sony AHD 2MP camera with 18 LED night-vision lights (up to 20 m), a wide lens and D-WDR + Smart IR technologies for a sharp image.","ar":"كاميرا خلفية Sony AHD 2MP مع 18 مصباح LED للرؤية الليلية (حتى 20 متراً)، عدسة واسعة وتقنيتا D-WDR و Smart IR لصورة واضحة."}});
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
 Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
+Object.assign(I18N,{"רכב כבד מעורב בתאונות הקטלניות":{"en":"Heavy vehicles are involved in fatal accidents","ar":"تشترك المركبات الثقيلة في الحوادث المميتة"},"פי 6.3":{"en":"6.3× more","ar":"بمعدّل 6.3 أضعاف"},"מחלקו בכביש.":{"en":"than their share on the road.","ar":"من حصّتها على الطريق."},"מקור: הרשות הלאומית לבטיחות בדרכים — סיכום שנת 2024":{"en":"Source: Israel's National Road Safety Authority — 2024 annual summary","ar":"المصدر: الهيئة الوطنية للسلامة المرورية في إسرائيل — ملخّص عام 2024"},"מתאונות הדרכים הקטלניות בישראל מעורב בהן רכב כבד (16 טון ומעלה)":{"en":"of fatal road accidents in Israel involve a heavy vehicle (16 tons and over)","ar":"من حوادث الطرق المميتة في إسرائيل تشترك فيها مركبة ثقيلة (16 طناً فأكثر)"},"מעבר לחלקו של רכב כבד בצי הרכב — המשמעות: כל שנייה מתועדת חשובה":{"en":"beyond the share of heavy vehicles in the fleet — meaning: every recorded second matters","ar":"أكثر من حصّة المركبات الثقيلة في الأسطول — أي أن كل ثانية موثّقة لها قيمة"}});
 const RTL_LANGS=['he','ar'];
 let LANG='he';
 function TR(s){ if(s==null)return s; if(LANG==='he')return s; const k=(''+s).trim(); const e=I18N[k]; const v=(e&&e[LANG]!=null&&e[LANG]!=='')?e[LANG]:null; return v==null?s:(''+s).replace(k,v); }
