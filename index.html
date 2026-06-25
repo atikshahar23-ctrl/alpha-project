@@ -687,8 +687,8 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
         <!-- feeds -->
         <div class="feeds-bar">
           <div class="fcell"><canvas id="ff_front"></canvas><div class="flbl"><span class="fdot"></span>קדמית</div></div>
-          <div class="fcell"><canvas id="ff_right"></canvas><div class="flbl"><span class="fdot"></span>ימין</div></div>
           <div class="fcell"><canvas id="ff_left"></canvas> <div class="flbl"><span class="fdot"></span>שמאל</div></div>
+          <div class="fcell"><canvas id="ff_right"></canvas><div class="flbl"><span class="fdot"></span>ימין</div></div>
           <div class="fcell"><canvas id="ff_rear"></canvas>  <div class="flbl"><span class="fdot"></span>אחורית</div></div>
         </div>
       </div>
@@ -1563,7 +1563,7 @@ function buildInterior(g, M){
 // rotY / scale / yOff are per-model tuning knobs (models come from different authors).
 const TRUCK_MODELS={
   volvo:{file:'volvo.glb',  rotY:0},
-  scania:{file:'scania.glb',rotZ:-Math.PI/2},
+  scania:{file:'scania.glb',rotY:Math.PI},
   daf:{file:'daf.glb',      rotY:0},
   merc:{file:'mercedes.glb',rotY:0},
   man:{file:'man.glb',      rotY:0},
