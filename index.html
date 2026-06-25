@@ -1799,6 +1799,7 @@ function buildTrailer(bodyId){
       box(T, w*0.5, topY*0.5, 0.5, steel, 0, deckY+topY*0.2, frontZ+0.0);         // gooseneck neck
       [-1,1].forEach(sx=>box(T, w*0.44, 0.10, 1.7, steel, sx*w*0.26, lowY+0.04, rearZ-0.8, DEG(20),0,0)); // twin rear ramps
       [-1,1].forEach(sx=>box(T,0.05,0.18,len*0.58,greyD, sx*w*0.5, lowY+0.22, cz+0.02)); // side rails
+      loadCargoGLB(T,'excavator.glb', cz+0.1, lowY+0.28, len*0.5, null, true);   // real excavator as machinery cargo
       break;
     }
     case'container':{                                                            // מכולה 40 רגל — real GLB container on a flatbed semi
@@ -1816,15 +1817,16 @@ function buildTrailer(bodyId){
   }
   trailerNode=T;
 }
-// Load the real 40ft container GLB and seat it on the flatbed (length along Z).
-function loadContainerBody(parent, cz, baseY, targetLen){
+// Load a real cargo GLB and seat it on the deck (length normalised along Z).
+// keepMat=true keeps the model's own materials (e.g. excavator); else applies col.
+function loadCargoGLB(parent, file, cz, baseY, targetLen, col, keepMat){
   if(!window.BABYLON||!BABYLON.SceneLoader) return;
   const tok=_containerToken;
-  BABYLON.SceneLoader.ImportMeshAsync(null,'assets/models/','container40.glb',scene).then(res=>{
+  BABYLON.SceneLoader.ImportMeshAsync(null,'assets/models/',file,scene).then(res=>{
     if(tok!==_containerToken || !parent || parent.isDisposed()){ res.meshes.forEach(m=>m.dispose&&m.dispose()); return; }
-    const wrap=new BABYLON.TransformNode('contWrap',scene);
-    const cmat=pbr('contmat',0.66,0.42,0.16,0.35,0.55);
-    res.meshes.forEach(m=>{ if(!m.parent) m.parent=wrap; if(m.getBoundingInfo) m.material=cmat; });
+    const wrap=new BABYLON.TransformNode('cargoWrap',scene);
+    const mat=col?pbr('cargo_'+file, col[0],col[1],col[2],0.35,0.55):null;
+    res.meshes.forEach(m=>{ if(!m.parent) m.parent=wrap; if(mat && !keepMat && m.getBoundingInfo) m.material=mat; });
     wrap.computeWorldMatrix(true);
     let mn=null,mx=null;
     res.meshes.forEach(m=>{ if(!m.getBoundingInfo)return; try{m.computeWorldMatrix(true);}catch(e){return;}
@@ -1837,6 +1839,9 @@ function loadContainerBody(parent, cz, baseY, targetLen){
     }
     wrap.parent=parent;
   }).catch(()=>{});
+}
+function loadContainerBody(parent, cz, baseY, targetLen){
+  loadCargoGLB(parent,'container40.glb',cz,baseY,targetLen,[0.66,0.42,0.16],false);
 }
 function applyTruckModel(brandId){
   if(appliedBrand===brandId) return;          // already applied this brand
