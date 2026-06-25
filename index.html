@@ -684,6 +684,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
           <button class="stbtn"     id="bBird"   onclick="setView('bird')">מלמעלה</button>
           <button class="stbtn"     id="bChase"  onclick="setView('chase')">מאחור</button>
           <button class="stbtn"     id="driveBtn" onclick="toggleDrive()" style="background:rgba(74,222,128,.12);border-color:#4ade80;color:#4ade80">🚦 הפעל נסיעה</button>
+          <button class="stbtn"     id="saveBtnTop" onclick="saveCamSetup()" style="background:rgba(232,181,61,.16);border-color:var(--gold);color:var(--gold);font-weight:700">💾 שמור מיקומים</button>
           <div style="width:1px;height:16px;background:rgba(255,255,255,.1);margin:0 4px"></div>
           <button class="stbtn"     id="bNight" onclick="setTOD('night')">🌙</button>
           <button class="stbtn"     id="bDusk"  onclick="setTOD('dusk')">🌅</button>
@@ -958,7 +959,7 @@ Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night v
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
 Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
 Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّاطة الخرسانة"},"רמסע":{"en":"Lowloader","ar":"ناقلة منخفضة"}});
-Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"}});
+Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 שמור מיקומים":{"en":"💾 Save positions","ar":"💾 حفظ المواضع"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"},"נטענו מיקומים שמורים":{"en":"Saved positions loaded","ar":"تم تحميل المواضع المحفوظة"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
@@ -1639,122 +1640,167 @@ function buildTrailer(bodyId){
   if(bodyId==='tractor') return;            // bobtail — no trailer
   const {halfW,topY,halfD}=D;
   const T=new BABYLON.TransformNode('trailer',scene); T.parent=truckRoot;
-  const w=halfW*1.7;                         // body width ~ truck width
+  const w=halfW*1.74;                        // body width ~ truck width
   const deckY=topY*0.34;                     // floor sits on the chassis
-  const len=halfD*1.75;
-  const frontZ=-halfD*0.26;                  // starts just behind the cab
+  const len=halfD*1.78;
+  const frontZ=-halfD*0.24;                  // starts just behind the cab
   const cz=frontZ - len/2;                   // body centre, extends rearward
   const rearZ=cz-len/2;                       // rear-most edge
-  const grey =pbr('trgrey',0.80,0.82,0.86,0.35,0.5);
-  const greyD=pbr('trgryd',0.40,0.43,0.48,0.45,0.5);
-  const dark =pbr('trdark',0.10,0.11,0.13,0.30,0.7);
-  const steel=pbr('trsteel',0.55,0.58,0.63,0.85,0.30);
+  const grey =pbr('trgrey',0.82,0.84,0.88,0.30,0.45);
+  const greyD=pbr('trgryd',0.34,0.37,0.42,0.45,0.5);
+  const dark =pbr('trdark',0.09,0.10,0.12,0.30,0.7);
+  const steel=pbr('trsteel',0.60,0.63,0.68,0.88,0.28);
   const tyre =pbr('trtyre',0.04,0.04,0.05,0,0.92);
-  const tank =pbr('trtank',0.85,0.88,0.93,0.92,0.15);
-  const yellow=pbr('tryel',0.86,0.66,0.10,0.55,0.4);
-  const conc =pbr('trconc',0.62,0.62,0.60,0.1,0.85);
+  const rim  =pbr('trrim',0.70,0.73,0.78,0.90,0.25);
+  const tank =pbr('trtank',0.88,0.90,0.94,0.95,0.12);
+  const yellow=pbr('tryel',0.90,0.69,0.08,0.50,0.42);
+  const conc =pbr('trconc',0.60,0.60,0.58,0.10,0.85);
+  const wood =pbr('trwood',0.36,0.27,0.16,0,0.9);
+  const amber=emissive('tramb',1,0.62,0.06,0.8);
+  const redL =emissive('trred',1,0.12,0.08,0.8);
 
-  // shared chassis frame + rear bogie (most bodies sit on this)
-  function chassis(){
-    box(T, w*0.62, 0.20, len, dark, 0, deckY-0.06, cz);
-    [-1,1].forEach(sx=>[0,1].forEach(i=>cyl(T,0.95,0.95,0.30,tyre, sx*w*0.46, deckY-0.55, rearZ+1.0+i*1.15, 0,0,Math.PI/2)));
+  // wheel with rim + hub
+  function wheel(x,y,z){
+    cyl(T,0.98,0.98,0.34,tyre, x,y,z, 0,0,Math.PI/2);
+    cyl(T,0.56,0.56,0.36,rim,  x,y,z, 0,0,Math.PI/2);
+    cyl(T,0.18,0.18,0.40,steel,x,y,z, 0,0,Math.PI/2);
+  }
+  // ribbed/corrugated panel: thin vertical ribs across a wall
+  function ribs(x0,x1,y,z,h,n,thick,mat){
+    for(let i=0;i<n;i++){ const x=x0+(x1-x0)*i/(n-1); box(T,thick,h,0.05,mat,x,y,z); }
+  }
+  // shared chassis: frame + twin/▢ rear bogie with mudguards, underrun bars, tail lights
+  function chassis(axles){
+    box(T, w*0.60, 0.22, len, dark, 0, deckY-0.07, cz);                          // main frame
+    const ax=axles||2;
+    for(let i=0;i<ax;i++){ const z=rearZ+1.0+i*1.25;
+      [-1,1].forEach(sx=>wheel(sx*w*0.47, deckY-0.56, z));
+      [-1,1].forEach(sx=>box(T, 0.10, 0.46, 1.18, greyD, sx*w*0.52, deckY-0.06, z));   // mudguard
+    }
+    [-1,1].forEach(sx=>box(T, 0.05, 0.26, len*0.78, steel, sx*(w*0.5+0.03), deckY-0.32, cz)); // side underrun bar
+    box(T, w*0.94, 0.10, 0.10, steel, 0, deckY-0.46, rearZ-0.08);                 // rear underrun bar
+    [-1,1].forEach(sx=>box(T, 0.20,0.11,0.06, redL, sx*w*0.42, deckY-0.18, rearZ-0.12)); // tail lights
   }
 
   switch(bodyId){
     case'flatbed':{
       chassis();
-      box(T, w, 0.18, len, grey, 0, deckY+0.18, cz);                 // deck
-      box(T, w, topY*0.45, 0.16, greyD, 0, deckY+0.18+topY*0.22, frontZ); // headboard
-      for(let i=1;i<=5;i++){ const z=frontZ-(len*i/5.5); [-1,1].forEach(sx=>box(T,0.10,topY*0.30,0.10,steel, sx*w*0.5, deckY+0.18+topY*0.15, z)); } // stake posts
+      box(T, w, 0.10, len, steel, 0, deckY+0.10, cz);                            // sub-frame
+      for(let i=0;i<7;i++){ const x=-w*0.5+ (w)*(i+0.5)/7; box(T, w/7.6, 0.10, len, wood, x, deckY+0.21, cz); } // planked deck
+      box(T, w, topY*0.5, 0.16, greyD, 0, deckY+0.21+topY*0.25, frontZ);         // headboard
+      ribs(-w*0.45,w*0.45, deckY+0.21+topY*0.25, frontZ-0.09, topY*0.42, 6, 0.07, steel); // headboard ribs
+      for(let i=1;i<=5;i++){ const z=frontZ-(len*i/5.5); [-1,1].forEach(sx=>box(T,0.10,topY*0.34,0.10,steel, sx*w*0.5, deckY+0.21+topY*0.17, z)); } // stake posts
+      [-1,1].forEach(sx=>box(T,0.06,0.14,len*0.98,greyD, sx*w*0.5, deckY+0.22, cz)); // side rave rail
       break;
     }
-    case'tipper':{                                                    // קיפר — open dump bed
+    case'tipper':{                                                                // קיפר — ribbed dump bed
       chassis();
-      const h=topY*0.52;
-      box(T, w, 0.16, len*0.86, greyD, 0, deckY+0.16, cz);           // floor
-      [-1,1].forEach(sx=>box(T, 0.12, h, len*0.86, grey, sx*w*0.5, deckY+0.16+h/2, cz));     // side walls
-      box(T, w, h, 0.14, grey, 0, deckY+0.16+h/2, frontZ);           // front wall
-      box(T, w, h*0.9, 0.12, greyD, 0, deckY+0.16+h*0.45, rearZ+0.1, DEG(-8),0,0);           // tailgate
-      cyl(T,0.18,0.18,w*0.5,steel,0,deckY+0.5,frontZ-0.4,0,0,Math.PI/2);                     // hoist ram
+      const h=topY*0.55;
+      box(T, w, 0.18, len*0.84, greyD, 0, deckY+0.18, cz);                        // floor
+      [-1,1].forEach(sx=>{ box(T, 0.12, h, len*0.84, grey, sx*w*0.5, deckY+0.18+h/2, cz);
+        box(T, 0.16, 0.12, len*0.84, steel, sx*w*0.5, deckY+0.18+h, cz); });      // side walls + top rail
+      [-1,1].forEach(sx=>ribs(cz-len*0.36,cz+len*0.36, deckY+0.18+h/2, sx*(w*0.5+0.06), h*0.9, 7, 0.08, steel)); // outer ribs
+      box(T, w, h*1.05, 0.14, grey, 0, deckY+0.18+h*0.52, frontZ);                // front wall (cab guard)
+      box(T, w, h*0.92, 0.12, greyD, 0, deckY+0.18+h*0.45, rearZ+0.08, DEG(-7),0,0);// tailgate
+      [-1,1].forEach(sx=>cyl(T,0.10,0.10,0.3,steel, sx*w*0.4, deckY+0.18+h*0.9, rearZ+0.12,0,0,Math.PI/2)); // tailgate hinges
+      cyl(T,0.22,0.22,h*1.1,steel,0,deckY+0.55,frontZ-0.5,DEG(28),0,0);           // hydraulic ram
       break;
     }
-    case'tanker':{                                                    // מיכלית — cylinder ALONG the length (rotX), not across
+    case'tanker':{                                                                // מיכלית — elliptical tank + walkway + ladder
+      chassis(3);
+      const r=topY*0.42, ty=deckY+r+0.16;
+      const t=cyl(T, r*2, r*2, len*0.96, tank, 0, ty, cz, Math.PI/2,0,0); t.scaling.y=0.82; // flatten → elliptical
+      [frontZ+0.05, rearZ-0.05].forEach(z=>{ const c=cyl(T, r*2, r*2, 0.10, steel, 0, ty, z, Math.PI/2,0,0); c.scaling.y=0.82; }); // end caps
+      [0.34,0.12,-0.12,-0.34].forEach(f=>{ const b=cyl(T, r*2.06, r*2.06, 0.08, steel, 0, ty, cz+len*f, Math.PI/2,0,0); b.scaling.y=0.82; }); // baffle bands
+      box(T, w*0.5,0.05,len*0.9, steel, 0, ty+r*0.82+0.04, cz);                   // top walkway
+      [0.0,0.18,-0.18].forEach(f=>box(T,0.5,0.18,0.5, steel, 0, ty+r*0.82+0.18, cz+len*f)); // manholes
+      box(T, w*0.85, topY*0.42, 0.6, steel, 0, deckY+topY*0.22, rearZ-0.1);       // rear valve cabinet
+      for(let i=0;i<5;i++) box(T,0.04,0.12,0.04,steel, w*0.36, deckY+0.1+i*(r*0.3), rearZ-0.42); // rear ladder rungs
+      break;
+    }
+    case'box':{                                                                   // ארגז — corrugated van + roller door
       chassis();
-      const r=topY*0.40;
-      cyl(T, r*2, r*2, len*0.94, tank, 0, deckY+r+0.12, cz, Math.PI/2,0,0);
-      cyl(T, r*2, r*2, 0.12, steel, 0, deckY+r+0.12, frontZ+0.05, Math.PI/2,0,0);            // front cap ring
-      cyl(T, r*2, r*2, 0.12, steel, 0, deckY+r+0.12, rearZ-0.05, Math.PI/2,0,0);             // rear cap ring
-      [0.3,0.0,-0.3].forEach(f=>cyl(T, r*2.05, r*2.05, 0.07, steel, 0, deckY+r+0.12, cz+len*f, Math.PI/2,0,0)); // baffle bands
-      box(T, 0.5,0.18,0.5, steel, 0, deckY+2*r+0.18, cz);            // top manhole
+      const h=topY*0.98, by=deckY+0.14+h/2;
+      box(T, w, h, len, grey, 0, by, cz);                                         // main body
+      box(T, w*1.02, 0.12, len*1.02, greyD, 0, deckY+0.14+h, cz);                 // roof cap
+      [-1,1].forEach(sx=>ribs(cz-len*0.45,cz+len*0.45, by, sx*(w*0.5+0.03), h*0.92, 12, 0.06, greyD)); // corrugation
+      box(T, w*0.99, h*0.92, 0.05, greyD, 0, by, rearZ-0.03);                     // rear door
+      for(let i=0;i<7;i++) box(T, w*0.96, h*0.92/7.4, 0.07, grey, 0, deckY+0.18+i*(h*0.92/7), rearZ-0.06); // roller slats
+      [-1,1].forEach(sx=>box(T,0.10,0.10,0.10,amber, sx*w*0.42, deckY+0.14+h*0.96, frontZ-0.02)); // top marker lights
       break;
     }
-    case'box':{                                                       // ארגז — enclosed van body
+    case'hooklift':{                                                              // רול-אוף / אמבטיה — ribbed open skip
       chassis();
-      const h=topY*0.95;
-      box(T, w, h, len, grey, 0, deckY+0.12+h/2, cz);
-      box(T, w*1.005, h*0.9, 0.04, greyD, 0, deckY+0.12+h/2, rearZ-0.02);  // rear doors panel
-      box(T, 0.03, h*0.9, len*0.99, greyD, w*0.502, deckY+0.12+h/2, cz);   // side seam R
-      box(T, 0.03, h*0.9, len*0.99, greyD,-w*0.502, deckY+0.12+h/2, cz);   // side seam L
+      const h=topY*0.6;
+      box(T, w, 0.16, len*0.9, greyD, 0, deckY+0.20, cz);                         // bath floor
+      [-1,1].forEach(sx=>{ box(T, 0.12, h, len*0.9, grey, sx*w*0.5, deckY+0.20+h/2, cz);
+        ribs(cz-len*0.4,cz+len*0.4, deckY+0.20+h/2, sx*(w*0.5+0.05), h*0.9, 6, 0.08, steel); });
+      box(T, w, h*1.3, 0.14, grey, 0, deckY+0.20+h*0.64, rearZ+0.06);             // tall rear wall
+      box(T, w, h, 0.14, grey, 0, deckY+0.20+h*0.5, frontZ, DEG(22),0,0);         // sloped front wall
+      box(T, 0.16,0.16,len*0.95, steel, 0, deckY+0.12, cz);                       // hook rail (centre)
+      cyl(T,0.14,0.14,h*1.15,steel,0,deckY+0.20+h*0.95,frontZ+0.25,0,0,0);        // hook post
+      cyl(T,0.34,0.0,0.5,steel,0,deckY+0.20+h*1.5,frontZ+0.25,DEG(90),0,0);       // hook
       break;
     }
-    case'hooklift':{                                                  // רול-אוף / אמבטיה — open skip bath with sloped front + hook
+    case'pump':{                                                                  // משאבת בטון — pedestal + folded multi-section boom + hopper
+      chassis(3);
+      box(T, w, 0.20, len, greyD, 0, deckY+0.16, cz);                             // deck
+      box(T, w*0.78, topY*0.55, 1.3, steel, 0, deckY+0.16+topY*0.28, frontZ-0.2); // turret pedestal
+      // folded Z-boom (three stacked sections)
+      box(T, 0.46, 0.42, len*0.78, yellow, 0, deckY+0.16+topY*0.60, cz+0.5);
+      box(T, 0.40, 0.38, len*0.66, yellow, 0, deckY+0.16+topY*0.92, cz-0.1);
+      box(T, 0.34, 0.32, len*0.5,  yellow, 0, deckY+0.16+topY*1.18, cz+0.3);
+      box(T, w*0.92, topY*0.5, 1.05, steel, 0, deckY+0.32, rearZ+0.5);            // hopper
+      box(T, 0.5, 0.6, 0.5, dark, 0, deckY+0.1, rearZ-0.1);                       // outlet
+      [-1,1].forEach(sx=>{ box(T,0.18,0.18,1.9,steel, sx*w*0.5, deckY-0.06, frontZ-0.2, 0,0,Math.PI/2);
+        cyl(T,0.24,0.24,0.9,dark, sx*(w*0.5+0.85), deckY-0.5, frontZ-0.2);
+        box(T,0.5,0.08,0.5,steel, sx*(w*0.5+0.85), deckY-0.92, frontZ-0.2); });   // front outriggers + pads
+      [-1,1].forEach(sx=>{ box(T,0.18,0.18,1.9,steel, sx*w*0.5, deckY-0.06, rearZ+0.7, 0,0,Math.PI/2);
+        box(T,0.5,0.08,0.5,steel, sx*(w*0.5+0.85), deckY-0.92, rearZ+0.7); });    // rear outrigger pads
+      break;
+    }
+    case'mixer':{                                                                 // מערבל בטון — spiral drum + funnel + ladder + water tank
+      chassis(3);
+      const r=topY*0.44, midY=deckY+r+0.4, tiltZ=cz;
+      cyl(T, r*1.75, r*1.75, len*0.46, conc, 0, midY, tiltZ, Math.PI/2,0,0);      // drum barrel
+      cyl(T, r*1.05, r*1.75, len*0.26, conc, 0, midY+0.18, tiltZ+len*0.34, Math.PI/2,0,0);  // front taper to ring
+      cyl(T, r*0.9,  r*1.75, len*0.26, conc, 0, midY-0.14, tiltZ-len*0.34, Math.PI/2,0,0);  // rear taper
+      // spiral fins approximated by angled bands around the barrel
+      for(let i=0;i<3;i++){ const f=0.28-i*0.28; const b=cyl(T, r*1.82, r*1.82, 0.10, steel, 0, midY, tiltZ+len*f, Math.PI/2,0,0); b.rotation.y=DEG(18*(i-1)); }
+      box(T, w*0.7, topY*0.4, 0.85, steel, 0, deckY+0.16+topY*0.2, frontZ-0.2);   // drive housing
+      cyl(T, r*1.2, r*1.2, 0.5, steel, 0, midY-0.2, rearZ-0.15, Math.PI/2,0,0);   // rear ring/funnel
+      box(T, w*0.55, 0.85, 0.5, greyD, 0, midY-0.55, rearZ-0.45, DEG(24),0,0);    // discharge chute
+      cyl(T,0.5,0.5,w*0.7,steel,0,deckY+0.16+topY*0.12,rearZ-0.1,0,0,Math.PI/2);  // water tank (cross)
+      for(let i=0;i<5;i++) box(T,0.05,0.12,0.05,steel, w*0.36, deckY+0.2+i*0.34, rearZ-0.3); // access ladder
+      break;
+    }
+    case'crane':{                                                                 // מנוף — column + 3-section knuckle boom + hook block
       chassis();
-      const h=topY*0.58;
-      box(T, w, 0.14, len*0.92, greyD, 0, deckY+0.20, cz);           // bath floor
-      [-1,1].forEach(sx=>box(T, 0.12, h, len*0.92, grey, sx*w*0.5, deckY+0.20+h/2, cz));
-      box(T, w, h*1.25, 0.13, grey, 0, deckY+0.20+h*0.62, rearZ+0.06);          // tall rear wall
-      box(T, w, h, 0.13, grey, 0, deckY+0.20+h*0.5, frontZ, DEG(20),0,0);       // sloped front wall
-      cyl(T,0.14,0.14,h*1.1,steel,0,deckY+0.20+h*0.9,frontZ+0.2,0,0,0);         // hook post
-      cyl(T,0.30,0.0,0.5,steel,0,deckY+0.20+h*1.45,frontZ+0.2,DEG(90),0,0);     // hook
+      for(let i=0;i<5;i++){ const x=-w*0.5+ w*(i+0.5)/5; box(T, w/5.4, 0.10, len, wood, x, deckY+0.2, cz); } // planked deck
+      box(T, w*0.55, topY*0.7, 1.0, steel, 0, deckY+0.2+topY*0.35, frontZ-0.1);   // crane column
+      box(T, 0.34, 0.34, len*0.66, yellow, 0, deckY+0.2+topY*0.72, cz+0.6, DEG(7),0,0);    // main boom
+      box(T, 0.28, 0.28, len*0.5,  yellow, 0, deckY+0.2+topY*0.98, cz-0.2, DEG(-12),0,0);  // mid section
+      box(T, 0.22, 0.22, len*0.4,  yellow, 0, deckY+0.2+topY*1.18, cz+0.4, DEG(8),0,0);    // tip section
+      box(T, 0.18,0.5,0.18, dark, w*0.1, deckY+0.2+topY*0.95, cz-len*0.18);       // hook block hanging
+      [-1,1].forEach(sx=>{ box(T,0.22,0.22,1.9,steel, sx*w*0.5, deckY-0.04, frontZ-0.1, 0,0,Math.PI/2);
+        cyl(T,0.24,0.24,1.0,dark, sx*(w*0.5+0.9), deckY-0.55, frontZ-0.1);
+        box(T,0.55,0.08,0.55,steel, sx*(w*0.5+0.9), deckY-1.0, frontZ-0.1); });   // stabilizers + pads
       break;
     }
-    case'pump':{                                                      // משאבת בטון — deck + folded boom + hopper + outriggers
+    case'lowloader':{                                                             // רמסע — gooseneck + low planked deck + ramps
+      const lowY=deckY*0.42;
+      box(T, w*0.6, 0.22, len*0.5, dark, 0, lowY, cz+len*0.06);                   // low frame
+      [-1,1].forEach(sx=>[0,1,2].forEach(i=>wheel(sx*w*0.47, lowY-0.34, rearZ+0.8+i*1.05)));
+      for(let i=0;i<7;i++){ const x=-w*0.5+ w*(i+0.5)/7; box(T, w/7.6, 0.12, len*0.6, wood, x, lowY+0.2, cz+0.02); } // deck planks
+      box(T, w, topY*0.62, len*0.26, dark, 0, deckY+0.06+topY*0.24, frontZ+0.12); // gooseneck rises to cab height
+      box(T, w*0.5, topY*0.5, 0.5, steel, 0, deckY+topY*0.2, frontZ+0.0);         // gooseneck neck
+      [-1,1].forEach(sx=>box(T, w*0.44, 0.10, 1.7, steel, sx*w*0.26, lowY+0.04, rearZ-0.8, DEG(20),0,0)); // twin rear ramps
+      [-1,1].forEach(sx=>box(T,0.05,0.18,len*0.58,greyD, sx*w*0.5, lowY+0.22, cz+0.02)); // side rails
+      break;
+    }
+    default:{
       chassis();
-      box(T, w, 0.18, len, greyD, 0, deckY+0.16, cz);                // deck
-      box(T, w*0.8, topY*0.5, 1.2, steel, 0, deckY+0.16+topY*0.25, frontZ-0.2);   // pedestal/turret
-      // folded boom (two stacked arms running rearward)
-      box(T, 0.5, 0.45, len*0.8, yellow, 0, deckY+0.16+topY*0.62, cz+0.3);
-      box(T, 0.42, 0.40, len*0.7, yellow, 0, deckY+0.16+topY*0.95, cz);
-      box(T, w*0.9, topY*0.5, 1.0, steel, 0, deckY+0.30, rearZ+0.5);             // hopper
-      [-1,1].forEach(sx=>{ box(T,0.18,0.18,1.6,steel, sx*w*0.5, deckY-0.1, rearZ+0.6, 0,0,Math.PI/2);
-        cyl(T,0.22,0.22,0.9,dark, sx*(w*0.5+0.7), deckY-0.5, rearZ+0.6); });    // outriggers
-      break;
-    }
-    case'mixer':{                                                     // מערבל בטון — inclined rotating drum
-      chassis();
-      const r=topY*0.42;
-      const tiltZ=cz, midY=deckY+r+0.35;
-      // drum = wide middle cylinder + two cones, tilted nose-down toward front
-      cyl(T, r*1.7, r*1.7, len*0.5, conc, 0, midY, tiltZ, Math.PI/2,0,0);
-      cyl(T, r*1.0, r*1.7, len*0.28, conc, 0, midY+0.15, tiltZ+len*0.36, Math.PI/2,0,0);  // front taper
-      cyl(T, r*1.7, r*0.7, len*0.26, conc, 0, midY-0.1, tiltZ-len*0.36, Math.PI/2,0,0);   // rear chute taper
-      [0.25,-0.25].forEach(f=>cyl(T, r*1.78, r*1.78, 0.10, steel, 0, midY, tiltZ+len*f, Math.PI/2,0,0)); // drum bands
-      box(T, w*0.7, topY*0.35, 0.8, steel, 0, deckY+0.16+topY*0.18, frontZ-0.2);          // drive housing
-      box(T, w*0.5, 0.7, 0.5, greyD, 0, midY-0.1, rearZ-0.2, DEG(20),0,0);                // discharge chute
-      break;
-    }
-    case'crane':{                                                     // מנוף — flatbed + folded knuckle crane behind cab
-      chassis();
-      box(T, w, 0.18, len, grey, 0, deckY+0.18, cz);                 // deck
-      box(T, w*0.6, topY*0.55, 0.9, steel, 0, deckY+0.18+topY*0.28, frontZ-0.1);  // crane base/column
-      box(T, 0.34, 0.34, len*0.7, yellow, 0, deckY+0.18+topY*0.6, cz+0.4, DEG(6),0,0);   // main boom (stowed)
-      box(T, 0.28, 0.28, len*0.45, yellow, 0.0, deckY+0.18+topY*0.85, cz+1.0, DEG(-10),0,0); // knuckle section
-      [-1,1].forEach(sx=>{ box(T,0.20,0.20,1.8,steel, sx*w*0.5, deckY-0.05, frontZ-0.2, 0,0,Math.PI/2);
-        cyl(T,0.22,0.22,1.0,dark, sx*(w*0.5+0.8), deckY-0.5, frontZ-0.2); });  // outriggers near cab
-      break;
-    }
-    case'lowloader':{                                                 // רמסע — drop-deck low-loader with gooseneck + ramps
-      // own low chassis (no high deck)
-      box(T, w*0.62, 0.22, len*0.5, dark, 0, deckY*0.45, cz+len*0.1);
-      [-1,1].forEach(sx=>[0,1,2].forEach(i=>cyl(T,0.85,0.85,0.28,tyre, sx*w*0.46, deckY*0.45-0.30, rearZ+0.8+i*1.0, 0,0,Math.PI/2)));
-      box(T, w, 0.20, len*0.62, greyD, 0, deckY*0.45+0.20, cz+len*0.02);         // low deck
-      box(T, w, topY*0.55, len*0.28, dark, 0, deckY+0.10+topY*0.20, frontZ+0.1); // gooseneck rises to cab height
-      box(T, w*0.9, 0.10, 1.6, steel, 0, deckY*0.45+0.05, rearZ-0.7, DEG(18),0,0);// rear ramp L/R
-      break;
-    }
-    default:{                                                         // fallback enclosed box
-      chassis();
-      const h=topY*0.8; box(T, w, h, len, grey, 0, deckY+0.12+h/2, cz);
+      const h=topY*0.8; box(T, w, h, len, grey, 0, deckY+0.14+h/2, cz);
     }
   }
   trailerNode=T;
@@ -2254,6 +2300,7 @@ function applySavedSetup(){
       const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
     });
     if(typeof s.mirror==='boolean') _mirrorActive=s.mirror;
+    toastMsg(TR('נטענו מיקומים שמורים'));
     return true;
   }catch(e){ return false; }
 }
