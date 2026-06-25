@@ -624,6 +624,16 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
       <div class="big" id="saveOut">₪16,800</div>
       <div style="color:var(--muted);font-size:13px">בהשתתפויות עצמיות שלא תשלם</div>
       <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:14px">
+        <div style="flex:1;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.25);border-radius:10px;padding:10px 8px">
+          <div style="font-family:'Orbitron';font-weight:900;font-size:20px;color:#4ade80" id="paybackOut">~14</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">חודשים להחזר השקעה</div>
+        </div>
+        <div style="flex:1;background:rgba(232,181,61,.07);border:1px solid rgba(232,181,61,.25);border-radius:10px;padding:10px 8px">
+          <div style="font-family:'Orbitron';font-weight:900;font-size:20px;color:var(--gold)" id="fiveYrOut">₪64,000</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">חיסכון נטו ב-5 שנים</div>
+        </div>
+      </div>
       <div style="color:var(--muted);font-size:12px">+ מניעת עליית פרמיות · פחות השבתה · פחות בירוקרטיה</div>
     </div>
   </div></div></div>
@@ -1098,7 +1108,9 @@ Object.assign(I18N,{
 "⚡ תגובה מהירה · הצעת מחיר תוך 24 שעות · התקנה בכל הארץ":{"en":"⚡ Fast response · quote within 24 hours · nationwide installation","ar":"⚡ استجابة سريعة · عرض سعر خلال 24 ساعة · تركيب في كل البلاد"},
 "בוא נתחיל":{"en":"Let's start","ar":"لنبدأ"},
 "מצלמות, GPS ומערכות אבטחה":{"en":"Cameras, GPS & security systems","ar":"كاميرات وأنظمة GPS وأمان"},
-"למשאיות וציוד כבד":{"en":"for trucks & heavy equipment","ar":"للشاحنات والمعدات الثقيلة"}
+"למשאיות וציוד כבד":{"en":"for trucks & heavy equipment","ar":"للشاحنات والمعدات الثقيلة"},
+"חודשים להחזר השקעה":{"en":"months to payback","ar":"شهراً للاسترداد"},
+"חיסכון נטו ב-5 שנים":{"en":"net savings over 5 years","ar":"صافي التوفير على 5 سنوات"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
@@ -2930,7 +2942,13 @@ function applyCfgCams(o){
 function doCalc(){
   const t=+document.getElementById('rT').value,d=+document.getElementById('rD').value,a=+document.getElementById('rA').value,w=+document.getElementById('rW').value/100;
   document.getElementById('vT').textContent=t;document.getElementById('vD').textContent=d.toLocaleString('he');document.getElementById('vA').textContent=a;document.getElementById('vW').textContent=Math.round(w*100)+'%';
-  document.getElementById('saveOut').textContent='₪'+Math.round(d*a*w).toLocaleString('he');
+  const annual=Math.round(d*a*w);
+  document.getElementById('saveOut').textContent='₪'+annual.toLocaleString('he');
+  // payback period (months) + 5-year net (Essential ≈ ₪4,000 / truck installed)
+  const cost=t*4000;
+  const pb=document.getElementById('paybackOut'), fy=document.getElementById('fiveYrOut');
+  if(pb) pb.textContent = annual>0 ? '~'+Math.max(1,Math.round(cost/annual*12)) : '—';
+  if(fy) fy.textContent='₪'+Math.max(0,annual*5-cost).toLocaleString('he');
 }
 
 // ─── LEAD ─────────────────────────────────────────────────────────────
