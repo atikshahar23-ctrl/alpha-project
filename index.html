@@ -135,8 +135,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-name{font-family:'Orbitron';font-weight:900;font-size:16px;letter-spacing:1px}
 .nav-name .h{color:var(--gold)}
 .nav-sub{font-size:8px;letter-spacing:3px;color:var(--muted)}
-.nav-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;transition:.2s}
+.nav-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;transition:.2s;position:relative}
 .nav-link:hover{color:var(--gold)}
+.nav-link.active{color:var(--gold)}
+.nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--cyan))}
 @media(max-width:760px){.nav-link{display:none}}
 .nav-cta{font-family:'Orbitron';font-weight:700;font-size:12px;padding:10px 18px;border-radius:8px;background:linear-gradient(120deg,var(--gold-dk),var(--gold));color:#1a1405;border:none;cursor:pointer;text-decoration:none;transition:.2s}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(232,181,61,.5)}
@@ -190,6 +192,14 @@ h2{font-family:'Orbitron';font-size:clamp(26px,4vw,42px);font-weight:900;color:v
 .center{text-align:center;margin-left:auto;margin-right:auto}
 .reveal{opacity:0;transform:translateY(36px);transition:.75s cubic-bezier(.2,.8,.2,1)}
 .reveal.vis{opacity:1;transform:none}
+/* trust / standards strip */
+.trust-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.trust-badge{text-align:center;padding:20px 12px;border:1px solid var(--line);border-radius:14px;background:var(--glass);backdrop-filter:blur(8px);transition:.25s}
+.trust-badge:hover{border-color:rgba(232,181,61,.4);transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.trust-badge .tb-ico{font-size:26px;margin-bottom:8px}
+.trust-badge .tb-t{font-family:'Orbitron';font-weight:700;font-size:14px;color:var(--gold);letter-spacing:.5px}
+.trust-badge .tb-s{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45}
+@media(max-width:760px){.trust-row{grid-template-columns:1fr 1fr}}
 
 /* ── COMPARISON TABLE ── */
 .holo{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:40px;background:rgba(232,181,61,.03);backdrop-filter:blur(6px)}
@@ -569,6 +579,19 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
       <div class="hrow"><b>תביעת שווא על הנהג</b><div class="c-no">מילה מול מילה</div><div class="c-yes">סרטון = תיק נסגר</div></div>
       <div class="hrow"><b>פגע וברח / נזק בחניה</b><div class="c-no">ספיגת העלות</div><div class="c-yes">זיהוי + תיעוד</div></div>
       <div class="hrow"><b>פרמיית ביטוח שנתית</b><div class="c-no">מזנקת אחרי תביעה</div><div class="c-yes">נשמרת נמוכה</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST / STANDARDS -->
+<section class="sec" style="padding:56px 0">
+  <div class="wrap">
+    <div class="trust-row">
+      <div class="trust-badge reveal"><div class="tb-ico">🛡️</div><div class="tb-t">IP69K</div><div class="tb-s">עמיד אבק · מים · רטט · קיצוניות</div></div>
+      <div class="trust-badge reveal"><div class="tb-ico">🎬</div><div class="tb-t">ראיה קבילה</div><div class="tb-s">חותמת זמן · GPS · מהירות</div></div>
+      <div class="trust-badge reveal"><div class="tb-ico">🔧</div><div class="tb-t">התקנה מקצועית</div><div class="tb-s">בשטח · בלי להשבית עבודה</div></div>
+      <div class="trust-badge reveal"><div class="tb-ico">☁️</div><div class="tb-t">גיבוי בענן</div><div class="tb-s">עד 4 חודשים אחורה</div></div>
+      <div class="trust-badge reveal"><div class="tb-ico">🛰️</div><div class="tb-t">GPS חי</div><div class="tb-s">ניהול צי בזמן אמת</div></div>
     </div>
   </div>
 </section>
@@ -1025,7 +1048,14 @@ Object.assign(I18N,{
 "קדמית · דרך":{"en":"Front · road","ar":"أمامية · الطريق"},
 "דברו איתנו בוואטסאפ":{"en":"Chat with us on WhatsApp","ar":"تحدّث معنا عبر واتساب"},
 "פותח וואטסאפ…":{"en":"Opening WhatsApp…","ar":"جارٍ فتح واتساب…"},
-"✅ תודה! פתחנו עבורך וואטסאפ עם הפרטים — שלח את ההודעה ונחזור אליך עם הצעת מחיר בהקדם.":{"en":"✅ Thank you! We've opened WhatsApp with your details — send the message and we'll get back to you with a quote shortly.","ar":"✅ شكراً لك! فتحنا واتساب مع تفاصيلك — أرسل الرسالة وسنعود إليك بعرض سعر قريباً."}
+"✅ תודה! פתחנו עבורך וואטסאפ עם הפרטים — שלח את ההודעה ונחזור אליך עם הצעת מחיר בהקדם.":{"en":"✅ Thank you! We've opened WhatsApp with your details — send the message and we'll get back to you with a quote shortly.","ar":"✅ شكراً لك! فتحنا واتساب مع تفاصيلك — أرسل الرسالة وسنعود إليك بعرض سعر قريباً."},
+"עמיד אבק · מים · רטט · קיצוניות":{"en":"Dust · water · vibration · extremes","ar":"غبار · ماء · اهتزاز · ظروف قاسية"},
+"חותמת זמן · GPS · מהירות":{"en":"Timestamp · GPS · speed","ar":"طابع زمني · GPS · سرعة"},
+"בשטח · בלי להשבית עבודה":{"en":"On-site · zero downtime","ar":"في الموقع · دون تعطيل العمل"},
+"גיבוי בענן":{"en":"Cloud backup","ar":"نسخ احتياطي سحابي"},
+"עד 4 חודשים אחורה":{"en":"Up to 4 months back","ar":"حتى 4 أشهر للوراء"},
+"GPS חי":{"en":"Live GPS","ar":"GPS مباشر"},
+"ניהול צי בזמן אמת":{"en":"Real-time fleet management","ar":"إدارة الأسطول في الوقت الفعلي"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
@@ -3058,6 +3088,18 @@ window.addEventListener('load',()=>{
     if(top) top.classList.toggle('show', sc>600);
   }
   window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  // scroll-spy: highlight the active section in the top nav
+  try{
+    var links=Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
+    var map={};
+    links.forEach(function(a){ var id=a.getAttribute('href'); if(id&&id[0]==='#'){ var s=document.getElementById(id.slice(1)); if(s) map[id.slice(1)]=a; } });
+    if('IntersectionObserver' in window){
+      var spy=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(l){l.classList.remove('active');}); var a=map[e.target.id]; if(a) a.classList.add('active'); } });
+      },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+      Object.keys(map).forEach(function(id){ spy.observe(document.getElementById(id)); });
+    }
+  }catch(e){}
 })();
 </script>
 </body>
