@@ -2092,37 +2092,36 @@ function toggleCam(id,btn){
 }
 
 let _mirrorActive=false;
+// Make the LEFT camera a mirror image of the RIGHT camera's current setup
+// (reflected across the truck's longitudinal axis → negate X of position & direction).
+function mirrorRightToLeft(){
+  camPos.left=V3(-camPos.right.x, camPos.right.y, camPos.right.z);
+  camDir.left=V3(-camDir.right.x, camDir.right.y, camDir.right.z).normalize();
+  if(camMarkers.left) camMarkers.left.position.copyFrom(camPos.left);
+  if(camCones.left) orientCone(camCones.left,camPos.left,camDir.left);
+  if(feedCams.left){ feedCams.left.position.copyFrom(camPos.left); feedCams.left.setTarget(camPos.left.add(camDir.left.scale(10))); }
+  if(activeCamId==='left') renderCamCtrl('left');
+}
 function toggleMirror(){
   _mirrorActive=!_mirrorActive;
   const btn=document.getElementById('mirrorBtn');
   if(_mirrorActive){
-    // Mirror mode: right cam flips to look inward from the right side,
-    // left cam flips to look inward from the left — they mirror each other
-    // and together show the full side panorama as a symmetric pair.
-    camPos.right=V3(1.42,2.6,-1.4);  camDir.right=V3(1,-0.18,-0.08).normalize();
-    camPos.left =V3(-1.42,2.6,-1.4); camDir.left =V3(-1,-0.18,-0.08).normalize();
+    // Left mirrors however the RIGHT camera is currently configured (kept in sync on right edits).
+    mirrorRightToLeft();
     btn.style.background='rgba(232,181,61,.18)';
     btn.style.borderColor='var(--gold)';
     btn.style.color='var(--gold)';
   } else {
-    // Restore default positions
-    camPos.right=V3(...CAM_DEFS.right.pos); camDir.right=V3(...CAM_DEFS.right.dir).normalize();
-    camPos.left =V3(...CAM_DEFS.left.pos);  camDir.left =V3(...CAM_DEFS.left.dir).normalize();
+    // Restore the left camera to its own default
+    camPos.left=V3(...CAM_DEFS.left.pos); camDir.left=V3(...CAM_DEFS.left.dir).normalize();
+    if(camMarkers.left) camMarkers.left.position.copyFrom(camPos.left);
+    if(camCones.left) orientCone(camCones.left,camPos.left,camDir.left);
+    if(feedCams.left){ feedCams.left.position.copyFrom(camPos.left); feedCams.left.setTarget(camPos.left.add(camDir.left.scale(10))); }
+    if(activeCamId==='left') renderCamCtrl('left');
     btn.style.background='rgba(95,210,224,.08)';
     btn.style.borderColor='rgba(95,210,224,.3)';
     btn.style.color='var(--cyan)';
   }
-  // Update 3D marker positions
-  ['right','left'].forEach(id=>{
-    if(camMarkers[id]) camMarkers[id].position.copyFrom(camPos[id]);
-    if(camCones[id]) orientCone(camCones[id],camPos[id],camDir[id]);
-    if(feedCams[id]){
-      feedCams[id].position.copyFrom(camPos[id]);
-      feedCams[id].setTarget(camPos[id].add(camDir[id].scale(10)));
-    }
-  });
-  // Re-render the control panel if one of those cams is selected
-  if(activeCamId==='right'||activeCamId==='left') renderCamCtrl(activeCamId);
 }
 
 function selectCam(id){
@@ -2160,6 +2159,8 @@ function onCtrl(el){
   const sv=document.getElementById(`sv_${id}_${k}`);if(sv)sv.textContent=(k==='yaw'||k==='pitch')?Math.round(v):parseFloat(v).toFixed(k==='px'?2:1);
   const sm=camMarkers[id];if(sm)sm.position.copyFrom(p);
   const cn=camCones[id];if(cn){orientCone(cn,p,d);}
+  const fc=feedCams[id];if(fc){fc.position.copyFrom(p);fc.setTarget(p.add(d.scale(10)));}
+  if(_mirrorActive && id==='right') mirrorRightToLeft();   // keep left mirrored to right
 }
 
 function resetCam(id){
