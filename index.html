@@ -1807,18 +1807,36 @@ function buildBody(g,M){
 // ───────────────────────────────────────────────────────────────────────
 //  CAM MARKERS
 // ───────────────────────────────────────────────────────────────────────
+let camLenses=[];
 function buildCamMarkers(){
   Object.values(camMarkers).forEach(m=>m.dispose());
   Object.values(camCones).forEach(m=>m&&m.dispose());
-  camMarkers={}; camCones={};
+  camLenses.forEach(m=>m&&m.dispose());
+  camMarkers={}; camCones={}; camLenses=[];
 
   ['front','right','left','rear'].forEach(id=>{
     const act=id===activeCamId;
-    const m=BABYLON.MeshBuilder.CreateSphere('cam_'+id,{diameter:0.36,segments:12},scene);
+    const m=BABYLON.MeshBuilder.CreateBox('cam_'+id,{width:0.5,height:0.34,depth:0.42},scene);
     m.material=emissive('cm_'+id, act?1:0.37, act?0.67:0.82, act?0:0.9, 1.0);
     m.position.copyFrom(camPos[id]);
     m.parent=truckRoot;
     camMarkers[id]=m;
+    // lens — small dark cylinder pointing along the camera direction
+    try{
+      const d=camDir[id].clone().normalize();
+      const lens=BABYLON.MeshBuilder.CreateCylinder('lens_'+id,{diameter:0.22,height:0.18,tessellation:16},scene);
+      const lm=new BABYLON.StandardMaterial('lensm_'+id,scene);
+      lm.diffuseColor=new BABYLON.Color3(0.02,0.02,0.03);
+      lm.emissiveColor=new BABYLON.Color3(0.10,0.32,0.42);
+      lens.material=lm;
+      lens.position.copyFrom(camPos[id].add(d.scale(0.24)));
+      const up=new BABYLON.Vector3(0,1,0);
+      const axis=BABYLON.Vector3.Cross(up,d);
+      const ang=Math.acos(Math.max(-1,Math.min(1,BABYLON.Vector3.Dot(up,d))));
+      lens.rotationQuaternion = axis.length()>1e-4 ? BABYLON.Quaternion.RotationAxis(axis.normalize(),ang) : BABYLON.Quaternion.Identity();
+      lens.parent=truckRoot;
+      camLenses.push(lens);
+    }catch(e){}
 
     if(camOn[id]){
       const cone=BABYLON.MeshBuilder.CreateCylinder('cone_'+id,{diameterTop:3.2,diameterBottom:0,height:6.5,tessellation:18},scene);
@@ -2087,8 +2105,10 @@ function renderCamCtrl(id){
   const R=CAM_RANGES[id];
   const lbl=LCAM()[id];
   const rows=[['px',TR('ימין/שמאל'),R.px[0],R.px[1],.05,+p.x.toFixed(2)],['py',TR('גובה'),R.py[0],R.py[1],.1,+p.y.toFixed(1)],['pz',TR('קדמי/אחורי'),R.pz[0],R.pz[1],.1,+p.z.toFixed(1)],['yaw',TR('סיבוב°'),R.yaw[0],R.yaw[1],1,Math.round(yaw)],['pitch',TR('הטיה°'),R.pitch[0],R.pitch[1],1,Math.round(pitch)]];
+  const CAMPROD={front:{m:'C600',img:'c600'},right:{m:'T15',img:'t15'},left:{m:'T15',img:'t15'},rear:{m:'C190',img:'c190'}};
+  const cp=CAMPROD[id]||{m:'',img:'c600'};
   document.getElementById('camCtrl').innerHTML=
-    `<div style="font-size:9px;color:var(--cyan);margin-bottom:8px;font-weight:700">🎛 ${TR('מצלמה')} ${lbl}</div>`+
+    `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--line)"><img src="assets/products/${cp.img}.webp" alt="${cp.m}" style="width:40px;height:30px;object-fit:contain;flex:none"><div style="line-height:1.3"><div style="font-family:'Orbitron';font-size:12px;color:var(--gold);font-weight:700">${cp.m}</div><div style="font-size:8px;color:var(--cyan)">🎛 ${TR('מצלמה')} ${lbl}</div></div></div>`+
     rows.map(([k,lbl2,mn,mx,st,val])=>`<div class="slrow"><div class="sllbl">${lbl2}<b id="sv_${id}_${k}">${val}</b></div><input type="range" class="slim" data-id="${id}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${val}" oninput="onCtrl(this)"></div>`).join('')+
     `<button class="rst-btn" onclick="resetCam('${id}')">↺ ${TR('איפוס')}</button>`;
 }
