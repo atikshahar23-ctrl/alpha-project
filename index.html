@@ -1654,10 +1654,10 @@ function buildTrailer(bodyId){
   const grey =pbr('trgrey',0.82,0.84,0.88,0.30,0.45);
   const greyD=pbr('trgryd',0.34,0.37,0.42,0.45,0.5);
   const dark =pbr('trdark',0.09,0.10,0.12,0.30,0.7);
-  const steel=pbr('trsteel',0.60,0.63,0.68,0.88,0.28);
+  const steel=pbr('trsteel',0.66,0.69,0.74,0.35,0.45);   // low metalness → reads bright (no env map in scene)
   const tyre =pbr('trtyre',0.04,0.04,0.05,0,0.92);
-  const rim  =pbr('trrim',0.70,0.73,0.78,0.90,0.25);
-  const tank =pbr('trtank',0.88,0.90,0.94,0.95,0.12);
+  const rim  =pbr('trrim',0.74,0.77,0.82,0.40,0.40);
+  const tank =pbr('trtank',0.90,0.92,0.96,0.22,0.22);    // bright stainless look
   const yellow=pbr('tryel',0.90,0.69,0.08,0.50,0.42);
   const conc =pbr('trconc',0.60,0.60,0.58,0.10,0.85);
   const wood =pbr('trwood',0.36,0.27,0.16,0,0.9);
@@ -1720,7 +1720,7 @@ function buildTrailer(bodyId){
     }
     case'box':{                                                                   // ארגז — corrugated van + roller door
       chassis();
-      const h=topY*0.98, by=deckY+0.14+h/2;
+      const h=topY*0.82, by=deckY+0.14+h/2;
       box(T, w, h, len, grey, 0, by, cz);                                         // main body
       box(T, w*1.02, 0.12, len*1.02, greyD, 0, deckY+0.14+h, cz);                 // roof cap
       [-1,1].forEach(sx=>ribs(cz-len*0.45,cz+len*0.45, by, sx*(w*0.5+0.03), h*0.92, 12, 0.06, greyD)); // corrugation
@@ -1745,46 +1745,36 @@ function buildTrailer(bodyId){
     case'pump':{                                                                  // משאבת בטון — pedestal + folded multi-section boom + hopper
       chassis(3);
       box(T, w, 0.20, len, greyD, 0, deckY+0.16, cz);                             // deck
-      box(T, w*0.78, topY*0.55, 1.3, steel, 0, deckY+0.16+topY*0.28, frontZ-0.2); // turret pedestal
-      // folded Z-boom (three stacked sections)
-      box(T, 0.46, 0.42, len*0.78, yellow, 0, deckY+0.16+topY*0.60, cz+0.5);
-      box(T, 0.40, 0.38, len*0.66, yellow, 0, deckY+0.16+topY*0.92, cz-0.1);
-      box(T, 0.34, 0.32, len*0.5,  yellow, 0, deckY+0.16+topY*1.18, cz+0.3);
-      box(T, w*0.92, topY*0.5, 1.05, steel, 0, deckY+0.32, rearZ+0.5);            // hopper
-      box(T, 0.5, 0.6, 0.5, dark, 0, deckY+0.1, rearZ-0.1);                       // outlet
-      [-1,1].forEach(sx=>{ box(T,0.18,0.18,1.9,steel, sx*w*0.5, deckY-0.06, frontZ-0.2, 0,0,Math.PI/2);
-        cyl(T,0.24,0.24,0.9,dark, sx*(w*0.5+0.85), deckY-0.5, frontZ-0.2);
-        box(T,0.5,0.08,0.5,steel, sx*(w*0.5+0.85), deckY-0.92, frontZ-0.2); });   // front outriggers + pads
-      [-1,1].forEach(sx=>{ box(T,0.18,0.18,1.9,steel, sx*w*0.5, deckY-0.06, rearZ+0.7, 0,0,Math.PI/2);
-        box(T,0.5,0.08,0.5,steel, sx*(w*0.5+0.85), deckY-0.92, rearZ+0.7); });    // rear outrigger pads
+      box(T, w*0.8, topY*0.34, 1.1, steel, 0, deckY+0.16+topY*0.17, frontZ-0.2);  // turret pedestal (low)
+      // folded boom resting along the deck (kept low so it never towers/floats)
+      box(T, 0.42, 0.34, len*0.82, yellow, 0, deckY+0.16+topY*0.30, cz+0.2);
+      box(T, 0.36, 0.30, len*0.70, yellow, 0, deckY+0.16+topY*0.55, cz-0.1);
+      box(T, w*0.9, topY*0.42, 1.0, steel, 0, deckY+0.30, rearZ+0.6);             // hopper
+      box(T, 0.5, 0.55, 0.5, dark, 0, deckY+0.1, rearZ+0.05);                     // outlet
+      [-1,1].forEach(sx=>{ box(T,0.16,0.16,0.9,steel, sx*(w*0.5+0.3), deckY-0.02, rearZ+0.7, 0,0,Math.PI/2);
+        box(T,0.45,0.08,0.45,steel, sx*(w*0.5+0.55), deckY-0.16, rearZ+0.7); });  // rear outrigger pads (folded)
       break;
     }
-    case'mixer':{                                                                 // מערבל בטון — spiral drum + funnel + ladder + water tank
-      chassis(3);
-      const r=topY*0.44, midY=deckY+r+0.4, tiltZ=cz;
-      cyl(T, r*1.75, r*1.75, len*0.46, conc, 0, midY, tiltZ, Math.PI/2,0,0);      // drum barrel
-      cyl(T, r*1.05, r*1.75, len*0.26, conc, 0, midY+0.18, tiltZ+len*0.34, Math.PI/2,0,0);  // front taper to ring
-      cyl(T, r*0.9,  r*1.75, len*0.26, conc, 0, midY-0.14, tiltZ-len*0.34, Math.PI/2,0,0);  // rear taper
-      // spiral fins approximated by angled bands around the barrel
-      for(let i=0;i<3;i++){ const f=0.28-i*0.28; const b=cyl(T, r*1.82, r*1.82, 0.10, steel, 0, midY, tiltZ+len*f, Math.PI/2,0,0); b.rotation.y=DEG(18*(i-1)); }
-      box(T, w*0.7, topY*0.4, 0.85, steel, 0, deckY+0.16+topY*0.2, frontZ-0.2);   // drive housing
-      cyl(T, r*1.2, r*1.2, 0.5, steel, 0, midY-0.2, rearZ-0.15, Math.PI/2,0,0);   // rear ring/funnel
-      box(T, w*0.55, 0.85, 0.5, greyD, 0, midY-0.55, rearZ-0.45, DEG(24),0,0);    // discharge chute
-      cyl(T,0.5,0.5,w*0.7,steel,0,deckY+0.16+topY*0.12,rearZ-0.1,0,0,Math.PI/2);  // water tank (cross)
-      for(let i=0;i<5;i++) box(T,0.05,0.12,0.05,steel, w*0.36, deckY+0.2+i*0.34, rearZ-0.3); // access ladder
-      break;
-    }
-    case'crane':{                                                                 // מנוף — column + 3-section knuckle boom + hook block
+    case'mixer':{                                                                 // מערבל בטון — compact inclined drum
       chassis();
-      for(let i=0;i<5;i++){ const x=-w*0.5+ w*(i+0.5)/5; box(T, w/5.4, 0.10, len, wood, x, deckY+0.2, cz); } // planked deck
-      box(T, w*0.55, topY*0.7, 1.0, steel, 0, deckY+0.2+topY*0.35, frontZ-0.1);   // crane column
-      box(T, 0.34, 0.34, len*0.66, yellow, 0, deckY+0.2+topY*0.72, cz+0.6, DEG(7),0,0);    // main boom
-      box(T, 0.28, 0.28, len*0.5,  yellow, 0, deckY+0.2+topY*0.98, cz-0.2, DEG(-12),0,0);  // mid section
-      box(T, 0.22, 0.22, len*0.4,  yellow, 0, deckY+0.2+topY*1.18, cz+0.4, DEG(8),0,0);    // tip section
-      box(T, 0.18,0.5,0.18, dark, w*0.1, deckY+0.2+topY*0.95, cz-len*0.18);       // hook block hanging
-      [-1,1].forEach(sx=>{ box(T,0.22,0.22,1.9,steel, sx*w*0.5, deckY-0.04, frontZ-0.1, 0,0,Math.PI/2);
-        cyl(T,0.24,0.24,1.0,dark, sx*(w*0.5+0.9), deckY-0.55, frontZ-0.1);
-        box(T,0.55,0.08,0.55,steel, sx*(w*0.5+0.9), deckY-1.0, frontZ-0.1); });   // stabilizers + pads
+      const r=topY*0.30, midY=deckY+r+0.22;                                       // smaller drum that fits the chassis
+      cyl(T, r*1.9, r*1.9, len*0.50, conc, 0, midY, cz, Math.PI/2,0,0);           // drum barrel
+      cyl(T, r*1.1, r*1.9, len*0.24, conc, 0, midY+0.12, cz+len*0.34, Math.PI/2,0,0); // front taper
+      cyl(T, r*0.95,r*1.9, len*0.22, conc, 0, midY-0.10, cz-len*0.34, Math.PI/2,0,0); // rear taper
+      [0.22,-0.22].forEach(f=>{ const b=cyl(T, r*1.96, r*1.96, 0.08, steel, 0, midY, cz+len*f, Math.PI/2,0,0); b.rotation.y=DEG(14); }); // drum bands
+      box(T, w*0.7, topY*0.30, 0.7, steel, 0, deckY+0.14+topY*0.15, frontZ-0.15); // drive housing
+      box(T, w*0.5, 0.7, 0.45, greyD, 0, midY-r*0.9, rearZ-0.05, DEG(24),0,0);    // discharge chute
+      break;
+    }
+    case'crane':{                                                                 // מנוף — column + folded boom resting on the deck
+      chassis();
+      for(let i=0;i<5;i++){ const x=-w*0.5+ w*(i+0.5)/5; box(T, w/5.4, 0.10, len, wood, x, deckY+0.18, cz); } // planked deck
+      box(T, w*0.5, topY*0.5, 0.9, steel, 0, deckY+0.18+topY*0.25, frontZ-0.1);   // crane column (modest)
+      box(T, 0.32, 0.30, len*0.72, yellow, 0, deckY+0.18+topY*0.34, cz+0.3, DEG(5),0,0);   // main boom (stowed low)
+      box(T, 0.26, 0.26, len*0.55, yellow, 0, deckY+0.18+topY*0.52, cz-0.2, DEG(-7),0,0);  // folded section
+      box(T, 0.30,0.30,0.30, dark, 0, deckY+0.18+topY*0.40, frontZ-0.1);          // winch drum
+      [-1,1].forEach(sx=>{ box(T,0.16,0.16,0.9,steel, sx*(w*0.5+0.3), deckY-0.02, frontZ-0.1, 0,0,Math.PI/2);
+        box(T,0.5,0.08,0.5,steel, sx*(w*0.5+0.55), deckY-0.16, frontZ-0.1); });   // stabilizer pads (folded)
       break;
     }
     case'lowloader':{                                                             // הובלת ציוד — flatbed carrying the excavator
