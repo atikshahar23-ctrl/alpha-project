@@ -343,6 +343,18 @@ input[type=range].slim::-webkit-slider-thumb{width:11px;height:11px}
 .cta-sec{text-align:center;padding:100px 0}
 .wa-btn{display:inline-flex;align-items:center;gap:9px;background:#25d366;color:#06210f;font-family:'Orbitron';font-weight:700;font-size:16px;padding:16px 32px;border-radius:12px;text-decoration:none;transition:.2s;box-shadow:0 0 36px rgba(37,211,102,.3)}
 .wa-btn:hover{transform:translateY(-3px);box-shadow:0 0 52px rgba(37,211,102,.6)}
+/* floating WhatsApp · back-to-top · scroll progress */
+.fab-wa{position:fixed;bottom:22px;right:22px;z-index:9998;width:58px;height:58px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:.25s;animation:fabPulse 2.6s infinite}
+.fab-wa svg{width:30px;height:30px;fill:#fff}
+.fab-wa:hover{transform:scale(1.08)}
+.fab-wa .fab-tip{position:absolute;right:70px;background:#0d0f13;border:1px solid var(--line);color:var(--white);font-family:'Heebo';font-size:12px;white-space:nowrap;padding:8px 12px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.fab-wa:hover .fab-tip{opacity:1}
+@keyframes fabPulse{0%{box-shadow:0 8px 28px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 8px 28px rgba(37,211,102,.45),0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 8px 28px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,0)}}
+.to-top{position:fixed;bottom:24px;left:22px;z-index:9997;width:46px;height:46px;border-radius:50%;background:rgba(13,15,19,.9);border:1px solid var(--line);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.25s;backdrop-filter:blur(4px)}
+.to-top.show{opacity:1;pointer-events:auto}
+.to-top:hover{border-color:var(--gold);transform:translateY(-3px)}
+.scroll-prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .12s ease-out}
+@media(max-width:640px){.fab-wa{width:52px;height:52px;bottom:16px;right:16px}.fab-wa .fab-tip{display:none}.to-top{width:42px;height:42px;bottom:18px;left:16px}}
 footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:var(--muted);font-size:12px}
 
 /* ── TESTIMONIALS ── */
@@ -981,7 +993,8 @@ Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّا�
 Object.assign(I18N,{
 "יעקב":{"en":"Yaakov","ar":"يعقوب"},"שמעון":{"en":"Shimon","ar":"شمعون"},"דני":{"en":"Dani","ar":"داني"},"אלי":{"en":"Eli","ar":"إيلي"},"נסים":{"en":"Nissim","ar":"نسيم"},"רמי":{"en":"Rami","ar":"رامي"},
 "מכוון ✓":{"en":"Aimed ✓","ar":"مضبوط ✓"},
-"קדמית · דרך":{"en":"Front · road","ar":"أمامية · الطريق"}
+"קדמית · דרך":{"en":"Front · road","ar":"أمامية · الطريق"},
+"דברו איתנו בוואטסאפ":{"en":"Chat with us on WhatsApp","ar":"تحدّث معنا عبر واتساب"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
@@ -2960,6 +2973,25 @@ window.addEventListener('load',()=>{
   buildDashboard();
   setInterval(animateDash, 80);
 });
+</script>
+<div class="scroll-prog" id="scrollProg"></div>
+<a class="fab-wa" id="fabWa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <span class="fab-tip">דברו איתנו בוואטסאפ</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15h-.01c-1.52 0-3.01-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+</a>
+<button class="to-top" id="toTop" aria-label="חזרה למעלה" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+(function(){
+  var wa=document.getElementById('fabWa');
+  if(wa) wa.href='https://wa.me/972547719070?text='+encodeURIComponent('שלום, אני מתעניין במערכת מצלמות, GPS ואבטחה למשאית. אפשר פרטים והצעת מחיר?');
+  var prog=document.getElementById('scrollProg'), top=document.getElementById('toTop');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop, max=h.scrollHeight-h.clientHeight;
+    if(prog) prog.style.width=(max>0?(sc/max*100):0)+'%';
+    if(top) top.classList.toggle('show', sc>600);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
 </script>
 </body>
 </html>
