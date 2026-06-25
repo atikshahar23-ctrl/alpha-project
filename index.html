@@ -995,10 +995,10 @@ const CAM_DEFS={
   rear: {pos:[0,4.15,0.18],  dir:[0,-0.28,-1]},
 };
 const CAM_RANGES={
-  front:{px:[-3,3],py:[0.3,7],pz:[-13,5],yaw:[-180,180],pitch:[-90,40]},
-  right:{px:[-3,3],py:[0.3,7],pz:[-13,5],yaw:[-180,180],pitch:[-90,40]},
-  left: {px:[-3,3],py:[0.3,7],pz:[-13,5],yaw:[-180,180],pitch:[-90,40]},
-  rear: {px:[-3,3],py:[0.3,7],pz:[-13,5],yaw:[-180,180],pitch:[-90,40]},
+  front:{px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
+  right:{px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
+  left: {px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
+  rear: {px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
 };
 
 // ═══ STATE ════════════════════════════════════════════════════════════════
@@ -1494,8 +1494,12 @@ function applyTruckModel(brandId){
   BABYLON.SceneLoader.ImportMeshAsync(null,'assets/models/',cfg.file,scene).then(res=>{
     if(token!==realTruckToken){ res.meshes.forEach(m=>m.dispose&&m.dispose()); return; }  // superseded
     const wrap=new BABYLON.TransformNode('realTruck',scene);
-    res.meshes.forEach(m=>{ if(!m.parent) m.parent=wrap; });
-    // auto-normalize: scale to ~11 units long, center on X/Z, sit on the ground
+    const inner=new BABYLON.TransformNode('realTruckInner',scene);
+    inner.parent=wrap;
+    inner.rotation=new BABYLON.Vector3(cfg.rotX||0, cfg.rotY||0, cfg.rotZ||0);  // per-model orientation fix
+    res.meshes.forEach(m=>{ if(!m.parent) m.parent=inner; });
+    inner.computeWorldMatrix(true);
+    // auto-normalize: scale to ~11 units long, center on X/Z, sit on the ground (after rotation)
     let mn=null,mx=null;
     res.meshes.forEach(m=>{ if(!m.getBoundingInfo)return; try{m.computeWorldMatrix(true);}catch(e){return;}
       const bb=m.getBoundingInfo().boundingBox,a=bb.minimumWorld,b=bb.maximumWorld;
@@ -1503,7 +1507,6 @@ function applyTruckModel(brandId){
     if(mn&&mx){
       const len=Math.max(mx.x-mn.x, mx.z-mn.z)||1, s=(11/len)*(cfg.scale||1);
       wrap.scaling.setAll(s);
-      wrap.rotation.y=cfg.rotY||0;
       wrap.position.set(-((mn.x+mx.x)/2)*s, -mn.y*s+(cfg.yOff||0), -((mn.z+mx.z)/2)*s);
     }
     wrap.parent=truckRoot;
