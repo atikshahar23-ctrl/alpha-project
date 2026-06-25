@@ -188,6 +188,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .sec{padding:100px 0}
 .eyebrow{font-family:'Orbitron';color:var(--gold);letter-spacing:4px;font-size:11px;margin-bottom:12px;font-weight:700}
 h2{font-family:'Orbitron';font-size:clamp(26px,4vw,42px);font-weight:900;color:var(--white);line-height:1.15}
+.hero-h1{font-family:'Heebo';font-weight:800;font-size:clamp(24px,4.4vw,40px);line-height:1.2;color:var(--white);margin:6px auto 4px;max-width:780px}
 .lead{color:var(--muted);font-size:17px;margin-top:12px;max-width:620px;line-height:1.7}
 .center{text-align:center;margin-left:auto;margin-right:auto}
 .reveal{opacity:0;transform:translateY(36px);transition:.75s cubic-bezier(.2,.8,.2,1)}
@@ -538,6 +539,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   <div class="wrap" style="position:relative;z-index:2">
     <div class="pill"><span class="pulse"></span>SECURE · TRACK · CONNECT</div>
     <picture><source srcset="assets/logo2.webp" type="image/webp"><img class="hero-logo" src="assets/logo2.png" alt="Heavy Guard — מצלמות, GPS ואבטחה למשאיות" width="380" height="428" fetchpriority="high"></picture>
+    <h1 class="hero-h1">מצלמות, GPS ומערכות אבטחה <span class="gold">למשאיות וציוד כבד</span></h1>
     <p class="sub">סרטון אחד מבטל תביעה. מצלמות, GPS ואבטחה לציי משאיות וציוד כבד — כשהאשמה לא עליך, ההקלטה מדברת במקומך.</p>
     <div class="hero-btns">
       <button class="btn-gold" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">🚛 דמיין את המשאית שלי</button>
@@ -1094,7 +1096,9 @@ Object.assign(I18N,{
 "🚛 בנה את המשאית שלי":{"en":"🚛 Build my truck","ar":"🚛 ابنِ شاحنتي"},
 "💬 דבר איתנו עכשיו":{"en":"💬 Talk to us now","ar":"💬 تحدّث معنا الآن"},
 "⚡ תגובה מהירה · הצעת מחיר תוך 24 שעות · התקנה בכל הארץ":{"en":"⚡ Fast response · quote within 24 hours · nationwide installation","ar":"⚡ استجابة سريعة · عرض سعر خلال 24 ساعة · تركيب في كل البلاد"},
-"בוא נתחיל":{"en":"Let's start","ar":"لنبدأ"}
+"בוא נתחיל":{"en":"Let's start","ar":"لنبدأ"},
+"מצלמות, GPS ומערכות אבטחה":{"en":"Cameras, GPS & security systems","ar":"كاميرات وأنظمة GPS وأمان"},
+"למשאיות וציוד כבד":{"en":"for trucks & heavy equipment","ar":"للشاحنات والمعدات الثقيلة"}
 });
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
