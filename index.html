@@ -857,7 +857,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   <picture><source srcset="assets/logo1.webp" type="image/webp"><img src="assets/logo1.png" alt="Heavy Guard" width="60" height="63" loading="lazy" style="width:60px;height:60px;object-fit:contain;margin-bottom:10px;opacity:.9"></picture>
   <div style="font-family:'Orbitron';font-weight:900;font-size:14px;margin-bottom:8px"><span style="color:var(--gold)">HEAVY</span> GUARD</div>
   התקנת מצלמות, GPS ומערכות אבטחה למשאיות וציוד כבד<br>© 2026 Heavy Guard. כל הזכויות שמורות.
-  <div style="margin-top:10px;font-size:9px;color:#5a6273;opacity:.8;line-height:1.7;max-width:720px;margin-left:auto;margin-right:auto">3D truck models — <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:#7c8aa8">CC-BY-4.0</a>: “VOLVO FH 16” by liebherr996litronic · “Scania R440” by zairiq-123 · “low poly DAF xf105” by Alvin.Woodly · “Mercedes-Benz Actros MP3” by DEMON_SCARY1235 · “MAN TGX 2010 V8” by DevPoly3D · “2008 Iveco Stralis 560” by tonielpro520 (via Sketchfab)</div>
+  <div style="margin-top:10px;font-size:9px;color:#5a6273;opacity:.8;line-height:1.7;max-width:720px;margin-left:auto;margin-right:auto">3D models <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:#7c8aa8">CC-BY-4.0</a> via Sketchfab: “low poly DAF xf105” by Alvin.Woodly · “MAN TGX 2010 V8” by DevPoly3D · “2008 Iveco Stralis 560” by tonielpro520. Other 3D models used under their respective licenses.</div>
 </footer>
 
 <!-- ═══════════ BABYLON.JS ENGINE (PBR, mobile-optimised) ═══════════ -->
@@ -1474,6 +1474,8 @@ const TRUCK_MODELS={
   merc:{file:'mercedes.glb',rotY:0},
   man:{file:'man.glb',      rotY:0},
   iveco:{file:'iveco.glb',  rotY:0},
+  isuzu:{file:'isuzu.glb',  rotY:0},
+  hino:{file:'hino.glb',    rotY:0},
 };
 let realTruckNode=null, realTruckToken=0, appliedBrand=null;
 function showProceduralTruck(show){ if(window.truckBody && !window.truckBody.isDisposed()) window.truckBody.setEnabled(show); }
