@@ -7,7 +7,7 @@ Landing page for fleet & heavy-equipment cameras, GPS and security systems.
 
 ## מבנה / Structure
 
-- `index.html` — האתר (single-page, RTL עברית + מתג אנגלית)
+- `index.html` — האתר (single-page, תלת-לשוני: עברית 🇮🇱 / אנגלית 🇬🇧 / ערבית 🇸🇦 עם מתג בניווט; RTL/LTR אוטומטי)
 - `assets/` — לוגואים (PNG + WebP), אייקונים, ותמונת שיתוף (OG)
 - `site.webmanifest` — מניפסט PWA
 
