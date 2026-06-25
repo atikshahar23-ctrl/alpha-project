@@ -1394,7 +1394,7 @@ function applyTOD(){
     sun.position=new BABYLON.Vector3(50,100,30); sun.intensity=2.5;
     lightsGroup.push(sun);
     shadowGen=new BABYLON.ShadowGenerator(1024,sun);
-    shadowGen.useBlurExponentialShadowMap=true; shadowGen.blurScale=2;
+    shadowGen.useBlurExponentialShadowMap=true; shadowGen.blurScale=2; shadowGen.useKernelBlur=true; shadowGen.blurKernel=32; shadowGen.darkness=0.42;
   } else if(tod==='dusk'){
     scene.clearColor=new BABYLON.Color4(0.05,0.02,0.09,1);
     scene.fogMode=BABYLON.Scene.FOGMODE_EXP2; scene.fogColor=new BABYLON.Color3(0.05,0.02,0.09); scene.fogDensity=0.014;
@@ -1935,6 +1935,8 @@ function applyTruckModel(brandId){
     }
     wrap.parent=truckRoot;
     realTruckNode=wrap;
+    // make the real truck cast a ground shadow (big realism win) + receive shadows
+    if(shadowGen){ res.meshes.forEach(m=>{ try{ if(m.getTotalVertices&&m.getTotalVertices()>0){ shadowGen.addShadowCaster(m); m.receiveShadows=true; } }catch(e){} }); }
   }).catch(e=>{ if(token===realTruckToken){ console.error('truck model load failed:',e); showProceduralTruck(true); } });
 }
 
