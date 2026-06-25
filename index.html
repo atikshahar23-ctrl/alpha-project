@@ -404,6 +404,16 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 .fm-driving{background:#4ade80}.fm-idle{background:#e8b53d}.fm-stopped{background:#9aa1ad}
 .fm-act{box-shadow:0 0 0 4px rgba(232,181,61,.35),0 2px 10px rgba(0,0,0,.7);border-color:var(--gold)}
 .fm-lbl{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:9px;font-weight:700;color:var(--gold);white-space:nowrap;text-shadow:0 1px 3px #000}
+#fleetCams{position:absolute;left:10px;bottom:10px;z-index:500;width:min(280px,72%);background:rgba(4,6,10,.93);border:1px solid rgba(232,181,61,.32);border-radius:10px;padding:8px;backdrop-filter:blur(5px);box-shadow:0 10px 32px rgba(0,0,0,.55)}
+.fc-head{display:flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:10px;color:var(--gold);margin-bottom:6px}
+.fc-head .fc-rec{width:7px;height:7px;border-radius:50%;background:#ff3b3b;animation:blink 1.2s infinite;flex:none}
+.fc-head #fcTag{font-family:'Heebo';font-size:8px;color:var(--green);border:1px solid rgba(74,222,128,.4);border-radius:20px;padding:0 5px}
+.fc-head #fcSub{margin-inline-start:auto;color:var(--muted);font-family:'Heebo';font-size:9px}
+.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.fc-cell{position:relative;border-radius:5px;overflow:hidden;background:#000;line-height:0}
+.fc-cell canvas{display:block;width:100%;height:auto}
+.fc-cell span{position:absolute;inset-inline-start:3px;bottom:2px;font-size:7px;color:#dfe3ea;font-family:'Heebo';text-shadow:0 1px 2px #000;letter-spacing:.3px;line-height:1}
+@media(max-width:640px){#fleetCams{width:62%;padding:6px}.fc-head{font-size:9px}}
 .dash-side{border-right:1px solid rgba(255,255,255,.06);padding:16px;overflow-y:auto;max-height:420px}
 .dash-side::-webkit-scrollbar{width:4px}.dash-side::-webkit-scrollbar-thumb{background:rgba(232,181,61,.2);border-radius:2px}
 .dstat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -840,6 +850,15 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     <div class="dash-body">
       <div class="dash-map" id="dashMap">
         <div id="fleetMap" style="display:none"></div>
+        <div id="fleetCams" style="display:none">
+          <div class="fc-head"><span class="fc-rec"></span><b id="fcTitle">HG-04</b><span id="fcTag">מכוון ✓</span><span id="fcSub">משה</span></div>
+          <div class="fc-grid">
+            <div class="fc-cell"><canvas id="fc_front" width="124" height="70"></canvas><span>קדמית</span></div>
+            <div class="fc-cell"><canvas id="fc_right" width="124" height="70"></canvas><span>ימין</span></div>
+            <div class="fc-cell"><canvas id="fc_left" width="124" height="70"></canvas><span>שמאל</span></div>
+            <div class="fc-cell"><canvas id="fc_rear" width="124" height="70"></canvas><span>אחורית</span></div>
+          </div>
+        </div>
         <svg viewBox="0 0 600 420" id="dashSvg">
           <!-- map grid -->
           <defs>
@@ -959,6 +978,10 @@ Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night v
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
 Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
 Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّاطة الخرسانة"},"רמסע":{"en":"Lowloader","ar":"ناقلة منخفضة"},"מכולה 40 רגל":{"en":"40ft container","ar":"حاوية 40 قدم"}});
+Object.assign(I18N,{
+"יעקב":{"en":"Yaakov","ar":"يعقوب"},"שמעון":{"en":"Shimon","ar":"شمعون"},"דני":{"en":"Dani","ar":"داني"},"אלי":{"en":"Eli","ar":"إيلي"},"נסים":{"en":"Nissim","ar":"نسيم"},"רמי":{"en":"Rami","ar":"رامي"},
+"מכוון ✓":{"en":"Aimed ✓","ar":"مضبوط ✓"}
+});
 Object.assign(I18N,{
 "אחורית · IP69K":{"en":"Rear · IP69K","ar":"خلفية · IP69K"},
 "צד · IP69K":{"en":"Side · IP69K","ar":"جانبية · IP69K"},
@@ -2717,13 +2740,21 @@ new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!counted){count
 
 
 // ─── FLEET DASHBOARD ──────────────────────────────────────────────────
+// lat/lng are real on-land positions; each truck wanders inside a small box around `home`
+// so it never drifts into the sea or across a border.
 const FLEET=[
-  {id:'HG-01',name:'משאית 01 · ארגז',driver:'דוד',status:'driving',x:180,y:160,spd:64,body:'📦',lat:32.075,lng:34.801},   // איילון ת"א
-  {id:'HG-02',name:'משאית 02 · מיכלית',driver:'רונן',status:'driving',x:340,y:240,spd:52,body:'🛢',lat:31.804,lng:34.650}, // נמל אשדוד
-  {id:'HG-03',name:'משאית 03 · קיפר',driver:'אבי',status:'idle',x:300,y:210,spd:0,body:'🏗',lat:31.899,lng:35.010},      // כביש 1 / מודיעין
-  {id:'HG-04',name:'משאית 04 · ראש-סוס',driver:'משה',status:'driving',x:420,y:120,spd:78,body:'🚛',lat:32.434,lng:34.949},// כביש 6 חדרה
-  {id:'HG-05',name:'משאית 05 · מנוף',driver:'יוסי',status:'stopped',x:480,y:340,spd:0,body:'🏗',lat:31.790,lng:35.197},   // ירושלים
-  {id:'HG-06',name:'משאית 06 · משאבת בטון',driver:'עמי',status:'driving',x:240,y:300,spd:43,body:'🚧',lat:31.252,lng:34.791}, // באר שבע
+  {id:'HG-01',name:'משאית 01 · ארגז',driver:'דוד',status:'driving',x:180,y:150,spd:64,body:'📦',lat:32.080,lng:34.830,home:[32.080,34.830]}, // ת"א איילון
+  {id:'HG-02',name:'משאית 02 · מיכלית',driver:'רונן',status:'driving',x:330,y:250,spd:52,body:'🛢',lat:31.800,lng:34.680,home:[31.800,34.680]}, // אשדוד
+  {id:'HG-03',name:'משאית 03 · קיפר',driver:'אבי',status:'idle',x:300,y:200,spd:0,body:'🪨',lat:31.900,lng:35.010,home:[31.900,35.010]}, // מודיעין
+  {id:'HG-04',name:'משאית 04 · ראש-סוס',driver:'משה',status:'driving',x:420,y:120,spd:78,body:'🚛',lat:32.430,lng:34.970,home:[32.430,34.970]}, // חדרה כביש 6
+  {id:'HG-05',name:'משאית 05 · מנוף',driver:'יוסי',status:'stopped',x:470,y:330,spd:0,body:'🏗',lat:31.780,lng:35.210,home:[31.780,35.210]}, // ירושלים
+  {id:'HG-06',name:'משאית 06 · משאבת בטון',driver:'עמי',status:'driving',x:240,y:300,spd:43,body:'🚧',lat:31.250,lng:34.800,home:[31.250,34.800]}, // באר שבע
+  {id:'HG-07',name:'משאית 07 · ארגז',driver:'יעקב',status:'driving',x:140,y:90,spd:69,body:'📦',lat:32.790,lng:35.010,home:[32.790,35.010]}, // חיפה
+  {id:'HG-08',name:'משאית 08 · מיכלית',driver:'שמעון',status:'driving',x:200,y:130,spd:58,body:'🛢',lat:32.310,lng:34.870,home:[32.310,34.870]}, // נתניה
+  {id:'HG-09',name:'משאית 09 · קיפר',driver:'דני',status:'driving',x:280,y:230,spd:47,body:'🪨',lat:31.960,lng:34.810,home:[31.960,34.810]}, // ראשון לציון
+  {id:'HG-10',name:'משאית 10 · מרכב פתוח',driver:'אלי',status:'idle',x:300,y:330,spd:0,body:'🛻',lat:31.610,lng:34.770,home:[31.610,34.770]}, // קריית גת
+  {id:'HG-11',name:'משאית 11 · מערבל בטון',driver:'נסים',status:'driving',x:520,y:150,spd:51,body:'🚧',lat:32.610,lng:35.290,home:[32.610,35.290]}, // עפולה
+  {id:'HG-12',name:'משאית 12 · מכולה',driver:'רמי',status:'driving',x:250,y:380,spd:62,body:'📦',lat:31.670,lng:34.610,home:[31.670,34.610]}, // אשקלון
 ];
 let dashActiveId=null;
 const STATUS_TXT={driving:'בנסיעה',idle:'בהמתנה',stopped:'חונה'};
@@ -2795,6 +2826,7 @@ function buildDashboard(){
     fl.appendChild(el);
   });
   drawBlips();
+  drawFleetCams();
 }
 
 function drawBlips(){
@@ -2824,28 +2856,73 @@ function drawBlips(){
   });
 }
 
-// animate driving trucks on the map
+// animate driving trucks — each bounces inside a small land box around its home
 function animateDash(){
   let moved=false;
   FLEET.forEach(t=>{
     if(t.status==='driving'){
-      // SVG fallback coords
-      t.x+=Math.cos(t.id.charCodeAt(4))*0.25+0.15;
-      t.y+=Math.sin(t.id.charCodeAt(4))*0.2;
-      if(t.x>580)t.x=20; if(t.x<20)t.x=580;
-      if(t.y>400)t.y=20; if(t.y<20)t.y=400;
-      // real map: drift gently along a per-truck heading, kept within Israel
-      if(LMAP){
-        const seed=t.id.charCodeAt(4);
-        t.lat+=Math.cos(seed)*0.0009;
-        t.lng+=Math.sin(seed)*0.0009;
-        if(t.lat>33.2||t.lat<29.6){ t.lat=Math.min(33.2,Math.max(29.6,t.lat)); }
-        if(t.lng>35.9||t.lng<34.2){ t.lng=Math.min(35.9,Math.max(34.2,t.lng)); }
-      }
+      if(t._hx===undefined){ const s=t.id.charCodeAt(4); t._hx=Math.cos(s); t._hy=Math.sin(s); }
+      const R=0.035, step=0.00016*((t.spd||50)/60);
+      t.lat+=t._hy*step; t.lng+=t._hx*step;
+      if(t.lat>t.home[0]+R){t.lat=t.home[0]+R; t._hy*=-1;}
+      if(t.lat<t.home[0]-R){t.lat=t.home[0]-R; t._hy*=-1;}
+      if(t.lng>t.home[1]+R){t.lng=t.home[1]+R; t._hx*=-1;}
+      if(t.lng<t.home[1]-R){t.lng=t.home[1]-R; t._hx*=-1;}
+      // SVG fallback coords (also bounce)
+      t.x+=t._hx*0.6; t.y+=t._hy*0.5;
+      if(t.x>580){t.x=580;t._hx*=-1;} if(t.x<20){t.x=20;t._hx*=-1;}
+      if(t.y>400){t.y=400;t._hy*=-1;} if(t.y<20){t.y=20;t._hy*=-1;}
       moved=true;
     }
   });
   if(moved){ if(LMAP) drawFleetMarkers(); else drawBlips(); }
+  drawFleetCams();   // animate the live camera mini-monitor
+}
+
+// ── Live 4-camera mini-monitor (stylised feeds simulating the selected truck) ──
+let _fcPhase=0;
+function fleetSavedCount(){ try{ return Object.keys(JSON.parse(localStorage.getItem('hg_camSetups')||'{}')).length; }catch(e){ return 0; } }
+function drawFleetCams(){
+  const box=document.getElementById('fleetCams'); if(!box) return;
+  const t=FLEET.find(x=>x.id===dashActiveId);
+  if(!t){ box.style.display='none'; return; }
+  box.style.display='block';
+  const ttl=document.getElementById('fcTitle'); if(ttl) ttl.textContent=t.id;
+  const sub=document.getElementById('fcSub');
+  if(sub) sub.textContent=TR(t.driver)+(t.spd>0?' · '+t.spd+(LANG==='en'?' km/h':LANG==='ar'?' كم/س':' קמ"ש'):' · '+TR('עומד'));
+  const tag=document.getElementById('fcTag'); if(tag) tag.style.display=fleetSavedCount()>0?'inline':'none';
+  _fcPhase+=(t.spd||0)*0.0035;
+  ['front','right','left','rear'].forEach(k=>{
+    const c=document.getElementById('fc_'+k); if(!c) return;
+    drawRoadFeed(c.getContext('2d'), c.width, c.height, k, _fcPhase);
+  });
+}
+function drawRoadFeed(ctx,w,h,kind,phase){
+  const horizon=h*0.42, cx=w/2;
+  const sky=ctx.createLinearGradient(0,0,0,horizon);
+  sky.addColorStop(0,'#9ec2e6'); sky.addColorStop(1,'#e6eef5');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,w,horizon);
+  ctx.fillStyle='#41463f'; ctx.fillRect(0,horizon,w,h-horizon);            // ground
+  let vpx=cx; if(kind==='right')vpx=w*0.74; if(kind==='left')vpx=w*0.26;
+  const topW=w*0.10, botW=w*0.92;
+  ctx.fillStyle='#2c2f34';                                                  // asphalt
+  ctx.beginPath();
+  ctx.moveTo(vpx-topW/2,horizon); ctx.lineTo(vpx+topW/2,horizon);
+  ctx.lineTo(cx+botW/2,h); ctx.lineTo(cx-botW/2,h); ctx.closePath(); ctx.fill();
+  for(let i=0;i<7;i++){                                                     // moving centre dashes
+    const p=((i/7 + (phase%1))%1), y=horizon+(h-horizon)*p*p, x=vpx+(cx-vpx)*p;
+    ctx.globalAlpha=0.25+0.75*p; ctx.fillStyle='#f0d24a';
+    ctx.fillRect(x-(0.6+p*1.6), y, 1.2+p*3.2, 2+p*5);
+  }
+  ctx.globalAlpha=1;
+  if(kind==='right'||kind==='left'){                                       // sliver of the truck body
+    ctx.fillStyle='rgba(232,234,238,0.92)';
+    const ex=kind==='right'?0:w-w*0.17; ctx.fillRect(ex,horizon*0.55,w*0.17,h-horizon*0.55);
+  }
+  if(kind==='rear'){ ctx.fillStyle='rgba(0,0,0,0.16)'; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#d6d9de'; ctx.fillRect(w*0.22,h*0.8,w*0.56,h*0.2); }     // trailer tail
+  ctx.fillStyle='rgba(255,59,59,0.95)'; ctx.beginPath(); ctx.arc(w-7,7,2.4,0,7); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.35)'; ctx.lineWidth=1; ctx.strokeRect(0.5,0.5,w-1,h-1);
 }
 
 
