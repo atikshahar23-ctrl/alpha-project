@@ -958,7 +958,7 @@ Object.assign(I18N,{"✋ הזז":{"en":"✋ Move","ar":"✋ تحريك"}});
 Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night vision","ar":"خلفية · رؤية ليلية"},"מצלמה אחורית Sony AHD 2MP עם 18 נורות LED לראיית לילה (עד 20 מטר), עדשה רחבה וטכנולוגיות D-WDR ו-Smart IR לתמונה חדה.":{"en":"A rear Sony AHD 2MP camera with 18 LED night-vision lights (up to 20 m), a wide lens and D-WDR + Smart IR technologies for a sharp image.","ar":"كاميرا خلفية Sony AHD 2MP مع 18 مصباح LED للرؤية الليلية (حتى 20 متراً)، عدسة واسعة وتقنيتا D-WDR و Smart IR لصورة واضحة."}});
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
 Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
-Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّاطة الخرسانة"},"רמסע":{"en":"Lowloader","ar":"ناقلة منخفضة"}});
+Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّاطة الخرسانة"},"רמסע":{"en":"Lowloader","ar":"ناقلة منخفضة"},"מכולה 40 רגל":{"en":"40ft container","ar":"حاوية 40 قدم"}});
 Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 שמור מיקומים":{"en":"💾 Save positions","ar":"💾 حفظ المواضع"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"},"נטענו מיקומים שמורים":{"en":"Saved positions loaded","ar":"تم تحميل المواضع المحفوظة"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
@@ -1065,6 +1065,7 @@ const BODIES=[
   {id:'mixer',    name:'מערבל בטון'},
   {id:'crane',    name:'מנוף'},
   {id:'lowloader',name:'רמסע'},
+  {id:'container',name:'מכולה 40 רגל'},
 ];
 
 // Camera defaults: pos=[x,y,z], dir=[dx,dy,dz]  (+Z = truck nose)
@@ -1633,8 +1634,10 @@ function fitCamerasToTruck(halfW, topY, halfD){
 }
 // Cargo body / trailer built behind the cab of a real truck, shaped by the selected body type.
 let trailerNode=null;
+let _containerToken=0;
 function buildTrailer(bodyId){
   if(trailerNode){ try{trailerNode.dispose(false,true);}catch(e){} trailerNode=null; }
+  _containerToken++;                          // invalidate any pending container GLB load
   const D=window.__truckDims;
   if(!D || !realTruckNode) return;          // only on real trucks
   if(bodyId==='tractor') return;            // bobtail — no trailer
@@ -1798,12 +1801,42 @@ function buildTrailer(bodyId){
       [-1,1].forEach(sx=>box(T,0.05,0.18,len*0.58,greyD, sx*w*0.5, lowY+0.22, cz+0.02)); // side rails
       break;
     }
+    case'container':{                                                            // מכולה 40 רגל — real GLB container on a flatbed semi
+      chassis(3);
+      box(T, w, 0.18, len, steel, 0, deckY+0.18, cz);                            // flatbed deck
+      [[-1,1],[1,1],[-1,-1],[1,-1]].forEach(([sx,sz])=>box(T,0.18,0.14,0.18,yellow, sx*w*0.44, deckY+0.30, cz+sz*len*0.44)); // twist-locks
+      cyl(T,0.5,0.5,0.25,steel,0,deckY+0.1,frontZ+0.2,Math.PI/2,0,0);            // kingpin plate
+      loadContainerBody(T, cz, deckY+0.36, len*1.02);                            // real container model on top
+      break;
+    }
     default:{
       chassis();
       const h=topY*0.8; box(T, w, h, len, grey, 0, deckY+0.14+h/2, cz);
     }
   }
   trailerNode=T;
+}
+// Load the real 40ft container GLB and seat it on the flatbed (length along Z).
+function loadContainerBody(parent, cz, baseY, targetLen){
+  if(!window.BABYLON||!BABYLON.SceneLoader) return;
+  const tok=_containerToken;
+  BABYLON.SceneLoader.ImportMeshAsync(null,'assets/models/','container40.glb',scene).then(res=>{
+    if(tok!==_containerToken || !parent || parent.isDisposed()){ res.meshes.forEach(m=>m.dispose&&m.dispose()); return; }
+    const wrap=new BABYLON.TransformNode('contWrap',scene);
+    const cmat=pbr('contmat',0.66,0.42,0.16,0.35,0.55);
+    res.meshes.forEach(m=>{ if(!m.parent) m.parent=wrap; if(m.getBoundingInfo) m.material=cmat; });
+    wrap.computeWorldMatrix(true);
+    let mn=null,mx=null;
+    res.meshes.forEach(m=>{ if(!m.getBoundingInfo)return; try{m.computeWorldMatrix(true);}catch(e){return;}
+      const bb=m.getBoundingInfo().boundingBox,a=bb.minimumWorld,b=bb.maximumWorld;
+      if(!mn){mn=a.clone();mx=b.clone();}else{mn=BABYLON.Vector3.Minimize(mn,a);mx=BABYLON.Vector3.Maximize(mx,b);} });
+    if(mn&&mx){
+      const Lz=(mx.z-mn.z)||1, s=targetLen/Lz;
+      wrap.scaling.setAll(s);
+      wrap.position.set(-((mn.x+mx.x)/2)*s, baseY-mn.y*s, cz-((mn.z+mx.z)/2)*s);
+    }
+    wrap.parent=parent;
+  }).catch(()=>{});
 }
 function applyTruckModel(brandId){
   if(appliedBrand===brandId) return;          // already applied this brand
