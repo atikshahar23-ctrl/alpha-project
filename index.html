@@ -1172,6 +1172,16 @@ function init3D(){
   glowLayer=new BABYLON.GlowLayer('glow',scene);
   glowLayer.intensity=0.55;
 
+  // premium post-processing: subtle bloom, anti-aliasing, gentle contrast (safe — falls back if unsupported)
+  try{
+    const pipe=new BABYLON.DefaultRenderingPipeline('hgPipe', true, scene, [orbitCam]);
+    pipe.fxaaEnabled=true;
+    pipe.bloomEnabled=true; pipe.bloomThreshold=0.78; pipe.bloomWeight=0.32; pipe.bloomKernel=48; pipe.bloomScale=0.5;
+    pipe.imageProcessingEnabled=true;
+    pipe.imageProcessing.contrast=1.12; pipe.imageProcessing.exposure=1.04;
+    window.__pipe=pipe;
+  }catch(e){ console.warn('rendering pipeline unavailable:',e); }
+
   // cam state
   Object.keys(CAM_DEFS).forEach(id=>{
     camPos[id]=V3(...CAM_DEFS[id].pos);
