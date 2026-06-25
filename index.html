@@ -1473,7 +1473,7 @@ function buildInterior(g, M){
 // rotY / scale / yOff are per-model tuning knobs (models come from different authors).
 const TRUCK_MODELS={
   volvo:{file:'volvo.glb',  rotY:0},
-  scania:{file:'scania.glb',rotY:0},
+  scania:{file:'scania.glb',rotZ:Math.PI/2},
   daf:{file:'daf.glb',      rotY:0},
   merc:{file:'mercedes.glb',rotY:0},
   man:{file:'man.glb',      rotY:0},
@@ -1483,6 +1483,24 @@ const TRUCK_MODELS={
 };
 let realTruckNode=null, realTruckToken=0, appliedBrand=null;
 function showProceduralTruck(show){ if(window.truckBody && !window.truckBody.isDisposed()) window.truckBody.setEnabled(show); }
+// Auto-place the 4 cameras at realistic mounting points based on the truck's real size:
+// front = windshield centre (looking down the road); right/left = under the mirrors on the
+// front face; rear = top-centre of the cab (looking back).
+function fitCamerasToTruck(halfW, topY, halfD){
+  const defs={
+    front:{pos:[0,            topY*0.80, halfD*0.86], dir:[0,-0.20, 1]},
+    right:{pos:[ halfW*0.96,  topY*0.70, halfD*0.55], dir:[1,-0.26, 0.05]},
+    left: {pos:[-halfW*0.96,  topY*0.70, halfD*0.55], dir:[-1,-0.26,0.05]},
+    rear: {pos:[0,            topY*0.96, halfD*0.30], dir:[0,-0.16,-1]},
+  };
+  ['front','right','left','rear'].forEach(id=>{
+    camPos[id]=V3(...defs[id].pos); camDir[id]=V3(...defs[id].dir).normalize();
+    const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
+  });
+  if(_mirrorActive) mirrorRightToLeft();
+  buildCamMarkers();
+  if(activeCamId) renderCamCtrl(activeCamId);
+}
 function applyTruckModel(brandId){
   if(appliedBrand===brandId) return;          // already applied this brand
   appliedBrand=brandId;
@@ -1508,6 +1526,8 @@ function applyTruckModel(brandId){
       const len=Math.max(mx.x-mn.x, mx.z-mn.z)||1, s=(11/len)*(cfg.scale||1);
       wrap.scaling.setAll(s);
       wrap.position.set(-((mn.x+mx.x)/2)*s, -mn.y*s+(cfg.yOff||0), -((mn.z+mx.z)/2)*s);
+      // auto-fit the cameras to this truck's real proportions (default mounting positions)
+      try{ fitCamerasToTruck((mx.x-mn.x)*s/2, (mx.y-mn.y)*s, (mx.z-mn.z)*s/2); }catch(e){}
     }
     wrap.parent=truckRoot;
     realTruckNode=wrap;
