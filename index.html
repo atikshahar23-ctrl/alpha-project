@@ -660,6 +660,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
             <div style="display:flex;gap:5px">
               <button id="camDragBtn" onclick="toggleCamDrag()" style="font-size:8px;font-family:'Orbitron';background:rgba(95,210,224,.08);border:1px solid rgba(95,210,224,.3);color:var(--cyan);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">✋ הזז</button>
               <button id="mirrorBtn" onclick="toggleMirror()" style="font-size:8px;font-family:'Orbitron';background:rgba(95,210,224,.08);border:1px solid rgba(95,210,224,.3);color:var(--cyan);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">⟺ מראה</button>
+              <button id="saveBtn" onclick="saveCamSetup()" style="font-size:8px;font-family:'Orbitron';background:rgba(232,181,61,.12);border:1px solid rgba(232,181,61,.4);color:var(--gold);border-radius:4px;padding:2px 7px;cursor:pointer;letter-spacing:.5px">💾 שמור</button>
             </div>
           </div>
           <div class="cam-rows" id="camRows"></div>
@@ -957,6 +958,7 @@ Object.assign(I18N,{"אחורית · ראיית לילה":{"en":"Rear · Night v
 Object.assign(I18N,{"קדמית/חוץ · IP69K":{"en":"Front/Exterior · IP69K","ar":"أمامية/خارجية · IP69K"},"מצלמת 1080P עמידה למים (IP69K) עם ראיית לילה, זווית רחבה, עמידות לזעזועים ומבנה אלומיניום קשיח לרכבים כבדים.":{"en":"A 1080P waterproof (IP69K) camera with night vision, a wide angle, shock resistance and a rugged aluminium body for heavy vehicles.","ar":"كاميرا 1080P مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة ومقاومة للاهتزازات وهيكل ألمنيوم متين للمركبات الثقيلة."},"צד · 130° · IP69K":{"en":"Side · 130° · IP69K","ar":"جانبية · 130° · IP69K"},"מצלמת צד CMOS עמידה למים (IP69K) עם ראיית לילה, זווית רחבה 130°, גוף אלומיניום קשיח ועמידות גבוהה לזעזועים.":{"en":"A CMOS waterproof (IP69K) side camera with night vision, a wide 130° angle, a rugged aluminium body and high shock resistance.","ar":"كاميرا جانبية CMOS مقاومة للماء (IP69K) مع رؤية ليلية وزاوية واسعة 130° وهيكل ألمنيوم متين ومقاومة عالية للاهتزازات."}});
 Object.assign(I18N,{"🚦 הפעל נסיעה":{"en":"🚦 Start driving","ar":"🚦 ابدأ القيادة"},"הפעל נסיעה":{"en":"Start driving","ar":"ابدأ القيادة"},"עצור":{"en":"Stop","ar":"توقف"}});
 Object.assign(I18N,{"מערבל בטון":{"en":"Concrete mixer","ar":"خلّاطة الخرسانة"},"רמסע":{"en":"Lowloader","ar":"ناقلة منخفضة"}});
+Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
@@ -1237,6 +1239,7 @@ function init3D(){
   orbitCam=new BABYLON.UniversalCamera('orbit',new BABYLON.Vector3(0,5,-20),scene);
   orbitCam.fov=0.9;
   orbitCam.minZ=0.1; orbitCam.maxZ=600;
+  orbitCam.layerMask=0x2FFFFFFF;   // sees normal scene + camera markers (bit 0x20000000)
   scene.activeCamera=orbitCam;
 
   glowLayer=new BABYLON.GlowLayer('glow',scene);
@@ -1622,6 +1625,7 @@ function fitCamerasToTruck(halfW, topY, halfD){
     camPos[id]=V3(...defs[id].pos); camDir[id]=V3(...defs[id].dir).normalize();
     const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
   });
+  applySavedSetup();                 // restore the user's saved layout for this truck, if any
   if(_mirrorActive) mirrorRightToLeft();
   buildCamMarkers();
   if(activeCamId) renderCamCtrl(activeCamId);
@@ -2163,13 +2167,29 @@ function buildCamMarkers(){
   camLenses.forEach(m=>m&&m.dispose());
   camMarkers={}; camCones={}; camLenses=[];
 
+  const MM=0x20000000;                          // markers render only to the on-screen camera
   ['front','right','left','rear'].forEach(id=>{
     const act=id===activeCamId;
-    const m=BABYLON.MeshBuilder.CreateBox('cam_'+id,{width:0.5,height:0.34,depth:0.42},scene);
-    m.material=emissive('cm_'+id, act?1:0.37, act?0.67:0.82, act?0:0.9, 1.0);
+    // ── little camera body (the draggable root); lens points local +Z ──
+    const m=BABYLON.MeshBuilder.CreateBox('cam_'+id,{width:0.42,height:0.30,depth:0.40},scene);
+    m.material=emissive('cm_'+id, act?1:0.32, act?0.67:0.55, act?0:0.62, act?1:0.62);
     m.position.copyFrom(camPos[id]);
     m.parent=truckRoot;
+    m.rotationQuaternion=BABYLON.Quaternion.Identity();
+    m.layerMask=MM;
     camMarkers[id]=m;
+    // detail: lens barrel + IR ring + glass + mounting bracket (children, disposed with m)
+    const det=pbr('camdet_'+id,0.05,0.06,0.08,0.35,0.55);
+    const barrel=BABYLON.MeshBuilder.CreateCylinder('cbar_'+id,{diameter:0.24,height:0.18,tessellation:16},scene);
+    barrel.material=det; barrel.rotation.x=Math.PI/2; barrel.position.set(0,0.02,0.25); barrel.parent=m; barrel.layerMask=MM;
+    const ring=BABYLON.MeshBuilder.CreateTorus('cring_'+id,{diameter:0.27,thickness:0.045,tessellation:14},scene);
+    ring.material=emissive('cir_'+id,0.5,0.58,0.66,0.4); ring.rotation.x=Math.PI/2; ring.position.set(0,0.02,0.30); ring.parent=m; ring.layerMask=MM;
+    const glass=BABYLON.MeshBuilder.CreateCylinder('cgl_'+id,{diameter:0.15,height:0.05,tessellation:16},scene);
+    glass.material=pbr('cgls_'+id,0.02,0.04,0.07,0.95,0.05); glass.rotation.x=Math.PI/2; glass.position.set(0,0.02,0.345); glass.parent=m; glass.layerMask=MM;
+    const arm=BABYLON.MeshBuilder.CreateBox('carm_'+id,{width:0.08,height:0.20,depth:0.10},scene);
+    arm.material=det; arm.position.set(0,-0.22,-0.08); arm.parent=m; arm.layerMask=MM;
+    const base=BABYLON.MeshBuilder.CreateBox('cbase_'+id,{width:0.22,height:0.05,depth:0.18},scene);
+    base.material=det; base.position.set(0,-0.32,-0.08); base.parent=m; base.layerMask=MM;
     // drag-on-truck: grab the camera marker and move it directly in the 3D view
     try{
       const db=new BABYLON.PointerDragBehavior();
@@ -2194,11 +2214,56 @@ function buildCamMarkers(){
       cm.alpha=0.10; cm.backFaceCulling=false;
       cone.material=cm;
       cone.parent=truckRoot;
+      cone.layerMask=MM;                          // keep the cone out of the camera feeds
       // orient cone along camDir
       orientCone(cone,camPos[id],camDir[id]);
       camCones[id]=cone;
     }
+    orientCamModel(id);                            // point the little camera body along its view dir
   });
+}
+// Rotate a camera marker so its lens (local +Z) points along the camera's view direction.
+function orientCamModel(id){
+  const m=camMarkers[id]; if(!m||!window.BABYLON) return;
+  const d=camDir[id].clone().normalize();
+  const up=Math.abs(d.y)>0.94?new BABYLON.Vector3(0,0,1):new BABYLON.Vector3(0,1,0);
+  try{ m.rotationQuaternion=BABYLON.Quaternion.FromLookDirectionLH(d,up); }catch(e){}
+}
+
+// ── Save / restore the camera layout per truck (localStorage) ──
+function _setupKey(){ return (curBrand?curBrand.id:'?')+'__'+(curBody?curBody.id:'?'); }
+function saveCamSetup(){
+  try{
+    const all=JSON.parse(localStorage.getItem('hg_camSetups')||'{}');
+    const rec={cams:{},mirror:_mirrorActive};
+    ['front','right','left','rear'].forEach(id=>{
+      rec.cams[id]={p:[camPos[id].x,camPos[id].y,camPos[id].z],d:[camDir[id].x,camDir[id].y,camDir[id].z]};
+    });
+    all[_setupKey()]=rec;
+    localStorage.setItem('hg_camSetups',JSON.stringify(all));
+    toastMsg(TR('המיקומים נשמרו ✓'));
+  }catch(e){ toastMsg(TR('השמירה נכשלה')); }
+}
+function applySavedSetup(){
+  try{
+    const all=JSON.parse(localStorage.getItem('hg_camSetups')||'{}');
+    const s=all[_setupKey()]; if(!s||!s.cams) return false;
+    ['front','right','left','rear'].forEach(id=>{
+      const c=s.cams[id]; if(!c||!c.p||!c.d) return;
+      camPos[id]=V3(c.p[0],c.p[1],c.p[2]); camDir[id]=V3(c.d[0],c.d[1],c.d[2]).normalize();
+      const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
+    });
+    if(typeof s.mirror==='boolean') _mirrorActive=s.mirror;
+    return true;
+  }catch(e){ return false; }
+}
+function toastMsg(msg){
+  let t=document.getElementById('hgToast');
+  if(!t){ t=document.createElement('div'); t.id='hgToast';
+    t.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(13,15,19,.96);border:1px solid var(--gold);color:var(--gold);font-family:Orbitron;font-size:12px;padding:10px 18px;border-radius:10px;z-index:99999;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.55)';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._h); t._h=setTimeout(()=>{t.style.opacity='0';},1800);
 }
 
 function orientCone(cone,pos,dir){
@@ -2419,6 +2484,7 @@ function mirrorRightToLeft(){
   camDir.left=V3(-camDir.right.x, camDir.right.y, camDir.right.z).normalize();
   if(camMarkers.left) camMarkers.left.position.copyFrom(camPos.left);
   if(camCones.left) orientCone(camCones.left,camPos.left,camDir.left);
+  orientCamModel('left');
   if(feedCams.left){ feedCams.left.position.copyFrom(camPos.left); feedCams.left.setTarget(camPos.left.add(camDir.left.scale(10))); }
   if(activeCamId==='left') renderCamCtrl('left');
 }
@@ -2436,6 +2502,7 @@ function toggleMirror(){
     camPos.left=V3(...CAM_DEFS.left.pos); camDir.left=V3(...CAM_DEFS.left.dir).normalize();
     if(camMarkers.left) camMarkers.left.position.copyFrom(camPos.left);
     if(camCones.left) orientCone(camCones.left,camPos.left,camDir.left);
+    orientCamModel('left');
     if(feedCams.left){ feedCams.left.position.copyFrom(camPos.left); feedCams.left.setTarget(camPos.left.add(camDir.left.scale(10))); }
     if(activeCamId==='left') renderCamCtrl('left');
     btn.style.background='rgba(95,210,224,.08)';
@@ -2479,6 +2546,7 @@ function onCtrl(el){
   const sv=document.getElementById(`sv_${id}_${k}`);if(sv)sv.textContent=(k==='yaw'||k==='pitch')?Math.round(v):parseFloat(v).toFixed(k==='px'?2:1);
   const sm=camMarkers[id];if(sm)sm.position.copyFrom(p);
   const cn=camCones[id];if(cn){orientCone(cn,p,d);}
+  orientCamModel(id);
   const fc=feedCams[id];if(fc){fc.position.copyFrom(p);fc.setTarget(p.add(d.scale(10)));}
   if(_mirrorActive && id==='right') mirrorRightToLeft();   // keep left mirrored to right
 }
