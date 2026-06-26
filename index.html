@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heavy Guard | מצלמות, GPS ואבטחה למשאיות וציוד כבד</title>
+<title>מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד</title>
 
 <!-- ═══ SEO ═══ -->
-<meta name="description" content="Heavy Guard — מצלמות, GPS ומערכות אבטחה לציי משאיות וציוד כבד. סרטון אחד מבטל תביעה: כשהאשמה לא עליך, ההקלטה מדברת במקומך. בנה תצורה למשאית שלך ושלח לנו בוואטסאפ להצעת מחיר.">
+<meta name="description" content="מצלמות למשאית, GPS ומערכות אבטחה לציי משאיות וציוד כבד — Heavy Guard. סרטון אחד מבטל תביעה: כשהאשמה לא עליך, ההקלטה מדברת במקומך. בנה תצורת מצלמות למשאית שלך ושלח בוואטסאפ להצעת מחיר.">
 <meta name="keywords" content="מצלמות למשאית, מצלמת דרך למשאית, GPS למשאיות, מצלמות לצי רכב, מצלמות ציוד כבד, dash cam truck, fleet cameras, Heavy Guard">
 <meta name="author" content="Heavy Guard">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -74,8 +74,10 @@
       "url": "https://heavygurad.com/",
       "logo": "https://heavygurad.com/assets/icon-512.png",
       "image": "https://heavygurad.com/assets/og-image.jpg",
-      "description": "מצלמות, GPS ומערכות אבטחה לציי משאיות וציוד כבד.",
+      "description": "מצלמות למשאית, GPS ומערכות אבטחה לציי משאיות וציוד כבד.",
       "slogan": "Secure · Track · Connect",
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "knowsAbout": ["מצלמות למשאית", "מצלמת דרך למשאית", "מצלמות לצי רכב", "GPS למשאיות", "מערכות 360° למשאית", "מערכות אבטחה לציוד כבד"],
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+972-54-771-9070",
@@ -94,10 +96,17 @@
     },
     {
       "@type": "Service",
-      "name": "התקנת מצלמות ואבטחה למשאיות",
+      "name": "התקנת מצלמות למשאית, GPS ומערכות אבטחה",
       "provider": { "@id": "https://heavygurad.com/#org" },
-      "areaServed": "IL",
-      "serviceType": "Fleet & heavy-equipment camera, GPS and security systems"
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "serviceType": "Truck cameras, GPS tracking and security systems for fleets & heavy equipment",
+      "description": "התקנה מקצועית של מצלמות למשאית, מערכות 360°, GPS וצפייה מרחוק לציי משאיות וציוד כבד — בכל הארץ.",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "ILS",
+        "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "ILS", "minPrice": "4500" },
+        "availability": "https://schema.org/InStock"
+      }
     }
   ]
 }
@@ -596,7 +605,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   <div class="wrap" style="position:relative;z-index:2">
     <div class="pill"><span class="pulse"></span>SECURE · TRACK · CONNECT</div>
     <picture><source srcset="assets/logo2.webp" type="image/webp"><img class="hero-logo" src="assets/logo2.png" alt="Heavy Guard — מצלמות, GPS ואבטחה למשאיות" width="380" height="428" fetchpriority="high"></picture>
-    <h1 class="hero-h1">מצלמות, GPS ומערכות אבטחה <span class="gold">למשאיות וציוד כבד</span></h1>
+    <h1 class="hero-h1">מצלמות למשאית, GPS ואבטחה <span class="gold">לצי ולציוד כבד</span></h1>
     <p class="sub">סרטון אחד מבטל תביעה. מצלמות, GPS ואבטחה לציי משאיות וציוד כבד — כשהאשמה לא עליך, ההקלטה מדברת במקומך.</p>
     <div class="hero-btns">
       <button class="btn-gold" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">🚛 דמיין את המשאית שלי</button>
@@ -1206,6 +1215,8 @@ Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 
 Object.assign(I18N,{"נא למלא שם וטלפון":{"en":"Please enter your name and phone","ar":"يرجى إدخال الاسم والهاتف"},"מספר טלפון לא תקין — בדקו שוב":{"en":"Invalid phone number — please check again","ar":"رقم هاتف غير صالح — يرجى التحقق مرة أخرى"}});
 Object.assign(I18N,{"גניבת דלק / סחורה":{"en":"Fuel / cargo theft","ar":"سرقة الوقود / البضائع"},"נעלם בלי עדים":{"en":"Gone, no witnesses","ar":"يختفي بلا شهود"},"מצולם · מאותר ב-GPS":{"en":"Filmed · GPS-tracked","ar":"مُصوّر · متعقّب بـGPS"}});
 Object.assign(I18N,{"עובדים עם כל יצרני המשאיות המובילים":{"en":"We work with every leading truck brand","ar":"نعمل مع كل علامات الشاحنات الرائدة"},"ההתקנה מותאמת בדיוק למחשב ולמערכת החשמל של הרכב שלך — בלי סיכון, בלי תקלות.":{"en":"Installation tailored precisely to your vehicle's computer and electrical system — no risk, no faults.","ar":"تركيب مُصمّم بدقة لكمبيوتر مركبتك ونظامها الكهربائي — بلا مخاطر، بلا أعطال."}});
+Object.assign(I18N,{"מצלמות למשאית, GPS ואבטחה":{"en":"Truck cameras, GPS & security","ar":"كاميرات للشاحنة، GPS وأمان"},"לצי ולציוד כבד":{"en":"for fleets & heavy equipment","ar":"للأساطيل والمعدات الثقيلة"}});
+Object.assign(I18N,{"מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד":{"en":"Truck Cameras — Heavy Guard | GPS & Security for Truck Fleets & Heavy Equipment","ar":"كاميرات للشاحنة — Heavy Guard | GPS وأمان لأساطيل الشاحنات والمعدات الثقيلة"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
@@ -1222,7 +1233,7 @@ const RTL_LANGS=['he','ar'];
 let LANG='he';
 function TR(s){ if(s==null)return s; if(LANG==='he')return s; const k=(''+s).trim(); const e=I18N[k]; const v=(e&&e[LANG]!=null&&e[LANG]!=='')?e[LANG]:null; return v==null?s:(''+s).replace(k,v); }
 function LCAM(){ return {front:TR('קדמית'),right:TR('ימין'),left:TR('שמאל'),rear:TR('אחורית')}; }
-const TITLE_HE='Heavy Guard | מצלמות, GPS ואבטחה למשאיות וציוד כבד';
+const TITLE_HE='מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד';
 /* snapshot original Hebrew static text once, then translate per language */
 let __snap=false; const __txt=[]; const __att=[];
 function __snapshot(){
