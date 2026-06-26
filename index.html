@@ -2617,7 +2617,7 @@ function buildCamMarkers(){
       db.useObjectOrientationForDragging=false;
       db.onDragStartObservable.add(()=>selectCam(id));
       db.onDragObservable.add(()=>{
-        _simTouched=true;
+        _simTouched=true;scheduleSaveBuild();
         camPos[id].copyFrom(m.position);
         if(camCones[id]) orientCone(camCones[id],camPos[id],camDir[id]);
         const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
@@ -2868,7 +2868,7 @@ function buildPanels(){
   const bg=document.getElementById('bodyGrid');bg.innerHTML='';
   BODIES.forEach(b=>{
     const el=document.createElement('div');el.className='bbtn'+(b.id===curBody.id?' on':'');el.textContent=TR(b.name);
-    el.onclick=()=>{curBody=b;_simTouched=true;document.querySelectorAll('#bodyGrid .bbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+    el.onclick=()=>{curBody=b;_simTouched=true;scheduleSaveBuild();document.querySelectorAll('#bodyGrid .bbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
       buildTruck();buildCamMarkers();updateTruckImg();updateSel();
       if(typeof realTruckNode!=='undefined'&&realTruckNode){ try{buildTrailer(b.id);}catch(e){} }};
     bg.appendChild(el);
@@ -2878,7 +2878,7 @@ function buildPanels(){
   BRANDS.forEach(b=>{
     const el=document.createElement('div');el.className='brbtn'+(b.id===curBrand.id?' on':'');
     el.innerHTML=`<span class="brspot" style="background:${b.hex}"></span>${b.name}`;
-    el.onclick=()=>{curBrand=b;_simTouched=true;document.querySelectorAll('#brandGrid .brbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+    el.onclick=()=>{curBrand=b;_simTouched=true;scheduleSaveBuild();document.querySelectorAll('#brandGrid .brbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
       buildTruck();buildCamMarkers();updateSel();updateBrandInfo();applyTruckModel(b.id);};
     brg.appendChild(el);
   });
@@ -2911,7 +2911,7 @@ function rebuildCamRows(){
 
 function toggleCam(id,btn){
   camOn[id]=!camOn[id];btn.className='ctog '+(camOn[id]?'on':'off');
-  _simTouched=true;
+  _simTouched=true;scheduleSaveBuild();
   buildCamMarkers();updateSel();
 }
 
@@ -2933,7 +2933,7 @@ function mirrorRightToLeft(){
 }
 function toggleMirror(){
   _mirrorActive=!_mirrorActive;
-  _simTouched=true;
+  _simTouched=true;scheduleSaveBuild();
   const btn=document.getElementById('mirrorBtn');
   if(_mirrorActive){
     // Left mirrors however the RIGHT camera is currently configured (kept in sync on right edits).
@@ -2981,7 +2981,7 @@ function renderCamCtrl(id){
 }
 
 function onCtrl(el){
-  _simTouched=true;
+  _simTouched=true;scheduleSaveBuild();
   const id=el.dataset.id,k=el.dataset.k,v=parseFloat(el.value);
   const p=camPos[id],d=camDir[id];
   if(k==='px')p.x=v;else if(k==='py')p.y=v;else if(k==='pz')p.z=v;
@@ -3099,6 +3099,12 @@ function shareConfig(){
   else { prompt(TR('העתק את הקישור:'),link); }
   try{ history.replaceState(null,'','#cfg='+encodeCfg(cfgFromState())); }catch(e){}
 }
+// ── Auto-save the last build so a returning visitor keeps their configuration ──
+let _saveBuildT=null;
+function saveLastBuild(){ try{ localStorage.setItem('hg_lastBuild', JSON.stringify(cfgFromState())); }catch(e){} }
+function scheduleSaveBuild(){ try{ clearTimeout(_saveBuildT); }catch(e){} _saveBuildT=setTimeout(saveLastBuild,400); }  // debounced (sliders/drag fire rapidly)
+let _savedBuild=null;
+function loadLastBuild(){ try{ const s=localStorage.getItem('hg_lastBuild'); return s?JSON.parse(s):null; }catch(e){ return null; } }
 let _pendingCfg=null;
 // set brand/body/mirror BEFORE the sim initialises (so the right model loads once)
 function applyCfgPre(o){
@@ -3117,8 +3123,9 @@ function applyCfgCams(o){
     const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); } });
   try{ buildCamMarkers(); rebuildCamRows&&rebuildCamRows(); updateSel(); }catch(e){}
 }
-// read a shared build from the URL on first load
-(function(){ const m=(location.hash||'').match(/cfg=([^&]+)/); if(m){ _pendingCfg=decodeCfg(m[1]); } })();
+// read a shared build from the URL on first load; otherwise fall back to this
+// visitor's own last saved build (so returning users keep their configuration)
+(function(){ const m=(location.hash||'').match(/cfg=([^&]+)/); if(m){ _pendingCfg=decodeCfg(m[1]); } else { _savedBuild=loadLastBuild(); } })();
 
 // ─── ROI ──────────────────────────────────────────────────────────────
 function doCalc(){
@@ -3389,12 +3396,14 @@ function startSimulator(){
   if(simStarted)return;
   simStarted=true;
   loadBabylon().then(()=>{
-    applyCfgPre(_pendingCfg);                         // restore a shared build (brand/body) before init
+    const cfg=_pendingCfg||_savedBuild;               // shared link wins, else this visitor's last build
+    applyCfgPre(cfg);                                 // restore brand/body before init (right model loads once)
     init3D();
     buildPanels();
     animate();
     try{ applyTruckModel(curBrand.id); }catch(e){}   // load the real GLB model for the current brand
-    if(_pendingCfg){ applyCfgCams(_pendingCfg); _pendingCfg=null; }   // restore shared camera aim
+    if(cfg){ applyCfgCams(cfg); }                     // restore exact camera aim/toggles
+    _pendingCfg=null;
     // resize a few times as layout settles / section becomes visible
     setTimeout(onResize,60);
     setTimeout(onResize,300);
