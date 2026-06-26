@@ -29,7 +29,11 @@
 <link rel="dns-prefetch" href="https://wa.me">
 <link rel="dns-prefetch" href="https://unpkg.com">
 <link rel="dns-prefetch" href="https://server.arcgisonline.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap">
+<!-- Fonts loaded non-blocking: preload + print-media swap (no longer render-blocking).
+     display=swap already prevents invisible text; <noscript> keeps it working without JS. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap"></noscript>
 
 <!-- Open Graph (WhatsApp / Facebook / LinkedIn preview) -->
 <meta property="og:type" content="website">
