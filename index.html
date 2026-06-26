@@ -496,6 +496,14 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     box-shadow:0 14px 26px rgba(0,0,0,.55);border-radius:0 0 16px 16px}
   /* flex:none + a px floor so the absolutely-positioned canvas can't collapse */
   .viewport-wrap{flex:0 0 auto!important;height:36vh!important;min-height:300px!important}
+  /* On mobile the viewport is pinned on top, so put the camera-aiming controls
+     (active cameras + sliders) right beneath it, and move the one-time truck-type
+     & brand selection below them. Reorders the flex children of .sim-panel. */
+  .sim-panel>.sp-section:nth-child(3){order:1}  /* active cameras (pick one) */
+  .sim-panel>#camCtrl{order:2}                  /* per-camera aim sliders     */
+  .sim-panel>.sp-section:nth-child(1){order:3}  /* truck type                 */
+  .sim-panel>.sp-section:nth-child(2){order:4}  /* brand / colour             */
+  .sim-panel>.crash-section{order:5}            /* crash sim stays last       */
   .feeds-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
   .fcell canvas{height:70px}
   .calc-grid{grid-template-columns:1fr}
@@ -1204,6 +1212,7 @@ Object.assign(I18N,{
 "קדמית · ראיית לילה":{"en":"Front · night vision","ar":"أمامية · رؤية ليلية"}
 });
 Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 שמור מיקומים":{"en":"💾 Save positions","ar":"💾 حفظ المواضع"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"},"נטענו מיקומים שמורים":{"en":"Saved positions loaded","ar":"تم تحميل المواضع المحفوظة"}});
+Object.assign(I18N,{"נא למלא שם וטלפון":{"en":"Please enter your name and phone","ar":"يرجى إدخال الاسم والهاتف"},"מספר טלפון לא תקין — בדקו שוב":{"en":"Invalid phone number — please check again","ar":"رقم هاتف غير صالح — يرجى التحقق مرة أخرى"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
@@ -1324,6 +1333,65 @@ const CAM_RANGES={
   right:{px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
   left: {px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
   rear: {px:[-6,6],py:[0,9],pz:[-16,9],yaw:[-180,180],pitch:[-90,40]},
+};
+// Baked-in default camera layouts per truck (brand__body), so the curated
+// positions ship with the site and appear on every device. A user's own saved
+// layout in localStorage still overrides these. Same shape as hg_camSetups.
+const DEFAULT_CAM_SETUPS={
+  "daf__box":{cams:{
+    front:{p:[0,5,5.3],d:[0,-0.40673664307580026,0.9135454576426011]},
+    right:{p:[2.3,2.9,5.3],d:[1.0385593864809738e-16,-0.5299192642332049,-0.848048096156426]},
+    left:{p:[-2.3,2.9,5.3],d:[-1.0385593864809738e-16,-0.5299192642332049,-0.848048096156426]},
+    rear:{p:[0,6.833092840139169,1.65],d:[9.907600726170916e-17,-0.5877852522924731,-0.8090169943749475]}
+  },mirror:true},
+  "ford__tractor":{cams:{
+    front:{p:[0,3.8,2.9],d:[0,-0.42261826174069944,0.9063077870366499]},
+    right:{p:[1.4,2.2,2.5],d:[0.3583133683707903,-0.01745240643728351,-0.9334382376763479]},
+    left:{p:[-1.4,2.2,2.5],d:[-0.3583133683707903,-0.01745240643728351,-0.9334382376763479]},
+    rear:{p:[0,4.8,-0.2],d:[8.35207108674283e-17,-0.7313537016191706,-0.6819983600624986]}
+  },mirror:true},
+  "iveco__box":{cams:{
+    front:{p:[0,4.577922910245064,4.9],d:[0,-0.29237170472273677,0.9563047559630354]},
+    right:{p:[1.85,2.2,5.2],d:[0.2921813083573825,-0.32556815445715664,-0.899241602601842]},
+    left:{p:[-1.85,2.2,5.2],d:[-0.2921813083573825,-0.32556815445715664,-0.899241602601842]},
+    rear:{p:[0,5.493507492294077,1.65],d:[8.659560562354934e-17,-0.7071067811865475,-0.7071067811865476]}
+  },mirror:true},
+  "man__box":{cams:{
+    front:{p:[0,5.6,4.9],d:[0,-0.19611613513818404,0.9805806756909201]},
+    right:{p:[2.7,3.8,4.9],d:[0.30600966222800396,0.13917310096006547,-0.9418008996556876]},
+    left:{p:[-2.7,3.8,4.9],d:[-0.30600966222800396,0.13917310096006547,-0.9418008996556876]},
+    rear:{p:[0,7.200278328806422,1.65],d:[0,-0.15799050110667284,-0.9874406319167053]}
+  },mirror:true},
+  "man__mixer":{cams:{
+    front:{p:[0,5.4,4.9],d:[0,-0.24192189559966773,0.9702957262759965]},
+    right:{p:[2.6,3.4,5.4],d:[0.23415594328280298,-0.25133974257848846,-0.9391481927927668]},
+    left:{p:[-2.6,3.4,5.4],d:[-0.23415594328280298,-0.25133974257848846,-0.9391481927927668]},
+    rear:{p:[0,7.200278328806422,1.65],d:[0,-0.15799050110667284,-0.9874406319167053]}
+  },mirror:true},
+  "man__tractor":{cams:{
+    front:{p:[0,6,5.1],d:[0,-0.40673664307580026,0.9135454576426011]},
+    right:{p:[2.2,3.3,4.9],d:[0.5149596321166027,0.01745240643728351,-0.8570367499704322]},
+    left:{p:[-2.2,3.1,4.9],d:[-0.5149596321166027,0.01745240643728351,-0.8570367499704322]},
+    rear:{p:[0,7.6,0.6],d:[8.809371839840254e-17,-0.6946583704589973,-0.7193398003386512]}
+  },mirror:true},
+  "merc__box":{cams:{
+    front:{p:[0,3.1327186187106375,5.2],d:[0,-0.4383711467890774,0.898794046299167]},
+    right:{p:[1.65,2,5],d:[0.40905176226871437,-0.25133974257848835,-0.8772143350318886]},
+    left:{p:[-1.65,2,5],d:[-0.40905176226871437,-0.25133974257848835,-0.8772143350318886]},
+    rear:{p:[0,4.9,-5.7],d:[6.848137993413649e-17,-0.8290375725550417,-0.5591929034707468]}
+  },mirror:true},
+  "scania__box":{cams:{
+    front:{p:[0,5.6,5.2],d:[0,-0.35836794954530027,0.9335804264972017]},
+    right:{p:[2.1,2.7,5],d:[0.434104948922847,-0.13917310096006544,-0.8900470444250977]},
+    left:{p:[-2.1,2.7,5],d:[-0.434104948922847,-0.13917310096006544,-0.8900470444250977]},
+    rear:{p:[0,7.4,1.2],d:[8.809371839840254e-17,-0.6946583704589973,-0.7193398003386512]}
+  },mirror:true},
+  "volvo__box":{cams:{
+    front:{p:[0,5,5.4],d:[0,-0.4694715627858908,0.882947592858927]},
+    right:{p:[2.4,3.3,5],d:[1.1853343234261912e-16,-0.2513397425784887,-0.9678989274715512]},
+    left:{p:[-2.4,3.3,5],d:[-1.1853343234261912e-16,-0.2513397425784887,-0.9678989274715512]},
+    rear:{p:[0,7.2,0.8],d:[8.35207108674283e-17,-0.7313537016191706,-0.6819983600624986]}
+  },mirror:true},
 };
 
 // ═══ STATE ════════════════════════════════════════════════════════════════
@@ -2550,6 +2618,7 @@ function buildCamMarkers(){
       db.useObjectOrientationForDragging=false;
       db.onDragStartObservable.add(()=>selectCam(id));
       db.onDragObservable.add(()=>{
+        _simTouched=true;scheduleSaveBuild();
         camPos[id].copyFrom(m.position);
         if(camCones[id]) orientCone(camCones[id],camPos[id],camDir[id]);
         const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
@@ -2599,15 +2668,18 @@ function saveCamSetup(){
 }
 function applySavedSetup(){
   try{
-    const all=JSON.parse(localStorage.getItem('hg_camSetups')||'{}');
-    const s=all[_setupKey()]; if(!s||!s.cams) return false;
+    let all={}; try{ all=JSON.parse(localStorage.getItem('hg_camSetups')||'{}'); }catch(_){ all={}; }
+    const key=_setupKey();
+    const userSaved=all[key];                       // this device's own save wins, if any
+    const s=userSaved || DEFAULT_CAM_SETUPS[key];   // otherwise fall back to baked-in default
+    if(!s||!s.cams) return false;
     ['front','right','left','rear'].forEach(id=>{
       const c=s.cams[id]; if(!c||!c.p||!c.d) return;
       camPos[id]=V3(c.p[0],c.p[1],c.p[2]); camDir[id]=V3(c.d[0],c.d[1],c.d[2]).normalize();
       const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); }
     });
     if(typeof s.mirror==='boolean') _mirrorActive=s.mirror;
-    toastMsg(TR('נטענו מיקומים שמורים'));
+    if(userSaved) toastMsg(TR('נטענו מיקומים שמורים'));   // baked defaults load silently
     return true;
   }catch(e){ return false; }
 }
@@ -2797,7 +2869,7 @@ function buildPanels(){
   const bg=document.getElementById('bodyGrid');bg.innerHTML='';
   BODIES.forEach(b=>{
     const el=document.createElement('div');el.className='bbtn'+(b.id===curBody.id?' on':'');el.textContent=TR(b.name);
-    el.onclick=()=>{curBody=b;document.querySelectorAll('#bodyGrid .bbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+    el.onclick=()=>{curBody=b;_simTouched=true;scheduleSaveBuild();document.querySelectorAll('#bodyGrid .bbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
       buildTruck();buildCamMarkers();updateTruckImg();updateSel();
       if(typeof realTruckNode!=='undefined'&&realTruckNode){ try{buildTrailer(b.id);}catch(e){} }};
     bg.appendChild(el);
@@ -2807,7 +2879,7 @@ function buildPanels(){
   BRANDS.forEach(b=>{
     const el=document.createElement('div');el.className='brbtn'+(b.id===curBrand.id?' on':'');
     el.innerHTML=`<span class="brspot" style="background:${b.hex}"></span>${b.name}`;
-    el.onclick=()=>{curBrand=b;document.querySelectorAll('#brandGrid .brbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
+    el.onclick=()=>{curBrand=b;_simTouched=true;scheduleSaveBuild();document.querySelectorAll('#brandGrid .brbtn').forEach(e=>e.classList.remove('on'));el.classList.add('on');
       buildTruck();buildCamMarkers();updateSel();updateBrandInfo();applyTruckModel(b.id);};
     brg.appendChild(el);
   });
@@ -2840,9 +2912,14 @@ function rebuildCamRows(){
 
 function toggleCam(id,btn){
   camOn[id]=!camOn[id];btn.className='ctog '+(camOn[id]?'on':'off');
+  _simTouched=true;scheduleSaveBuild();
   buildCamMarkers();updateSel();
 }
 
+// Flips true the moment the visitor actually configures the build (picks a
+// brand/body, toggles or aims a camera). Used to decide whether the lead's
+// WhatsApp message should carry their specific configuration.
+let _simTouched=false;
 let _mirrorActive=false;
 // Make the LEFT camera a mirror image of the RIGHT camera's current setup
 // (reflected across the truck's longitudinal axis → negate X of position & direction).
@@ -2857,6 +2934,7 @@ function mirrorRightToLeft(){
 }
 function toggleMirror(){
   _mirrorActive=!_mirrorActive;
+  _simTouched=true;scheduleSaveBuild();
   const btn=document.getElementById('mirrorBtn');
   if(_mirrorActive){
     // Left mirrors however the RIGHT camera is currently configured (kept in sync on right edits).
@@ -2904,6 +2982,7 @@ function renderCamCtrl(id){
 }
 
 function onCtrl(el){
+  _simTouched=true;scheduleSaveBuild();
   const id=el.dataset.id,k=el.dataset.k,v=parseFloat(el.value);
   const p=camPos[id],d=camDir[id];
   if(k==='px')p.x=v;else if(k==='py')p.y=v;else if(k==='pz')p.z=v;
@@ -3021,6 +3100,12 @@ function shareConfig(){
   else { prompt(TR('העתק את הקישור:'),link); }
   try{ history.replaceState(null,'','#cfg='+encodeCfg(cfgFromState())); }catch(e){}
 }
+// ── Auto-save the last build so a returning visitor keeps their configuration ──
+let _saveBuildT=null;
+function saveLastBuild(){ try{ localStorage.setItem('hg_lastBuild', JSON.stringify(cfgFromState())); }catch(e){} }
+function scheduleSaveBuild(){ try{ clearTimeout(_saveBuildT); }catch(e){} _saveBuildT=setTimeout(saveLastBuild,400); }  // debounced (sliders/drag fire rapidly)
+let _savedBuild=null;
+function loadLastBuild(){ try{ const s=localStorage.getItem('hg_lastBuild'); return s?JSON.parse(s):null; }catch(e){ return null; } }
 let _pendingCfg=null;
 // set brand/body/mirror BEFORE the sim initialises (so the right model loads once)
 function applyCfgPre(o){
@@ -3039,8 +3124,9 @@ function applyCfgCams(o){
     const fc=feedCams[id]; if(fc){ fc.position.copyFrom(camPos[id]); fc.setTarget(camPos[id].add(camDir[id].scale(10))); } });
   try{ buildCamMarkers(); rebuildCamRows&&rebuildCamRows(); updateSel(); }catch(e){}
 }
-// read a shared build from the URL on first load
-(function(){ const m=(location.hash||'').match(/cfg=([^&]+)/); if(m){ _pendingCfg=decodeCfg(m[1]); } })();
+// read a shared build from the URL on first load; otherwise fall back to this
+// visitor's own last saved build (so returning users keep their configuration)
+(function(){ const m=(location.hash||'').match(/cfg=([^&]+)/); if(m){ _pendingCfg=decodeCfg(m[1]); } else { _savedBuild=loadLastBuild(); } })();
 
 // ─── ROI ──────────────────────────────────────────────────────────────
 function doCalc(){
@@ -3056,16 +3142,49 @@ function doCalc(){
 }
 
 // ─── LEAD ─────────────────────────────────────────────────────────────
+// Normalise an Israeli phone number to its international digits (972XXXXXXXX),
+// returning null if it can't be a valid IL mobile/landline — so typos are caught
+// before we open WhatsApp with a dead number.
+function _normPhone(raw){
+  let digits=(''+raw).replace(/\D/g,'');
+  if(digits.startsWith('00')) digits=digits.slice(2);
+  if(digits.startsWith('972')){ /* already international */ }
+  else if(digits.startsWith('0')) digits='972'+digits.slice(1);
+  else if(digits.length===9 && digits[0]==='5') digits='972'+digits;  // mobile typed w/o leading 0
+  return /^972\d{8,9}$/.test(digits) ? digits : null;
+}
 function sendLead(){
-  const n=document.getElementById('fName').value.trim(),p=document.getElementById('fPhone').value.trim();
-  if(!n||!p){document.getElementById('fErr').style.display='block';return;}
-  document.getElementById('fErr').style.display='none';
+  const fErr=document.getElementById('fErr');
+  const n=document.getElementById('fName').value.trim();
+  const pRaw=document.getElementById('fPhone').value.trim();
+  const showErr=(msgKey,focusId)=>{ if(fErr){ fErr.textContent=TR(msgKey); fErr.style.display='block'; } if(focusId){ const el=document.getElementById(focusId); if(el) el.focus(); } };
+  if(!n||!pRaw){ showErr('נא למלא שם וטלפון', !n?'fName':'fPhone'); return; }
+  if(!_normPhone(pRaw)){ showErr('מספר טלפון לא תקין — בדקו שוב', 'fPhone'); return; }
+  if(fErr) fErr.style.display='none';
   const q=document.getElementById('fQty').value.trim(),f=document.getElementById('fFleet').value;
+
+  // If the visitor actually built a configuration in the simulator, attach it so the
+  // sales team receives the exact layout (brand · body · active cameras + a live link).
+  let bHe='',bEn='',bAr='';
+  try{
+    if(_simTouched && typeof cfgFromState==='function'){
+      const cfg=cfgFromState();
+      const ref=(typeof cfgRef==='function')?cfgRef():'';
+      const link=(typeof shareLink==='function')?shareLink():'';
+      const brandName=(curBrand&&curBrand.name)||'';
+      const bodyHe=(curBody&&curBody.name)||'';
+      const nOn=['front','right','left','rear'].filter(id=>cfg.c[id]&&cfg.c[id].on).length;
+      bHe=`\n\n🛠 התצורה שבניתי (${ref}):\nמשאית: ${brandName} · ${bodyHe}\nמצלמות פעילות: ${nOn}/4\nצפייה בתצורה: ${link}`;
+      bEn=`\n\n🛠 My build (${ref}):\nTruck: ${brandName} · ${TR(bodyHe)}\nActive cameras: ${nOn}/4\nView config: ${link}`;
+      bAr=`\n\n🛠 التهيئة التي أعددتها (${ref}):\nالشاحنة: ${brandName} · ${TR(bodyHe)}\nالكاميرات الفعّالة: ${nOn}/4\nعرض التهيئة: ${link}`;
+    }
+  }catch(e){}
+
   const msg = LANG==='en'
-    ? `Hi Heavy Guard! 👋\nName: ${n}\nPhone: ${p}\nTrucks: ${q||'—'}\nCategory: ${TR(f)}\nPlease send details 🚛`
+    ? `Hi Heavy Guard! 👋\nName: ${n}\nPhone: ${pRaw}\nTrucks: ${q||'—'}\nCategory: ${TR(f)}\nPlease send details 🚛${bEn}`
     : LANG==='ar'
-    ? `مرحباً Heavy Guard! 👋\nالاسم: ${n}\nالهاتف: ${p}\nالشاحنات: ${q||'—'}\nالفئة: ${TR(f)}\nيرجى إرسال التفاصيل 🚛`
-    : `היי Heavy Guard! 👋\nשם: ${n}\nטלפון: ${p}\nמשאיות: ${q||'—'}\nקטגוריה: ${f}\nאשמח לפרטים 🚛`;
+    ? `مرحباً Heavy Guard! 👋\nالاسم: ${n}\nالهاتف: ${pRaw}\nالشاحنات: ${q||'—'}\nالفئة: ${TR(f)}\nيرجى إرسال التفاصيل 🚛${bAr}`
+    : `היי Heavy Guard! 👋\nשם: ${n}\nטלפון: ${pRaw}\nמשאיות: ${q||'—'}\nקטגוריה: ${f}\nאשמח לפרטים 🚛${bHe}`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
   const ok=document.getElementById('fOk'); if(ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
 }
@@ -3278,12 +3397,14 @@ function startSimulator(){
   if(simStarted)return;
   simStarted=true;
   loadBabylon().then(()=>{
-    applyCfgPre(_pendingCfg);                         // restore a shared build (brand/body) before init
+    const cfg=_pendingCfg||_savedBuild;               // shared link wins, else this visitor's last build
+    applyCfgPre(cfg);                                 // restore brand/body before init (right model loads once)
     init3D();
     buildPanels();
     animate();
     try{ applyTruckModel(curBrand.id); }catch(e){}   // load the real GLB model for the current brand
-    if(_pendingCfg){ applyCfgCams(_pendingCfg); _pendingCfg=null; }   // restore shared camera aim
+    if(cfg){ applyCfgCams(cfg); }                     // restore exact camera aim/toggles
+    _pendingCfg=null;
     // resize a few times as layout settles / section becomes visible
     setTimeout(onResize,60);
     setTimeout(onResize,300);
