@@ -524,6 +524,26 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   .dash-map{height:300px;min-height:300px;order:-1}
   .dash-side{border-right:none;border-top:1px solid rgba(255,255,255,.06);max-height:none}
 }
+
+/* ─────────────────────────────────────────────────────────────────────
+   DESIGN POLISH — consistent hover feedback & subtle micro-interactions.
+   Additive overrides (placed last so they win the cascade); all transforms
+   respect the prefers-reduced-motion rule defined above.
+   ───────────────────────────────────────────────────────────────────── */
+/* Secondary button now lifts + glows like the primary one (was colour-only) */
+.btn-out:hover{transform:translateY(-3px);background:rgba(95,210,224,.06);box-shadow:0 0 26px rgba(95,210,224,.28)}
+/* FAQ rows had no hover feedback at all */
+.faq-item:not(.open):hover{border-color:rgba(232,181,61,.32)}
+.faq-q{transition:color .2s,background .2s}
+.faq-q:hover{color:var(--gold-lt);background:rgba(232,181,61,.04)}
+.faq-q:hover .pm{transform:scale(1.15)}
+.faq-item.open .faq-q:hover .pm{transform:rotate(45deg) scale(1.1)}
+/* Card icons gently scale on card hover — premium touch, none existed before */
+.gcard .ico,.trust-badge .tb-ico{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.gcard:hover .ico{transform:scale(1.12) translateY(-2px)}
+.trust-badge:hover .tb-ico{transform:scale(1.12)}
+/* Testimonial card: add a soft shadow on hover to match the other cards */
+.tcard:hover{box-shadow:0 18px 44px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
