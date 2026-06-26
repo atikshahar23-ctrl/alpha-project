@@ -309,7 +309,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .ctog::after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;top:3px;transition:left .15s}
 .ctog.on::after{left:16px}.ctog.off::after{left:3px}
 /* cam ctrl */
-.cam-ctrl{flex:1;overflow-y:auto;padding:10px 12px}
+.cam-ctrl{flex:0 0 auto;padding:10px 12px}
 .cam-ctrl::-webkit-scrollbar{width:3px}
 .cam-ctrl::-webkit-scrollbar-thumb{background:rgba(232,181,61,.2);border-radius:2px}
 .slrow{margin-bottom:7px}
@@ -781,6 +781,10 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
           <div class="brand-grid" id="brandGrid"></div>
           <div class="brand-info" id="brandInfo"></div>
         </div>
+        <!-- sliders first so they sit right under the pinned simulator on mobile -->
+        <div class="cam-ctrl" id="camCtrl">
+          <p style="font-size:9px;color:#7c8493">← בחר מצלמה לכוונון</p>
+        </div>
         <div class="sp-section">
           <div class="spt" style="justify-content:space-between">
             <span>מצלמות פעילות</span>
@@ -791,9 +795,6 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
             </div>
           </div>
           <div class="cam-rows" id="camRows"></div>
-        </div>
-        <div class="cam-ctrl" id="camCtrl">
-          <p style="font-size:9px;color:#7c8493">← בחר מצלמה לכוונון</p>
         </div>
         <div class="crash-section" style="border-top:1px solid rgba(255,255,255,.05)">
           <div class="spt" style="color:#ef4444;margin-bottom:6px">⚠ סימולציית תאונה</div>
