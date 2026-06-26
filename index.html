@@ -250,9 +250,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .tcard-body .ico{font-size:30px;margin-bottom:10px}
 .tcard-body h4{font-family:'Orbitron';font-size:14px;margin-bottom:6px;color:var(--white)}
 .tcard-body p{color:var(--muted);font-size:12px;line-height:1.55}
-.brandstrip{margin-top:30px;text-align:center;color:var(--muted);font-size:13px;line-height:2}
-.brandstrip b{color:var(--gold);font-family:'Orbitron';font-weight:700}
-.brandstrip .bsep{color:var(--cyan);opacity:.5;margin:0 4px}
+.brandstrip{margin-top:34px;text-align:center}
+.brandstrip .bs-title{color:var(--muted);font-size:13.5px;line-height:1.7;margin-bottom:16px;max-width:560px;margin-inline:auto}
+.brandstrip .bs-title b{color:var(--gold);font-family:'Orbitron';font-weight:700}
+.brandstrip .bs-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.brandstrip .bchip{font-family:'Orbitron';font-weight:700;font-size:12px;letter-spacing:.4px;color:#c7ccd4;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;padding:8px 14px;transition:.2s}
+.brandstrip .bchip:hover{color:var(--gold);border-color:rgba(232,181,61,.5);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
 @media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.grid4{grid-template-columns:1fr}}
 /* product lineup */
@@ -790,7 +793,12 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     <div class="gcard tcard-body reveal"><div class="ico">🚧</div><h4>משאבת בטון</h4><p>הזרמת בטון לגובה ולמרחק באתרי בנייה.</p></div>
     <div class="gcard tcard-body reveal"><div class="ico">🏗️</div><h4>מנוף</h4><p>הרמת משאות כבדים — מנופים מתקפלים לעבודות הקמה והרכבה.</p></div>
   </div>
-  <div class="brandstrip reveal"><b>יצרנים נתמכים:</b><br>Scania<span class="bsep">·</span>Volvo<span class="bsep">·</span>Mercedes<span class="bsep">·</span>DAF<span class="bsep">·</span>MAN<span class="bsep">·</span>Iveco<span class="bsep">·</span>Renault<span class="bsep">·</span>Ford Trucks<span class="bsep">·</span>Isuzu<span class="bsep">·</span>Fuso<span class="bsep">·</span>Hino</div>
+  <div class="brandstrip reveal">
+    <div class="bs-title"><b>עובדים עם כל יצרני המשאיות המובילים</b><br>ההתקנה מותאמת בדיוק למחשב ולמערכת החשמל של הרכב שלך — בלי סיכון, בלי תקלות.</div>
+    <div class="bs-chips">
+      <span class="bchip">Scania</span><span class="bchip">Volvo</span><span class="bchip">Mercedes</span><span class="bchip">DAF</span><span class="bchip">MAN</span><span class="bchip">Iveco</span><span class="bchip">Renault</span><span class="bchip">Ford Trucks</span><span class="bchip">Isuzu</span><span class="bchip">Fuso</span><span class="bchip">Hino</span>
+    </div>
+  </div>
   </div>
 </section>
 
@@ -1239,6 +1247,7 @@ Object.assign(I18N,{
 Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 שמור מיקומים":{"en":"💾 Save positions","ar":"💾 حفظ المواضع"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"},"נטענו מיקומים שמורים":{"en":"Saved positions loaded","ar":"تم تحميل المواضع المحفوظة"}});
 Object.assign(I18N,{"נא למלא שם וטלפון":{"en":"Please enter your name and phone","ar":"يرجى إدخال الاسم والهاتف"},"מספר טלפון לא תקין — בדקו שוב":{"en":"Invalid phone number — please check again","ar":"رقم هاتف غير صالح — يرجى التحقق مرة أخرى"}});
 Object.assign(I18N,{"גניבת דלק / סחורה":{"en":"Fuel / cargo theft","ar":"سرقة الوقود / البضائع"},"נעלם בלי עדים":{"en":"Gone, no witnesses","ar":"يختفي بلا شهود"},"מצולם · מאותר ב-GPS":{"en":"Filmed · GPS-tracked","ar":"مُصوّر · متعقّب بـGPS"}});
+Object.assign(I18N,{"עובדים עם כל יצרני המשאיות המובילים":{"en":"We work with every leading truck brand","ar":"نعمل مع كل علامات الشاحنات الرائدة"},"ההתקנה מותאמת בדיוק למחשב ולמערכת החשמל של הרכב שלך — בלי סיכון, בלי תקלות.":{"en":"Installation tailored precisely to your vehicle's computer and electrical system — no risk, no faults.","ar":"تركيب مُصمّم بدقة لكمبيوتر مركبتك ونظامها الكهربائي — بلا مخاطر، بلا أعطال."}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
