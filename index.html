@@ -490,7 +490,13 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 /* responsive */
 @media(max-width:960px){
   .sim-container{grid-template-columns:minmax(0,1fr)}
-  .sim-right{order:-1}
+  /* pin the live simulator to the top of the screen so the user can see the
+     truck + camera feeds while scrolling/dragging the controls below it */
+  .sim-right{order:-1;position:sticky;top:0;z-index:20;background:#06080f;
+    box-shadow:0 14px 26px rgba(0,0,0,.55);border-radius:0 0 16px 16px}
+  .viewport-wrap{min-height:0!important;height:38vh!important}
+  .feeds-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fcell canvas{height:92px}
   .calc-grid{grid-template-columns:1fr}
   .grid3,.price-grid,.test-grid{grid-template-columns:1fr}
   .hrow{grid-template-columns:1.2fr .9fr .9fr;font-size:13px;padding:12px 14px}
@@ -499,9 +505,10 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 }
 @media(max-width:600px){
   .sim-container{gap:12px}
-  .feeds-bar{grid-template-columns:1fr 1fr}
-  .fcell:nth-child(2){border-right:none}
-  .fcell:nth-child(3){border-top:1px solid rgba(255,255,255,.05)}
+  /* keep feeds in one compact row so the pinned simulator stays short */
+  .feeds-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fcell canvas{height:74px}
+  .fcell span{font-size:7px}
 }
 @media(max-width:760px){
   .dash-body{grid-template-columns:1fr;min-height:0}
@@ -786,11 +793,6 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
         </div>
         <div class="cam-ctrl" id="camCtrl">
           <p style="font-size:9px;color:#7c8493">← בחר מצלמה לכוונון</p>
-        </div>
-        <!-- aim preview: truck view from optimal angle for the selected camera -->
-        <div id="aimPrevWrap" style="display:none;padding:6px 10px 8px">
-          <div id="aimPrevLbl" style="font-size:8px;letter-spacing:.6px;color:var(--cyan);font-family:'Orbitron';text-align:center;margin-bottom:5px">🎯 תצוגת כיוון</div>
-          <canvas id="aimPrevCnv" style="width:100%;height:130px;border-radius:7px;border:1px solid rgba(95,210,224,.25);background:#04060a;display:block"></canvas>
         </div>
         <div class="crash-section" style="border-top:1px solid rgba(255,255,255,.05)">
           <div class="spt" style="color:#ef4444;margin-bottom:6px">⚠ סימולציית תאונה</div>
@@ -1528,18 +1530,6 @@ function init3D(){
     const outCanvas=document.getElementById('ff_'+id);
     feedTextures[id]._outCanvas=outCanvas;
   });
-
-  // aim preview camera — shows truck from optimal angle when a camera is selected
-  // (added to customRenderTargets only when visible)
-  const _apCam=new BABYLON.UniversalCamera('aimPrev',new BABYLON.Vector3(4,5,22),scene);
-  _apCam.fov=0.92; _apCam.minZ=0.05; _apCam.maxZ=400;
-  _apCam.setTarget(new BABYLON.Vector3(0,2.5,4));
-  window._aimPrevCam=_apCam;
-  const _apRTT=new BABYLON.RenderTargetTexture('rtt_aim',{width:240,height:135},scene);
-  _apRTT.activeCamera=_apCam; _apRTT.renderList=null;
-  _apRTT._outCanvas=document.getElementById('aimPrevCnv');
-  window._aimPrevRTT=_apRTT;
-  window._aimPrevOn=false;
 
   setupDrag();
   window.addEventListener('resize',onResize);
@@ -2759,34 +2749,6 @@ function drawFeeds(){
     }).catch(()=>{ rtt._busy=false; });
   });
 
-  // aim preview — draw if visible
-  const apRTT=window._aimPrevRTT;
-  if(apRTT&&window._aimPrevOn&&apRTT._outCanvas&&!apRTT._busy){
-    const cnv=apRTT._outCanvas;
-    const ctx=cnv.getContext('2d'); if(!ctx)return;
-    const w=cnv.clientWidth||240, h=cnv.clientHeight||130;
-    if(cnv.width!==w||cnv.height!==h){cnv.width=w;cnv.height=h;}
-    let result;
-    try{ result=apRTT.readPixels(); }catch(e){ return; }
-    if(!result) return;
-    apRTT._busy=true;
-    Promise.resolve(result).then(pixels=>{
-      apRTT._busy=false;
-      if(!pixels) return;
-      const rw=apRTT.getSize().width, rh=apRTT.getSize().height;
-      const img=ctx.createImageData(rw,rh);
-      for(let y=0;y<rh;y++){
-        const sy=rh-1-y;
-        for(let x=0;x<rw;x++){
-          const si=(sy*rw+x)*4, di=(y*rw+x)*4;
-          img.data[di]=pixels[si];img.data[di+1]=pixels[si+1];img.data[di+2]=pixels[si+2];img.data[di+3]=255;
-        }
-      }
-      if(!apRTT._tmp){apRTT._tmp=document.createElement('canvas');apRTT._tmp.width=rw;apRTT._tmp.height=rh;}
-      apRTT._tmp.getContext('2d').putImageData(img,0,0);
-      ctx.drawImage(apRTT._tmp,0,0,w,h);
-    }).catch(()=>{ apRTT._busy=false; });
-  }
 }
 
 // ───────────────────────────────────────────────────────────────────────
@@ -2919,6 +2881,9 @@ function selectCam(id){
   document.querySelectorAll('.crow').forEach(r=>r.classList.toggle('sel',r.dataset.id===id));
   ['front','right','left','rear'].forEach(cid=>{const m=camMarkers[cid];if(m){const act=cid===id;m.material.emissiveColor=new BABYLON.Color3(act?1:0.37,act?0.67:0.82,act?0:0.9);}});
   renderCamCtrl(id);
+  try{ snapOrbitToCam(id); }catch(e){}
+  // on mobile, scroll so the pinned viewport + the chosen camera's controls are both visible
+  try{ if(window.matchMedia('(max-width:960px)').matches){ const cc=document.getElementById('camCtrl'); if(cc) cc.scrollIntoView({behavior:'smooth',block:'center'}); } }catch(e){}
 }
 
 function renderCamCtrl(id){
@@ -2934,7 +2899,6 @@ function renderCamCtrl(id){
     `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--line)"><img src="assets/products/${cp.img}.webp" alt="${cp.m}" onerror="this.style.display='none'" style="width:40px;height:30px;object-fit:contain;flex:none"><div style="line-height:1.3"><div style="font-family:'Orbitron';font-size:12px;color:var(--gold);font-weight:700">${cp.m}</div><div style="font-size:8px;color:var(--cyan)">🎛 ${TR('מצלמה')} ${lbl}</div></div></div>`+
     rows.map(([k,lbl2,mn,mx,st,val])=>`<div class="slrow"><div class="sllbl">${lbl2}<b id="sv_${id}_${k}">${val}</b></div><input type="range" class="slim" data-id="${id}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${val}" oninput="onCtrl(this)"></div>`).join('')+
     `<button class="rst-btn" onclick="resetCam('${id}')">↺ ${TR('איפוס')}</button>`;
-  try{ showAimPreview(id); }catch(e){}
 }
 
 function onCtrl(el){
@@ -2960,27 +2924,21 @@ function resetCam(id){
   buildCamMarkers();renderCamCtrl(id);
 }
 
-// ─── AIM PREVIEW ─────────────────────────────────────────────────────
+// ─── ORBIT SNAP (aim helper) ─────────────────────────────────────────
+// When a camera is selected we swing the orbit camera to the side that
+// camera faces, so the user sees exactly what they're aiming — essential
+// on mobile where the viewport is pinned above the controls.
 const _AIM_ANGLES={
-  front:{pos:[4,5,22],  tgt:[0,2.5,4]},
-  rear: {pos:[-4,5,-22],tgt:[0,2.5,-4]},
-  right:{pos:[22,5,3],  tgt:[0,2.5,3]},
-  left: {pos:[-22,5,3], tgt:[0,2.5,3]},
+  front:{theta:Math.PI/2,    phi:1.15},  // looking at the front
+  rear: {theta:-Math.PI/2,   phi:1.15},  // looking at the rear
+  right:{theta:0,            phi:1.15},  // looking from the right
+  left: {theta:Math.PI,      phi:1.15},  // looking from the left
 };
-function showAimPreview(id){
-  if(typeof BABYLON==='undefined'||!window._aimPrevCam||!window._aimPrevRTT) return;
-  const a=_AIM_ANGLES[id]||_AIM_ANGLES.front;
-  window._aimPrevCam.position.set(a.pos[0],a.pos[1],a.pos[2]);
-  window._aimPrevCam.setTarget(new BABYLON.Vector3(a.tgt[0],a.tgt[1],a.tgt[2]));
-  if(!window._aimPrevOn){
-    scene.customRenderTargets.push(window._aimPrevRTT);
-    window._aimPrevOn=true;
-  }
-  const wrap=document.getElementById('aimPrevWrap');
-  if(wrap) wrap.style.display='';
-  const lbl=document.getElementById('aimPrevLbl');
-  const lblMap={front:TR('תצוגה קדמית'),rear:TR('תצוגה אחורית'),right:TR('תצוגת צד ימין'),left:TR('תצוגת צד שמאל')};
-  if(lbl) lbl.textContent='🎯 '+(lblMap[id]||id);
+function snapOrbitToCam(id){
+  const a=_AIM_ANGLES[id]; if(!a) return;
+  if(typeof theta==='undefined') return;
+  theta=a.theta; phi=a.phi; radius=16; autoRot=false;
+  if(curView!=='free') setView('free');
 }
 
 // ─── TRUCK IMAGE ─────────────────────────────────────────────────────
