@@ -3,12 +3,36 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://heavygurad.com/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="he" href="https://heavygurad.com/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://heavygurad.com/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://heavygurad.com/?lang=ar"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://heavygurad.com/"/>
+  </url>
+  <url>
+    <loc>https://heavygurad.com/מצלמות-360-למשאית.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://heavygurad.com/מצלמת-רוורס-למשאית.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://heavygurad.com/מצלמות-לצי-רכב.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://heavygurad.com/מצלמות-לציוד-כבד.html</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
