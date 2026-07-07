@@ -2,11 +2,18 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TJSCXHWW');</script>
+<!-- End Google Tag Manager -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heavy Guard | מצלמות, GPS ואבטחה למשאיות וציוד כבד</title>
+<title>מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד</title>
 
 <!-- ═══ SEO ═══ -->
-<meta name="description" content="Heavy Guard — מצלמות, GPS ומערכות אבטחה לציי משאיות וציוד כבד. סרטון אחד מבטל תביעה: כשהאשמה לא עליך, ההקלטה מדברת במקומך. בנה תצורה למשאית שלך ושלח לנו בוואטסאפ להצעת מחיר.">
+<meta name="description" content="מצלמות למשאית, GPS ומערכות אבטחה לציי משאיות וציוד כבד — Heavy Guard. סרטון אחד מבטל תביעה: כשהאשמה לא עליך, ההקלטה מדברת במקומך. בנה תצורת מצלמות למשאית שלך ושלח בוואטסאפ להצעת מחיר.">
 <meta name="keywords" content="מצלמות למשאית, מצלמת דרך למשאית, GPS למשאיות, מצלמות לצי רכב, מצלמות ציוד כבד, dash cam truck, fleet cameras, Heavy Guard">
 <meta name="author" content="Heavy Guard">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -29,7 +36,11 @@
 <link rel="dns-prefetch" href="https://wa.me">
 <link rel="dns-prefetch" href="https://unpkg.com">
 <link rel="dns-prefetch" href="https://server.arcgisonline.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap">
+<!-- Fonts loaded non-blocking: preload + print-media swap (no longer render-blocking).
+     display=swap already prevents invisible text; <noscript> keeps it working without JS. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Heebo:wght@300;400;600;800&display=swap"></noscript>
 
 <!-- Open Graph (WhatsApp / Facebook / LinkedIn preview) -->
 <meta property="og:type" content="website">
@@ -70,8 +81,10 @@
       "url": "https://heavygurad.com/",
       "logo": "https://heavygurad.com/assets/icon-512.png",
       "image": "https://heavygurad.com/assets/og-image.jpg",
-      "description": "מצלמות, GPS ומערכות אבטחה לציי משאיות וציוד כבד.",
+      "description": "מצלמות למשאית, GPS ומערכות אבטחה לציי משאיות וציוד כבד.",
       "slogan": "Secure · Track · Connect",
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "knowsAbout": ["מצלמות למשאית", "מצלמת דרך למשאית", "מצלמות לצי רכב", "GPS למשאיות", "מערכות 360° למשאית", "מערכות אבטחה לציוד כבד"],
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+972-54-771-9070",
@@ -90,10 +103,17 @@
     },
     {
       "@type": "Service",
-      "name": "התקנת מצלמות ואבטחה למשאיות",
+      "name": "התקנת מצלמות למשאית, GPS ומערכות אבטחה",
       "provider": { "@id": "https://heavygurad.com/#org" },
-      "areaServed": "IL",
-      "serviceType": "Fleet & heavy-equipment camera, GPS and security systems"
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "serviceType": "Truck cameras, GPS tracking and security systems for fleets & heavy equipment",
+      "description": "התקנה מקצועית של מצלמות למשאית, מערכות 360°, GPS וצפייה מרחוק לציי משאיות וציוד כבד — בכל הארץ.",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "ILS",
+        "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "ILS", "minPrice": "4500" },
+        "availability": "https://schema.org/InStock"
+      }
     }
   ]
 }
@@ -234,7 +254,9 @@ h2{font-family:'Orbitron';font-size:clamp(26px,4vw,42px);font-weight:900;color:v
 .field{margin-bottom:22px}
 .field label{display:flex;justify-content:space-between;font-weight:600;margin-bottom:10px;font-size:14px}
 .field label b{color:var(--gold);font-family:'Orbitron';font-size:13px}
-input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:5px;background:#1e2230;outline:none}
+/* touch-action:pan-y — on mobile, a vertical swipe on a slider scrolls the page
+   instead of dragging the slider; only horizontal drags change its value. */
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;border-radius:5px;background:#1e2230;outline:none;touch-action:pan-y}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));cursor:pointer;box-shadow:0 0 12px rgba(232,181,61,.6)}
 .result{text-align:center;padding:28px;border-radius:16px;background:radial-gradient(250px 140px at 50% 0%,rgba(232,181,61,.1),transparent),#0d0f13;border:1px solid var(--line)}
 .result .big{font-family:'Orbitron';font-size:46px;font-weight:900;margin:6px 0;background:linear-gradient(120deg,var(--gold),var(--gold-lt));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -246,9 +268,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .tcard-body .ico{font-size:30px;margin-bottom:10px}
 .tcard-body h4{font-family:'Orbitron';font-size:14px;margin-bottom:6px;color:var(--white)}
 .tcard-body p{color:var(--muted);font-size:12px;line-height:1.55}
-.brandstrip{margin-top:30px;text-align:center;color:var(--muted);font-size:13px;line-height:2}
-.brandstrip b{color:var(--gold);font-family:'Orbitron';font-weight:700}
-.brandstrip .bsep{color:var(--cyan);opacity:.5;margin:0 4px}
+.brandstrip{margin-top:34px;text-align:center}
+.brandstrip .bs-title{color:var(--muted);font-size:13.5px;line-height:1.7;margin-bottom:16px;max-width:560px;margin-inline:auto}
+.brandstrip .bs-title b{color:var(--gold);font-family:'Orbitron';font-weight:700}
+.brandstrip .bs-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.brandstrip .bchip{font-family:'Orbitron';font-weight:700;font-size:12px;letter-spacing:.4px;color:#c7ccd4;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;padding:8px 14px;transition:.2s}
+.brandstrip .bchip:hover{color:var(--gold);border-color:rgba(232,181,61,.5);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
 @media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.grid4{grid-template-columns:1fr}}
 /* product lineup */
@@ -372,16 +397,30 @@ input[type=range].slim::-webkit-slider-thumb{width:11px;height:11px}
 .ferr{color:var(--red);font-size:12px;margin-bottom:10px;display:none}
 /* keyboard accessibility — visible focus ring */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:5px}
-/* branded splash */
-#splash{position:fixed;inset:0;z-index:100000;background:radial-gradient(ellipse at 50% 38%,#12161d,#06080c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s ease,visibility .5s}
+/* ── Digital HUD loading screen ── */
+#splash{position:fixed;inset:0;z-index:100000;background:radial-gradient(ellipse at 50% 40%,#12161d,#06080c 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .55s ease,visibility .55s;overflow:hidden}
 #splash.hide{opacity:0;visibility:hidden}
-#splash img{width:clamp(120px,30vw,160px);height:auto;filter:drop-shadow(0 0 42px rgba(232,181,61,.4));animation:splashFloat 2s ease-in-out infinite}
-#splash .sl-bar{width:160px;height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
-#splash .sl-fill{height:100%;width:38%;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:3px;animation:slLoad 1.1s ease-in-out infinite}
-#splash .sl-txt{font-family:'Orbitron';font-size:10px;letter-spacing:3px;color:var(--muted)}
+/* animated tech grid, faded at the edges */
+#splash .sp-grid{position:absolute;inset:-2px;background-image:linear-gradient(rgba(95,210,224,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(95,210,224,.06) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:radial-gradient(ellipse at 50% 42%,#000 28%,transparent 72%);mask-image:radial-gradient(ellipse at 50% 42%,#000 28%,transparent 72%);animation:spGrid 8s linear infinite}
+@keyframes spGrid{to{background-position:38px 38px}}
+/* HUD corner brackets around the logo */
+#splash .sp-core{position:relative;display:flex;align-items:center;justify-content:center;padding:24px 30px;overflow:hidden}
+#splash .sp-core::before,#splash .sp-core::after{content:'';position:absolute;width:24px;height:24px;border:2px solid var(--gold);opacity:.7}
+#splash .sp-core::before{top:0;inset-inline-start:0;border-inline-end:none;border-bottom:none}
+#splash .sp-core::after{bottom:0;inset-inline-end:0;border-inline-start:none;border-top:none}
+#splash img{width:clamp(110px,30vw,150px);height:auto;filter:drop-shadow(0 0 42px rgba(232,181,61,.45));animation:splashFloat 2.4s ease-in-out infinite}
+/* cyan scan line sweeping over the logo */
+#splash .sp-scan{position:absolute;left:8%;right:8%;height:2px;top:6%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 12px var(--cyan);opacity:.85;animation:spScan 1.9s ease-in-out infinite}
+@keyframes spScan{0%,100%{top:6%}50%{top:92%}}
+/* percentage counter */
+#splash .sp-pct{font-family:'Orbitron';font-weight:900;font-size:clamp(28px,7vw,36px);color:var(--gold);letter-spacing:2px;line-height:1;text-shadow:0 0 22px rgba(232,181,61,.35)}
+#splash .sp-pct i{font-style:normal;font-size:.45em;color:var(--muted);margin-inline-start:3px;vertical-align:top}
+/* determinate progress bar (width driven by JS) */
+#splash .sl-bar{width:min(220px,60vw);height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}
+#splash .sl-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:4px;transition:width .22s linear;box-shadow:0 0 10px rgba(95,210,224,.5)}
+#splash .sl-txt{font-family:'Orbitron';font-size:10px;letter-spacing:4px;color:var(--muted);min-height:13px;text-align:center}
 @keyframes splashFloat{50%{transform:translateY(-8px)}}
-@keyframes slLoad{0%{transform:translateX(-120%)}100%{transform:translateX(300%)}}
-@media(prefers-reduced-motion:reduce){#splash img,#splash .sl-fill{animation:none}}
+@media(prefers-reduced-motion:reduce){#splash img,#splash .sp-scan,#splash .sp-grid{animation:none}}
 
 /* ── CTA ── */
 .cta-sec{text-align:center;padding:100px 0}
@@ -401,17 +440,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[t
 @media(max-width:640px){.fab-wa{width:52px;height:52px;bottom:16px;right:16px}.fab-wa .fab-tip{display:none}.to-top{width:42px;height:42px;bottom:18px;left:16px}}
 footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:var(--muted);font-size:12px}
 
-/* ── TESTIMONIALS ── */
-.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
-.tcard{background:var(--glass);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:26px;backdrop-filter:blur(12px);position:relative;transition:.3s}
-.tcard:hover{border-color:rgba(232,181,61,.3);transform:translateY(-5px)}
-.tcard .quote{font-size:40px;color:var(--gold);line-height:.5;opacity:.4;font-family:Georgia,serif}
-.tcard p{color:var(--txt);font-size:14px;line-height:1.7;margin:12px 0 18px}
-.tcard .who{display:flex;align-items:center;gap:12px}
-.tcard .av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-weight:900;color:#1a1405;font-size:15px;flex-shrink:0}
-.tcard .nm{font-weight:700;font-size:14px;color:var(--white)}
-.tcard .rl{font-size:12px;color:var(--muted)}
-.stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:4px}
 /* ── PRICING ── */
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;align-items:stretch}
 .pcard{background:var(--glass);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:32px 26px;backdrop-filter:blur(12px);display:flex;flex-direction:column;transition:.3s;position:relative}
@@ -508,7 +536,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   .feeds-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
   .fcell canvas{height:70px}
   .calc-grid{grid-template-columns:1fr}
-  .grid3,.price-grid,.test-grid{grid-template-columns:1fr}
+  .grid3,.price-grid{grid-template-columns:1fr}
   .hrow{grid-template-columns:1.2fr .9fr .9fr;font-size:13px;padding:12px 14px}
   nav{padding:10px 14px}
   .counters{gap:24px}
@@ -525,20 +553,71 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   .dash-map{height:300px;min-height:300px;order:-1}
   .dash-side{border-right:none;border-top:1px solid rgba(255,255,255,.06);max-height:none}
 }
+
+/* ─────────────────────────────────────────────────────────────────────
+   DESIGN POLISH — consistent hover feedback & subtle micro-interactions.
+   Additive overrides (placed last so they win the cascade); all transforms
+   respect the prefers-reduced-motion rule defined above.
+   ───────────────────────────────────────────────────────────────────── */
+/* Secondary button now lifts + glows like the primary one (was colour-only) */
+.btn-out:hover{transform:translateY(-3px);background:rgba(95,210,224,.06);box-shadow:0 0 26px rgba(95,210,224,.28)}
+/* FAQ rows had no hover feedback at all */
+.faq-item:not(.open):hover{border-color:rgba(232,181,61,.32)}
+.faq-q{transition:color .2s,background .2s}
+.faq-q:hover{color:var(--gold-lt);background:rgba(232,181,61,.04)}
+.faq-q:hover .pm{transform:scale(1.15)}
+.faq-item.open .faq-q:hover .pm{transform:rotate(45deg) scale(1.1)}
+/* Card icons gently scale on card hover — premium touch, none existed before */
+.gcard .ico,.trust-badge .tb-ico{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.gcard:hover .ico{transform:scale(1.12) translateY(-2px)}
+.trust-badge:hover .tb-ico{transform:scale(1.12)}
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJSCXHWW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div id="splash">
-  <picture><source srcset="assets/logo2.webp" type="image/webp"><img src="assets/logo2.png" alt="Heavy Guard" width="160" height="180"></picture>
-  <div class="sl-bar"><div class="sl-fill"></div></div>
-  <div class="sl-txt">SECURE · TRACK · CONNECT</div>
+  <div class="sp-grid"></div>
+  <div class="sp-core">
+    <div class="sp-scan"></div>
+    <picture><source srcset="assets/logo2.webp" type="image/webp"><img src="assets/logo2.png" alt="Heavy Guard" width="160" height="180"></picture>
+  </div>
+  <div class="sp-pct"><span id="spNum">0</span><i>%</i></div>
+  <div class="sl-bar"><div class="sl-fill" id="spFill"></div></div>
+  <div class="sl-txt" id="spStat">INITIALIZING</div>
 </div>
 <script>
 (function(){
-  function hide(){ var s=document.getElementById('splash'); if(s){ s.classList.add('hide'); setTimeout(function(){ if(s&&s.parentNode) s.parentNode.removeChild(s); },600); } }
-  if(document.readyState==='complete') setTimeout(hide,250);
-  else window.addEventListener('load',function(){ setTimeout(hide,250); });
-  setTimeout(hide,3500); // safety: never let the splash stick
+  var splash=document.getElementById('splash'); if(!splash) return;
+  var fill=document.getElementById('spFill'), num=document.getElementById('spNum'), stat=document.getElementById('spStat');
+  var STAGES=['INITIALIZING','LOADING ASSETS','CALIBRATING SYSTEM','SECURE · TRACK · CONNECT'];
+  var pct=0, ready=false, finished=false;
+  function render(){
+    if(fill) fill.style.width=pct+'%';
+    if(num) num.textContent=Math.round(pct);
+    if(stat){ var si=Math.min(STAGES.length-1, Math.floor(pct/100*STAGES.length)); stat.textContent=STAGES[si]; }
+  }
+  function finish(){
+    if(finished) return; finished=true; pct=100; render();
+    setTimeout(function(){ splash.classList.add('hide');
+      setTimeout(function(){ if(splash&&splash.parentNode) splash.parentNode.removeChild(splash); },650); }, 300);
+  }
+  // Climb smoothly toward 90% while loading; once truly ready, sprint to 100% and reveal.
+  var tick=setInterval(function(){
+    if(!ready){ if(pct<90) pct+=Math.max(0.4,(90-pct)*0.05); }
+    else { pct+=6; if(pct>=100){ clearInterval(tick); finish(); } }
+    render();
+  },40);
+  // "ready" = the initial page is fully loaded AND web fonts are in — so nothing
+  // reflows or pops in after the splash lifts (page shown only when in place).
+  var loadOk=(document.readyState==='complete'), fontOk=false;
+  function check(){ if(loadOk&&fontOk) ready=true; }
+  if(!loadOk) window.addEventListener('load',function(){ loadOk=true; check(); });
+  if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(function(){ fontOk=true; check(); }); } else { fontOk=true; }
+  check();
+  setTimeout(function(){ ready=true; },4500);      // safety: never stick
 })();
 </script>
 
@@ -582,7 +661,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
   <div class="wrap" style="position:relative;z-index:2">
     <div class="pill"><span class="pulse"></span>SECURE · TRACK · CONNECT</div>
     <picture><source srcset="assets/logo2.webp" type="image/webp"><img class="hero-logo" src="assets/logo2.png" alt="Heavy Guard — מצלמות, GPS ואבטחה למשאיות" width="380" height="428" fetchpriority="high"></picture>
-    <h1 class="hero-h1">מצלמות, GPS ומערכות אבטחה <span class="gold">למשאיות וציוד כבד</span></h1>
+    <h1 class="hero-h1">מצלמות למשאית, GPS ואבטחה <span class="gold">לצי ולציוד כבד</span></h1>
     <p class="sub">סרטון אחד מבטל תביעה. מצלמות, GPS ואבטחה לציי משאיות וציוד כבד — כשהאשמה לא עליך, ההקלטה מדברת במקומך.</p>
     <div class="hero-btns">
       <button class="btn-gold" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">🚛 דמיין את המשאית שלי</button>
@@ -631,6 +710,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
       <div class="hrow"><b>תאונה "לא אני התחלתי"</b><div class="c-no">משלם השתתפות</div><div class="c-yes">מזוכה · ₪0</div></div>
       <div class="hrow"><b>תביעת שווא על הנהג</b><div class="c-no">מילה מול מילה</div><div class="c-yes">סרטון = תיק נסגר</div></div>
       <div class="hrow"><b>פגע וברח / נזק בחניה</b><div class="c-no">ספיגת העלות</div><div class="c-yes">זיהוי + תיעוד</div></div>
+      <div class="hrow"><b>גניבת דלק / סחורה</b><div class="c-no">נעלם בלי עדים</div><div class="c-yes">מצולם · מאותר ב-GPS</div></div>
       <div class="hrow"><b>פרמיית ביטוח שנתית</b><div class="c-no">מזנקת אחרי תביעה</div><div class="c-yes">נשמרת נמוכה</div></div>
     </div>
   </div>
@@ -740,7 +820,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     <div class="gcard edge reveal"><div class="ico">📡</div><h4>צפייה מרחוק בזמן אמת</h4><div class="tl">Live Remote Viewing</div><p>צפייה חיה בכל מצלמה מהנייד או מהמחשב — רואים בדיוק מה קורה בכל משאית, בכל רגע.</p></div>
     <div class="gcard edge reveal"><div class="ico">🕒</div><h4>היסטוריית נסיעה ומעקב</h4><div class="tl">Trip History &amp; Tracking</div><p>שחזור מלא של מסלול הנסיעה עם מעקב GPS — בודקים בדיוק איפה הרכב היה ומתי.</p></div>
     <div class="gcard edge reveal"><div class="ico">☁️</div><h4>שמירה בענן</h4><div class="tl">Cloud Storage</div><p>גיבוי אוטומטי בענן — מ-10 עד 14 ימים אחורה, ובחבילות מורחבות עד 4 חודשים.</p></div>
-    <div class="gcard edge reveal"><div class="ico">🎥</div><h4>עד 8 ערוצים FHD</h4><div class="tl">Up to 8 Channels · 1080P</div><p>תמיכה ב-4 או 8 ערוצי מצלמה ברזולוציית Full HD 1080P — כיסוי מלא לכל זוויות הרכב.</p></div>
+    <div class="gcard edge reveal"><div class="ico">🛰️</div><h4>כיסוי 360° · אפס שטח מת</h4><div class="tl">360° · Zero Blind Spots</div><p>איחוד כל המצלמות לתמונת-על אחת סביב המשאית — רואים כל זווית במבט אחד, בלי נקודות עיוורות שגורמות לתאונות.</p></div>
     <div class="gcard edge reveal"><div class="ico">🅿️</div><h4>התראות גם בחנייה</h4><div class="tl">Parking Alerts</div><p>אופציה לקבלת התראות בזמן אמת גם כשהרכב חונה — שמירה על המשאית גם כשלא נוהגים בה.</p></div>
     <div class="gcard edge reveal"><div class="ico">📱</div><h4>אפליקציה פשוטה</h4><div class="tl">Easy App</div><p>אפליקציה ותוכנה ידידותיות וקלות לתפעול — שליטה מלאה בלי כאב ראש טכני.</p></div>
     <div class="gcard edge reveal"><div class="ico">🖥️</div><h4>חיבור למסך ברכב</h4><div class="tl">Screen Integration</div><p>אופציה לחיבור למסך חיצוני או למולטימדיה הקיימת ברכב (בכפוף לתאימות).</p></div>
@@ -765,7 +845,12 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
     <div class="gcard tcard-body reveal"><div class="ico">🚧</div><h4>משאבת בטון</h4><p>הזרמת בטון לגובה ולמרחק באתרי בנייה.</p></div>
     <div class="gcard tcard-body reveal"><div class="ico">🏗️</div><h4>מנוף</h4><p>הרמת משאות כבדים — מנופים מתקפלים לעבודות הקמה והרכבה.</p></div>
   </div>
-  <div class="brandstrip reveal"><b>יצרנים נתמכים:</b><br>Scania<span class="bsep">·</span>Volvo<span class="bsep">·</span>Mercedes<span class="bsep">·</span>DAF<span class="bsep">·</span>MAN<span class="bsep">·</span>Iveco<span class="bsep">·</span>Renault<span class="bsep">·</span>Ford Trucks<span class="bsep">·</span>Isuzu<span class="bsep">·</span>Fuso<span class="bsep">·</span>Hino</div>
+  <div class="brandstrip reveal">
+    <div class="bs-title"><b>עובדים עם כל יצרני המשאיות המובילים</b><br>ההתקנה מותאמת בדיוק למחשב ולמערכת החשמל של הרכב שלך — בלי סיכון, בלי תקלות.</div>
+    <div class="bs-chips">
+      <span class="bchip">Scania</span><span class="bchip">Volvo</span><span class="bchip">Mercedes</span><span class="bchip">DAF</span><span class="bchip">MAN</span><span class="bchip">Iveco</span><span class="bchip">Renault</span><span class="bchip">Ford Trucks</span><span class="bchip">Isuzu</span><span class="bchip">Fuso</span><span class="bchip">Hino</span>
+    </div>
+  </div>
   </div>
 </section>
 
@@ -875,35 +960,6 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
       <div class="tl-item reveal"><div class="nd">4</div><h4>חיבור ל-GPS + ניהול</h4><p>מחברים למסך הניהול. מאותו רגע — אתה רואה את כל הצי בזמן אמת.</p></div>
     </div>
   </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="sec" id="testimonials">
-  <div class="wrap center" style="max-width:660px">
-    <div class="eyebrow reveal">TESTIMONIALS</div>
-    <h2 class="reveal">חברות הובלה <span class="gold">כבר מרוויחות.</span></h2>
-    <p class="lead center reveal">לקוחות שהמצלמות שלהם כבר חסכו תביעות, השתתפויות עצמיות וכאב ראש.</p>
-  </div>
-  <div class="wrap"><div class="test-grid">
-    <div class="tcard reveal">
-      <div class="quote">"</div>
-      <div class="stars">★★★★★</div>
-      <p>נהג שלי נחסם בצומת ורכב פגע בנו מאחור. הביטוח רצה להאשים אותנו — שלחנו את הסרטון, התיק נסגר תוך יומיים. המערכת החזירה את עצמה בפגיעה אחת.</p>
-      <div class="who"><div class="av">דמ</div><div><div class="nm">דוד מ.</div><div class="rl">בעלים · צי 12 משאיות</div></div></div>
-    </div>
-    <div class="tcard reveal">
-      <div class="quote">"</div>
-      <div class="stars">★★★★★</div>
-      <p>הכי חשוב לי זה שאני רואה את כל הצי מהמשרד בזמן אמת. יודע איפה כל משאית, מקבל התראה אם משהו קורה. שקט נפשי שלא היה לי קודם.</p>
-      <div class="who"><div class="av">רכ</div><div><div class="nm">רונן כ.</div><div class="rl">מנהל תפעול · חברת לוגיסטיקה</div></div></div>
-    </div>
-    <div class="tcard reveal">
-      <div class="quote">"</div>
-      <div class="stars">★★★★★</div>
-      <p>התקנה מקצועית ומהירה, לא השביתו לי את המשאיות ליום שלם. הצוות הגיע, התקין, חיבר למסך וזהו. ממליץ בחום לכל מי שיש לו ציוד כבד.</p>
-      <div class="who"><div class="av">אע</div><div><div class="nm">אבי ע.</div><div class="rl">קבלן עבודות עפר</div></div></div>
-    </div>
-  </div></div>
 </section>
 
 <!-- WHY NOT A CHEAP CAMERA -->
@@ -1101,6 +1157,13 @@ footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:v
 <footer>
   <picture><source srcset="assets/logo1.webp" type="image/webp"><img src="assets/logo1.png" alt="Heavy Guard" width="60" height="63" loading="lazy" style="width:60px;height:60px;object-fit:contain;margin-bottom:10px;opacity:.9"></picture>
   <div style="font-family:'Orbitron';font-weight:900;font-size:14px;margin-bottom:8px"><span style="color:var(--gold)">HEAVY</span> GUARD</div>
+  <nav aria-label="פתרונות ייעודיים" style="display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin:10px auto 14px;max-width:660px;font-size:12px">
+    <a href="מצלמות-360-למשאית.html" style="color:var(--cyan);text-decoration:none">מצלמות 360° למשאית</a>
+    <a href="מצלמת-רוורס-למשאית.html" style="color:var(--cyan);text-decoration:none">מצלמת רוורס למשאית</a>
+    <a href="מצלמות-לצי-רכב.html" style="color:var(--cyan);text-decoration:none">מצלמות ו-DVR לצי רכב</a>
+    <a href="מצלמות-לציוד-כבד.html" style="color:var(--cyan);text-decoration:none">מצלמות לציוד כבד</a>
+    <a href="מאמרים.html" style="color:var(--cyan);text-decoration:none">מאמרים</a>
+  </nav>
   התקנת מצלמות, GPS ומערכות אבטחה למשאיות וציוד כבד<br>© 2026 Heavy Guard. כל הזכויות שמורות.
   <div style="margin-top:10px;font-size:9px;color:#5a6273;opacity:.8;line-height:1.7;max-width:720px;margin-left:auto;margin-right:auto">3D models <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:#7c8aa8">CC-BY-4.0</a> via Sketchfab: “Scania R440” by zairiq-123 · “low poly DAF xf105” by Alvin.Woodly · “MAN TGX 2010 V8” by DevPoly3D · “2008 Iveco Stralis 560” by tonielpro520. Other 3D models used under their respective licenses.</div>
 </footer>
@@ -1126,13 +1189,15 @@ function loadBabylon(){
 </script>
 <script>
 const WA='972547719070';
+// Push a conversion event into GTM's dataLayer (safe no-op if GTM/dataLayer absent).
+function hgTrack(ev,params){ try{ (window.dataLayer=window.dataLayer||[]).push(Object.assign({event:ev},params||{})); }catch(e){} }
 /* ═══ i18n engine (HE · EN · AR) ═══ */
 const I18N={"Heavy Guard | מצלמות, GPS ואבטחה למשאיות וציוד כבד":{"en":"Heavy Guard | Cameras, GPS & Security for Trucks and Heavy Equipment","ar":"Heavy Guard | كاميرات وأنظمة GPS وأمان للشاحنات والمعدات الثقيلة"},"סימולטור":{"en":"Simulator","ar":"المحاكي"},"מחירים":{"en":"Pricing","ar":"الأسعار"},"שאלות":{"en":"FAQ","ar":"الأسئلة"},"דברו איתי ←":{"en":"Talk to us ←","ar":"تحدّث معنا ←"},"סרטון אחד מבטל תביעה. מצלמות, GPS ואבטחה לציי משאיות וציוד כבד — כשהאשמה לא עליך, ההקלטה מדברת במקומך.":{"en":"One video shuts down a claim. Cameras, GPS and security for truck fleets and heavy equipment — when the fault isn't yours, the footage speaks for you.","ar":"مقطع فيديو واحد يُسقط الدعوى. كاميرات وأنظمة GPS وأمان لأساطيل الشاحنات والمعدات الثقيلة — عندما لا يكون الخطأ خطأك، فإن التسجيل يتحدث بدلاً عنك."},"🚛 דמיין את המשאית שלי":{"en":"🚛 Visualize my truck","ar":"🚛 تخيّل شاحنتي"},"💰 כמה אני חוסך?":{"en":"💰 How much do I save?","ar":"💰 كم أوفّر؟"},"כיסוי סביב הרכב":{"en":"All-around vehicle coverage","ar":"تغطية محيطة بالمركبة"},"תיעוד רציף":{"en":"Continuous recording","ar":"تسجيل مستمر"},"ראיה קבילה":{"en":"Admissible evidence","ar":"دليل مقبول"},"השתתפות כשמזוכים":{"en":"Deductible when cleared","ar":"التحمّل عند البراءة"},"בלי מצלמה — מילה מול מילה.":{"en":"Without a camera — it's your word against theirs.","ar":"بدون كاميرا — كلمة مقابل كلمة."},"איתה — עובדה.":{"en":"With one — it's a fact.","ar":"معها — حقيقة دامغة."},"תרחיש":{"en":"Scenario","ar":"السيناريو"},"בלי מצלמה":{"en":"Without a camera","ar":"بدون كاميرا"},"עם Heavy Guard":{"en":"With Heavy Guard","ar":"مع Heavy Guard"},"תאונה \"לא אני התחלתי\"":{"en":"Accident — \"I didn't start it\"","ar":"حادث — \"لست من تسبب فيه\""},"משלם השתתפות":{"en":"You pay the deductible","ar":"تدفع التحمّل"},"מזוכה · ₪0":{"en":"Cleared · ₪0","ar":"براءة · ₪0"},"תביעת שווא על הנהג":{"en":"False claim against the driver","ar":"دعوى كاذبة ضد السائق"},"מילה מול מילה":{"en":"Word against word","ar":"كلمة مقابل كلمة"},"סרטון = תיק נסגר":{"en":"Video = case closed","ar":"فيديو = إغلاق الملف"},"פגע וברח / נזק בחניה":{"en":"Hit-and-run / parking damage","ar":"اصطدام وهروب / أضرار أثناء الوقوف"},"ספיגת העלות":{"en":"You absorb the cost","ar":"تتحمّل التكلفة"},"זיהוי + תיעוד":{"en":"Identification + footage","ar":"تحديد الهوية + توثيق"},"פרמיית ביטוח שנתית":{"en":"Annual insurance premium","ar":"قسط التأمين السنوي"},"מזנקת אחרי תביעה":{"en":"Spikes after a claim","ar":"يرتفع بعد المطالبة"},"נשמרת נמוכה":{"en":"Stays low","ar":"يبقى منخفضاً"},"תאונה אחת שלא באשמתך":{"en":"One accident that isn't your fault","ar":"حادث واحد ليس بخطئك"},"מחזירה את ההשקעה.":{"en":"pays back the investment.","ar":"يسترد الاستثمار."},"משאיות בצי":{"en":"Trucks in the fleet","ar":"الشاحنات في الأسطول"},"השתתפות עצמית (₪)":{"en":"Deductible (₪)","ar":"التحمّل الذاتي (₪)"},"תאונות שנויות/שנה":{"en":"Disputed accidents/year","ar":"حوادث متنازع عليها/سنة"},"אחוז מזוכים עם מצלמה":{"en":"Cleared rate with a camera","ar":"نسبة البراءة مع الكاميرا"},"חיסכון משוער לשנה":{"en":"Estimated annual savings","ar":"التوفير السنوي المُقدّر"},"בהשתתפויות עצמיות שלא תשלם":{"en":"in deductibles you won't pay","ar":"في مبالغ التحمّل التي لن تدفعها"},"+ מניעת עליית פרמיות · פחות השבתה · פחות בירוקרטיה":{"en":"+ no premium hikes · less downtime · less bureaucracy","ar":"+ منع ارتفاع الأقساط · توقّف أقل · بيروقراطية أقل"},"מצלמות לעולם":{"en":"Cameras for the world","ar":"كاميرات لعالم"},"הכבד.":{"en":"of heavy duty.","ar":"المعدات الثقيلة."},"עמידות לזעזועים, אבק וגשם · ראיית לילה מתקדמת · כל מצלמה ממוקמת בדיוק במקום הנכון.":{"en":"Resistant to shocks, dust and rain · advanced night vision · every camera placed exactly where it belongs.","ar":"مقاومة للصدمات والغبار والمطر · رؤية ليلية متقدمة · كل كاميرا موضوعة في المكان الصحيح تماماً."},"קדמית (שמשה)":{"en":"Front (windshield)","ar":"أمامية (الزجاج الأمامي)"},"מצלמת דרך ראשית":{"en":"Main road camera","ar":"كاميرا الطريق الرئيسية"},"על השמשה הקדמית, פונה לכביש. מתעדת מרחק ביטחון ורמזורים — הראיה המרכזית בכל תביעה.":{"en":"On the windshield, facing the road. Records safe distance and traffic lights — the key evidence in any claim.","ar":"على الزجاج الأمامي، باتجاه الطريق. توثّق مسافة الأمان وإشارات المرور — الدليل المحوري في أي دعوى."},"צדדיות (שני צדדים)":{"en":"Side (both sides)","ar":"جانبية (الجانبان)"},"ביטול שטח מת":{"en":"Blind-spot elimination","ar":"إلغاء النقاط العمياء"},"מכסות את שני הצדדים בפניות ובמעברי נתיב — שם קורות רוב התאונות עם משאיות.":{"en":"Cover both sides during turns and lane changes — where most truck accidents happen.","ar":"تغطّي الجانبين أثناء المنعطفات وتغيير المسارات — حيث تقع معظم حوادث الشاحنات."},"אחורית":{"en":"Rear","ar":"خلفية"},"רוורס ותיעוד אחורי":{"en":"Reverse & rear recording","ar":"الرجوع للخلف وتوثيق خلفي"},"מותקנת בגב המשאית. כיסוי אחורי מלא לרוורס ולתיעוד פגיעות מאחור.":{"en":"Mounted at the rear of the truck. Full rear coverage for reversing and documenting impacts from behind.","ar":"مُركّبة في مؤخرة الشاحنة. تغطية خلفية كاملة للرجوع للخلف وتوثيق الاصطدامات من الخلف."},"מערכת 360°":{"en":"360° system","ar":"نظام 360°"},"מבט על מלא":{"en":"Full bird's-eye view","ar":"رؤية علوية كاملة"},"איחוד כל המצלמות לתמונת על מסביב למשאית — אפס נקודות עיוורות.":{"en":"Merges all cameras into one overhead image around the truck — zero blind spots.","ar":"تدمج جميع الكاميرات في صورة علوية واحدة حول الشاحنة — صفر نقاط عمياء."},"GPS + שידור חי":{"en":"GPS + live streaming","ar":"GPS + بث مباشر"},"שליטה מהמשרד":{"en":"Control from the office","ar":"تحكّم من المكتب"},"צפייה חיה, מיקום בזמן אמת והתראות — ניהול הצי מכל מקום.":{"en":"Live viewing, real-time location and alerts — manage the fleet from anywhere.","ar":"مشاهدة مباشرة، وموقع في الوقت الفعلي، وتنبيهات — إدارة الأسطول من أي مكان."},"ראיית לילה":{"en":"Night vision","ar":"رؤية ليلية"},"IR + WDR מתקדם":{"en":"Advanced IR + WDR","ar":"IR + WDR متقدّم"},"הקלטה ברורה גם ב-0 לוקס — גם בחשיכה מלאה, גם נגד פנסים.":{"en":"Clear recording even at 0 lux — in total darkness and against headlights alike.","ar":"تسجيل واضح حتى عند 0 لوكس — في الظلام الدامس وأمام الأضواء الساطعة على حد سواء."},"הדמיית מצלמות":{"en":"Camera visualization","ar":"محاكاة الكاميرات"},"על המשאית שלך.":{"en":"on your truck.","ar":"على شاحنتك."},"בחר סוג משאית ויצרן, כוון כל מצלמה למיקום המדויק וצפה בתמונה החיה. לחץ \"הפעל תאונה\" לראות את ערך התיעוד.":{"en":"Choose a truck type and manufacturer, aim each camera to its exact position and watch the live image. Press \"Trigger accident\" to see the value of the footage.","ar":"اختر نوع الشاحنة والشركة المصنّعة، ووجّه كل كاميرا إلى موضعها الدقيق وشاهد الصورة المباشرة. اضغط \"تشغيل حادث\" لترى قيمة التوثيق."},"סוג משאית":{"en":"Truck type","ar":"نوع الشاحنة"},"יצרן / צבע":{"en":"Manufacturer / color","ar":"الشركة المصنّعة / اللون"},"מצלמות פעילות":{"en":"Active cameras","ar":"كاميرات نشطة"},"⟺ מראה":{"en":"⟺ Mirror","ar":"⟺ مرآة"},"← בחר מצלמה לכוונון":{"en":"← Select a camera to adjust","ar":"← اختر كاميرا للضبط"},"⚠ סימולציית תאונה":{"en":"⚠ Accident simulation","ar":"⚠ محاكاة حادث"},"💥 הפעל תאונה":{"en":"💥 Trigger accident","ar":"💥 تشغيل حادث"},"נהג":{"en":"Driver","ar":"السائق"},"מלמעלה":{"en":"Top","ar":"من الأعلى"},"מאחור":{"en":"Rear","ar":"من الخلف"},"טוען סימולטור תלת-ממד...":{"en":"Loading 3D simulator...","ar":"جارٍ تحميل المحاكي ثلاثي الأبعاد..."},"גרור לסיבוב · Scroll לזום":{"en":"Drag to rotate · Scroll to zoom","ar":"اسحب للتدوير · مرّر للتكبير"},"קדמית":{"en":"Front","ar":"أمامية"},"ימין":{"en":"Right","ar":"يمين"},"שמאל":{"en":"Left","ar":"يسار"},"ארגז ·":{"en":"Box ·","ar":"صندوق ·"},"· 4 מצלמות פעילות":{"en":"· 4 active cameras","ar":"· 4 كاميرات نشطة"},"💬 שלח את הבחירה שלי בוואטסאפ":{"en":"💬 Send my selection on WhatsApp","ar":"💬 أرسل اختياري عبر واتساب"},"מהשיחה הראשונה":{"en":"From the first call","ar":"من المكالمة الأولى"},"עד הדרך.":{"en":"to the road.","ar":"حتى الطريق."},"אבחון הצי":{"en":"Fleet assessment","ar":"تشخيص الأسطول"},"מבינים כמה משאיות, איזה סוגים ומה הצרכים — ובונים פתרון מותאם.":{"en":"We learn how many trucks, which types and what you need — then build a tailored solution.","ar":"نفهم عدد الشاحنات وأنواعها واحتياجاتك — ثم نبني حلاً مخصصاً."},"הדמיה ובחירה":{"en":"Visualization & selection","ar":"محاكاة واختيار"},"בסימולטור בוחרים תצורה ומכוונים כל מצלמה — רואים בדיוק מה תיקלט.":{"en":"In the simulator you pick a configuration and aim every camera — seeing exactly what will be recorded.","ar":"في المحاكي تختار التهيئة وتوجّه كل كاميرا — لترى بالضبط ما سيُسجَّل."},"התקנה מקצועית":{"en":"Professional installation","ar":"تركيب احترافي"},"צוות מנוסה מתקין בשטח — מהיר, נקי ובלי להשבית את העבודה.":{"en":"An experienced team installs on-site — fast, clean and without halting your work.","ar":"فريق متمرّس يقوم بالتركيب في الموقع — سريع ونظيف ودون تعطيل العمل."},"חיבור ל-GPS + ניהול":{"en":"GPS connection + management","ar":"اتصال بـ GPS + إدارة"},"מחברים למסך הניהול. מאותו רגע — אתה רואה את כל הצי בזמן אמת.":{"en":"We connect to the management dashboard. From that moment — you see your entire fleet in real time.","ar":"نوصل بشاشة الإدارة. من تلك اللحظة — ترى أسطولك بالكامل في الوقت الفعلي."},"חברות הובלה":{"en":"Transport companies","ar":"شركات النقل"},"כבר מרוויחות.":{"en":"are already winning.","ar":"تربح بالفعل."},"לקוחות שהמצלמות שלהם כבר חסכו תביעות, השתתפויות עצמיות וכאב ראש.":{"en":"Customers whose cameras have already saved them claims, deductibles and headaches.","ar":"عملاء وفّرت لهم كاميراتهم بالفعل دعاوى ومبالغ تحمّل والكثير من المتاعب."},"נהג שלי נחסם בצומת ורכב פגע בנו מאחור. הביטוח רצה להאשים אותנו — שלחנו את הסרטון, התיק נסגר תוך יומיים. המערכת החזירה את עצמה בפגיעה אחת.":{"en":"My driver was blocked at a junction and a vehicle hit us from behind. The insurer wanted to blame us — we sent the video, and the case closed within two days. The system paid for itself with a single incident.","ar":"تعطّل سائقي عند تقاطع واصطدمت بنا مركبة من الخلف. أرادت شركة التأمين تحميلنا المسؤولية — أرسلنا الفيديو، وأُغلق الملف خلال يومين. سدّد النظام تكلفته من حادث واحد."},"דמ":{"en":"DM","ar":"د.م"},"דוד מ.":{"en":"David M.","ar":"داود م."},"בעלים · צי 12 משאיות":{"en":"Owner · fleet of 12 trucks","ar":"مالك · أسطول من 12 شاحنة"},"הכי חשוב לי זה שאני רואה את כל הצי מהמשרד בזמן אמת. יודע איפה כל משאית, מקבל התראה אם משהו קורה. שקט נפשי שלא היה לי קודם.":{"en":"What matters most to me is seeing the whole fleet from the office in real time. I know where every truck is and get an alert if anything happens. Peace of mind I never had before.","ar":"أهم شيء بالنسبة لي هو رؤية الأسطول بأكمله من المكتب في الوقت الفعلي. أعرف مكان كل شاحنة، وأتلقى تنبيهاً إذا حدث أي شيء. راحة بال لم أعرفها من قبل."},"רכ":{"en":"RK","ar":"ر.ك"},"רונן כ.":{"en":"Ronen K.","ar":"رونين ك."},"מנהל תפעול · חברת לוגיסטיקה":{"en":"Operations manager · logistics company","ar":"مدير عمليات · شركة لوجستيات"},"התקנה מקצועית ומהירה, לא השביתו לי את המשאיות ליום שלם. הצוות הגיע, התקין, חיבר למסך וזהו. ממליץ בחום לכל מי שיש לו ציוד כבד.":{"en":"Professional, fast installation — they didn't take my trucks out of service for a whole day. The team arrived, installed, connected to the screen and that was it. Highly recommended for anyone with heavy equipment.","ar":"تركيب احترافي وسريع، لم يعطّلوا شاحناتي ليوم كامل. وصل الفريق، ركّب، ووصل بالشاشة وانتهى الأمر. أنصح به بشدة لكل من يملك معدات ثقيلة."},"אע":{"en":"AA","ar":"آ.ع"},"אבי ע.":{"en":"Avi A.","ar":"آفي ع."},"קבלן עבודות עפר":{"en":"Earthworks contractor","ar":"مقاول أعمال حفر"},"חבילות":{"en":"Packages","ar":"الباقات"},"לכל צי.":{"en":"for every fleet.","ar":"لكل أسطول."},"ממשאית בודדת ועד צי גדול — בוחרים את הרמה שמתאימה. כל המחירים להמחשה; הצעה סופית מותאמת אישית.":{"en":"From a single truck to a large fleet — pick the level that fits. All prices are illustrative; the final quote is personalized.","ar":"من شاحنة واحدة إلى أسطول كبير — اختر المستوى المناسب. جميع الأسعار للتوضيح؛ العرض النهائي مخصّص شخصياً."},"הגנה בסיסית למשאית":{"en":"Basic protection per truck","ar":"حماية أساسية للشاحنة"},"/ משאית":{"en":"/ truck","ar":"/ شاحنة"},"מצלמה קדמית (דרך) Full HD":{"en":"Front (road) camera Full HD","ar":"كاميرا أمامية (الطريق) Full HD"},"מצלמה אחורית לרוורס":{"en":"Rear reverse camera","ar":"كاميرا خلفية للرجوع للخلف"},"הקלטה רציפה על כרטיס":{"en":"Continuous recording to card","ar":"تسجيل مستمر على بطاقة"},"ראיית לילה בסיסית":{"en":"Basic night vision","ar":"رؤية ليلية أساسية"},"GPS ושידור חי":{"en":"GPS & live streaming","ar":"GPS وبث مباشر"},"מבט 360°":{"en":"360° view","ar":"رؤية 360°"},"קבל הצעה":{"en":"Get a quote","ar":"احصل على عرض"},"הפתרון המלא לצי עובד":{"en":"The complete solution for a working fleet","ar":"الحل الكامل لأسطول عامل"},"4 מצלמות (קדם · 2 צד · אחור)":{"en":"4 cameras (front · 2 side · rear)","ar":"4 كاميرات (أمامية · جانبيتان · خلفية)"},"GPS + שידור חי למשרד":{"en":"GPS + live streaming to the office","ar":"GPS + بث مباشر إلى المكتب"},"ראיית לילה IR + WDR מתקדם":{"en":"Night vision IR + advanced WDR","ar":"رؤية ليلية IR + WDR متقدّم"},"התראות בזמן אמת":{"en":"Real-time alerts","ar":"تنبيهات في الوقت الفعلي"},"אחסון ענן 30 יום":{"en":"30-day cloud storage","ar":"تخزين سحابي 30 يوماً"},"אפליקציית ניהול צי":{"en":"Fleet management app","ar":"تطبيق إدارة الأسطول"},"לצי גדול וציוד כבד":{"en":"For a large fleet and heavy equipment","ar":"لأسطول كبير ومعدات ثقيلة"},"בהתאמה":{"en":"Custom","ar":"حسب الطلب"},"מערכת 360° מלאה · אפס שטח מת":{"en":"Full 360° system · zero blind spots","ar":"نظام 360° كامل · صفر نقاط عمياء"},"כל יכולות PROFESSIONAL":{"en":"All PROFESSIONAL capabilities","ar":"جميع إمكانيات PROFESSIONAL"},"דשבורד ניהול צי מתקדם":{"en":"Advanced fleet management dashboard","ar":"لوحة تحكّم متقدّمة لإدارة الأسطول"},"אינטגרציה למערכות קיימות":{"en":"Integration with existing systems","ar":"تكامل مع الأنظمة القائمة"},"אחסון ענן ללא הגבלה":{"en":"Unlimited cloud storage","ar":"تخزين سحابي غير محدود"},"תמיכה ושירות VIP":{"en":"VIP support & service","ar":"دعم وخدمة VIP"},"בואו נדבר":{"en":"Let's talk","ar":"لنتحدّث"},"* המחירים להמחשה בלבד וכוללים התקנה. הצעת מחיר סופית תלויה בסוג המשאית, כמות ותצורה.":{"en":"* Prices are illustrative only and include installation. The final quote depends on truck type, quantity and configuration.","ar":"* الأسعار للتوضيح فقط وتشمل التركيب. يعتمد العرض النهائي على نوع الشاحنة والكمية والتهيئة."},"כל הצי שלך":{"en":"Your entire fleet","ar":"أسطولك بالكامل"},"על מסך אחד.":{"en":"on one screen.","ar":"على شاشة واحدة."},"מבט חי על כל משאית — מיקום, מהירות, סטטוס מצלמות. כך נראה מסך הניהול (הדגמה אינטראקטיבית — לחץ על משאית).":{"en":"A live view of every truck — location, speed, camera status. This is what the management screen looks like (interactive demo — click a truck).","ar":"عرض مباشر لكل شاحنة — الموقع والسرعة وحالة الكاميرات. هكذا تبدو شاشة الإدارة (عرض تفاعلي — انقر على شاحنة)."},"תל אביב":{"en":"Tel Aviv","ar":"تل أبيب"},"אשדוד":{"en":"Ashdod","ar":"أشدود"},"מודיעין":{"en":"Modi'in","ar":"موديعين"},"משאיות פעילות":{"en":"Active trucks","ar":"شاحنات نشطة"},"ק\"מ היום":{"en":"km today","ar":"كم اليوم"},"מצלמות / רכב":{"en":"Cameras / vehicle","ar":"كاميرات / مركبة"},"מצלמות תקינות":{"en":"Cameras operational","ar":"كاميرات تعمل"},"צי פעיל":{"en":"Active fleet","ar":"أسطول نشط"},"נפוצות.":{"en":"Frequently asked.","ar":"الشائعة."},"כמה זמן לוקחת ההתקנה?":{"en":"How long does the installation take?","ar":"كم يستغرق التركيب؟"},"התקנה של מערכת מלאה למשאית אחת אורכת בדרך כלל 3–5 שעות. אנחנו עובדים בתיאום מראש כדי לא להשבית את העבודה — אפשר להתקין בלילה או בסופ\"ש לצי גדול.":{"en":"Installing a full system on a single truck usually takes 3–5 hours. We work by prior arrangement so as not to disrupt your operations — for a large fleet, we can install at night or on weekends.","ar":"يستغرق تركيب نظام كامل لشاحنة واحدة عادةً 3–5 ساعات. نعمل بالتنسيق المسبق حتى لا نعطّل العمل — يمكن التركيب ليلاً أو في عطلة نهاية الأسبوع للأساطيل الكبيرة."},"האם הסרטונים קבילים בבית משפט ובביטוח?":{"en":"Are the videos admissible in court and with insurers?","ar":"هل المقاطع مقبولة في المحكمة ولدى شركات التأمين؟"},"כן. ההקלטות כוללות חותמת זמן, מיקום GPS ומהירות — מה שהופך אותן לראיה קבילה. חברות ביטוח ובתי משפט מקבלים תיעוד וידאו כהוכחה ברורה לנסיבות התאונה.":{"en":"Yes. The recordings include a timestamp, GPS location and speed — which makes them admissible evidence. Insurers and courts accept video footage as clear proof of the accident's circumstances.","ar":"نعم. تتضمّن التسجيلات طابعاً زمنياً وموقع GPS والسرعة — ما يجعلها دليلاً مقبولاً. تقبل شركات التأمين والمحاكم التوثيق المرئي كدليل واضح على ملابسات الحادث."},"מה קורה אם אין קליטה סלולרית?":{"en":"What happens if there's no cellular reception?","ar":"ماذا يحدث إذا لم تتوفر تغطية خلوية؟"},"המערכת ממשיכה להקליט מקומית על כרטיס זיכרון בכל מצב. ברגע שחוזרת קליטה, הנתונים מסתנכרנים לענן. לא מאבדים אף שנייה של תיעוד.":{"en":"The system keeps recording locally to a memory card under any condition. The moment reception returns, the data syncs to the cloud. You don't lose a single second of footage.","ar":"يواصل النظام التسجيل محلياً على بطاقة ذاكرة في جميع الأحوال. وبمجرد عودة التغطية، تتزامن البيانات مع السحابة. لا تفقد ولو ثانية واحدة من التوثيق."},"המצלמות עמידות לתנאי שטח קשים?":{"en":"Are the cameras built for harsh field conditions?","ar":"هل الكاميرات مقاومة لظروف الميدان القاسية؟"},"בהחלט. כל המצלמות מוגנות מפני אבק, מים, רטט וטמפרטורות קיצון (IP69K) — מתוכננות במיוחד לציוד כבד ולעבודה בשטח, באתרי בנייה ובכבישים.":{"en":"Absolutely. All cameras are protected against dust, water, vibration and extreme temperatures (IP69K) — designed specifically for heavy equipment and field work, on construction sites and roads.","ar":"بالتأكيد. جميع الكاميرات محمية من الغبار والماء والاهتزاز ودرجات الحرارة القصوى (IP69K) — مصمّمة خصيصاً للمعدات الثقيلة والعمل الميداني، في مواقع البناء وعلى الطرق."},"אפשר לראות את המשאיות בזמן אמת מהטלפון?":{"en":"Can I see the trucks in real time from my phone?","ar":"هل يمكنني رؤية الشاحنات في الوقت الفعلي من الهاتف؟"},"כן — בחבילות PROFESSIONAL ו-FLEET מקבלים אפליקציה שמראה מיקום חי, סטטוס כל מצלמה והתראות. שולטים בכל הצי מהמשרד או מהנייד, מכל מקום.":{"en":"Yes — the PROFESSIONAL and FLEET packages include an app that shows live location, the status of every camera and alerts. Control your whole fleet from the office or your mobile, anywhere.","ar":"نعم — تتضمّن باقتا PROFESSIONAL و FLEET تطبيقاً يعرض الموقع المباشر وحالة كل كاميرا والتنبيهات. تحكّم في أسطولك بالكامل من المكتب أو الجوال، من أي مكان."},"מה אם יש לי כבר מערכת ישנה?":{"en":"What if I already have an old system?","ar":"ماذا لو كان لديّ نظام قديم بالفعل؟"},"אנחנו בודקים את המערכת הקיימת ומציעים שדרוג או החלפה לפי הצורך. במקרים רבים אפשר לשלב את הציוד החדש עם תשתית קיימת ולחסוך בעלויות.":{"en":"We inspect your existing system and recommend an upgrade or replacement as needed. In many cases the new equipment can be integrated with existing infrastructure to save costs.","ar":"نفحص نظامك الحالي ونقترح ترقية أو استبدالاً حسب الحاجة. في كثير من الحالات يمكن دمج المعدات الجديدة مع البنية التحتية القائمة لتوفير التكاليف."},"לצי שלך.":{"en":"for your fleet.","ar":"لأسطولك."},"שם מלא":{"en":"Full name","ar":"الاسم الكامل"},"טלפון":{"en":"Phone","ar":"الهاتف"},"כמה משאיות?":{"en":"How many trucks?","ar":"كم عدد الشاحنات؟"},"קטגוריה":{"en":"Category","ar":"الفئة"},"נהג עצמאי · משאית אחת":{"en":"Independent driver · one truck","ar":"سائق مستقل · شاحنة واحدة"},"2–5 משאיות":{"en":"2–5 trucks","ar":"2–5 شاحنات"},"6–15 משאיות":{"en":"6–15 trucks","ar":"6–15 شاحنة"},"16+ משאיות":{"en":"16+ trucks","ar":"16+ شاحنة"},"ציוד כבד / אחר":{"en":"Heavy equipment / other","ar":"معدات ثقيلة / أخرى"},"נא למלא שם וטלפון":{"en":"Please enter a name and phone","ar":"يرجى إدخال الاسم والهاتف"},"💬 שליחה בוואטסאפ":{"en":"💬 Send on WhatsApp","ar":"💬 الإرسال عبر واتساب"},"בחרת תצורה?":{"en":"Chose a configuration?","ar":"اخترت تهيئة؟"},"שלח לנו.":{"en":"Send it to us.","ar":"أرسلها إلينا."},"שלח את הבחירה שלך ישירות בוואטסאפ — נחזור עם הצעת מחיר.":{"en":"Send your selection directly on WhatsApp — we'll get back to you with a quote.","ar":"أرسل اختيارك مباشرةً عبر واتساب — وسنعود إليك بعرض سعر."},"💬 שליחת הבחירה בוואטסאפ":{"en":"💬 Send selection on WhatsApp","ar":"💬 إرسال الاختيار عبر واتساب"},"התקנת מצלמות, GPS ומערכות אבטחה למשאיות וציוד כבד":{"en":"Installation of cameras, GPS and security systems for trucks and heavy equipment","ar":"تركيب كاميرات وأنظمة GPS وأنظمة أمان للشاحنات والمعدات الثقيلة"},"© 2026 Heavy Guard. כל הזכויות שמורות.":{"en":"© 2026 Heavy Guard. All rights reserved.","ar":"© 2026 Heavy Guard. جميع الحقوق محفوظة."},"השם שלך":{"en":"Your name","ar":"اسمك"},"לדוגמה: 8":{"en":"Example: 8","ar":"مثال: 8"},"מנוע V8 · עד 770 כ\"ס":{"en":"V8 engine · up to 770 hp","ar":"محرك V8 · حتى 770 حصان"},"עד 780 כ\"ס · תיבת I-Shift":{"en":"Up to 780 hp · I-Shift gearbox","ar":"حتى 780 حصان · ناقل I-Shift"},"New Generation · תא ענק":{"en":"New Generation · giant cab","ar":"New Generation · قمرة ضخمة"},"יעילות דלק גבוהה":{"en":"High fuel efficiency","ar":"كفاءة عالية في استهلاك الوقود"},"אווירודינמי · גם גז טבעי":{"en":"Aerodynamic · also natural gas","ar":"ديناميكي هوائياً · يعمل بالغاز الطبيعي أيضاً"},"הדגל של סקניה — מלך ה־V8":{"en":"Scania's flagship — the king of the V8","ar":"رائدة سكانيا — ملك محركات V8"},"הספק שיא בשוק + בטיחות":{"en":"Market-leading power + safety","ar":"قوة رائدة في السوق + أمان"},"חסכוני וטכנולוגי":{"en":"Economical and tech-forward","ar":"اقتصادية ومتطوّرة تقنياً"},"משאית השנה 2022":{"en":"Truck of the Year 2022","ar":"شاحنة العام 2022"},"משאית השנה 2021":{"en":"Truck of the Year 2021","ar":"شاحنة العام 2021"},"חסכוני ונקי":{"en":"Economical and clean","ar":"اقتصادية ونظيفة"},"ארגז":{"en":"Box","ar":"صندوق"},"ראש-סוס":{"en":"Tractor unit","ar":"رأس قاطرة"},"קיפר":{"en":"Tipper","ar":"قلّابة"},"מרכב פתוח":{"en":"Flatbed","ar":"مسطّحة مكشوفة"},"מיכלית":{"en":"Tanker","ar":"صهريج"},"רול-אוף":{"en":"Roll-off","ar":"رول-أوف"},"משאבת בטון":{"en":"Concrete pump","ar":"مضخة خرسانة"},"מנוף":{"en":"Crane","ar":"رافعة"},"שוודיה":{"en":"Sweden","ar":"السويد"},"גרמניה":{"en":"Germany","ar":"ألمانيا"},"הולנד":{"en":"Netherlands","ar":"هولندا"},"איטליה":{"en":"Italy","ar":"إيطاليا"},"⚠️ תאונה מתועדת!":{"en":"⚠️ Accident recorded!","ar":"⚠️ تم توثيق الحادث!"},"ראיה מלאה":{"en":"Full view","ar":"رؤية كاملة"},"כיסוי חלקי":{"en":"Partial coverage","ar":"تغطية جزئية"},"כבוי":{"en":"Off","ar":"مُطفأة"},"ימין/שמאל":{"en":"Left/Right","ar":"يمين/يسار"},"גובה":{"en":"Height","ar":"الارتفاع"},"קדמי/אחורי":{"en":"Front/Back","ar":"أمامي/خلفي"},"סיבוב°":{"en":"Rotation°","ar":"دوران°"},"הטיה°":{"en":"Tilt°","ar":"إمالة°"},"איפוס":{"en":"Reset","ar":"إعادة ضبط"},"מצלמה":{"en":"Camera","ar":"كاميرا"},"בנסיעה":{"en":"Driving","ar":"أثناء السير"},"בהמתנה":{"en":"Idle","ar":"في الانتظار"},"חונה":{"en":"Parked","ar":"متوقفة"},"עומד":{"en":"Stopped","ar":"متوقف"},"מצלמות":{"en":"Cameras","ar":"كاميرات"},"דוד":{"en":"David","ar":"داود"},"רונן":{"en":"Ronen","ar":"رونين"},"אבי":{"en":"Avi","ar":"آفي"},"משה":{"en":"Moshe","ar":"موشيه"},"יוסי":{"en":"Yossi","ar":"يوسي"},"עמי":{"en":"Ami","ar":"عامي"}};
 Object.assign(I18N,{"טכנולוגיית קצה":{"en":"Edge technology","ar":"تقنية الحافة"},"שחושבת בשבילך.":{"en":"that thinks for you.","ar":"تفكّر بدلاً عنك."},"בינה מלאכותית שרצה ישירות על המצלמה — מזהה סכנה, מתעדת ומתריעה בזמן אמת, גם בלי אינטרנט. זה ההבדל בין הקלטה לבין הגנה אמיתית.":{"en":"AI that runs right on the camera — detects danger, records and alerts in real time, even with no internet. That's the difference between recording and real protection.","ar":"ذكاء اصطناعي يعمل مباشرة على الكاميرا — يكتشف الخطر ويسجّل وينبّه في الوقت الفعلي، حتى بدون إنترنت. هذا هو الفرق بين مجرّد تسجيل وبين حماية حقيقية."},"זיהוי תאונה חכם":{"en":"Smart Collision Detection","ar":"كشف الحوادث الذكي"},"בינה מלאכותית מזהה את רגע הפגיעה — נועלת ושומרת את הסרטון אוטומטית, מסמנת אותו ושולחת התראה מיידית. אף ראיה לא הולכת לאיבוד.":{"en":"AI detects the moment of impact — automatically locks and saves the clip, flags it and sends an instant alert. No evidence is ever lost.","ar":"يكتشف الذكاء الاصطناعي لحظة الاصطدام — يقفل المقطع ويحفظه تلقائياً، ويعلّمه ويُرسل تنبيهاً فورياً. لا تضيع أي أدلة أبداً."},"התראת עייפות נהג":{"en":"Driver Fatigue Alert","ar":"تنبيه إجهاد السائق"},"מצלמה פנימית מזהה עייפות, פיהוק או הסחת דעת של הנהג — ומתריעה לפני שקורה אסון. בטיחות שמצילה חיים.":{"en":"An in-cab camera detects driver fatigue, yawning or distraction — and warns before disaster strikes. Safety that saves lives.","ar":"كاميرا داخل المقصورة تكتشف إجهاد السائق أو التثاؤب أو تشتّت الانتباه — وتحذّر قبل وقوع الكارثة. أمان ينقذ الأرواح."},"זיהוי שטח מת":{"en":"Blind-Spot Detection","ar":"كشف النقطة العمياء"},"חיישני AI מזהים הולכי רגל, אופניים ורכבים בשטח המת ומתריעים בזמן אמת — קריטי במיוחד במשאיות גדולות.":{"en":"AI sensors detect pedestrians, cyclists and vehicles in the blind spot and alert in real time — especially critical for large trucks.","ar":"تكتشف مستشعرات الذكاء الاصطناعي المشاة والدرّاجات والمركبات في النقطة العمياء وتنبّه في الوقت الفعلي — أمر بالغ الأهمية للشاحنات الكبيرة."},"עיבוד Edge בזמן אמת":{"en":"Real-Time Edge Processing","ar":"معالجة طرفية فورية"},"כל העיבוד קורה על המצלמה עצמה — אפס השהיה, פועל גם בלי קליטה, ומסנכרן לענן ברגע שחוזר אינטרנט.":{"en":"All processing happens on the camera itself — zero latency, works even with no signal, and syncs to the cloud the moment internet returns.","ar":"تتم كل المعالجة على الكاميرا نفسها — بدون أي تأخير، وتعمل حتى بدون تغطية، وتتزامن مع السحابة فور عودة الإنترنت."},"מעקב צי + גדר וירטואלית":{"en":"Live Fleet & Geofencing","ar":"تتبّع الأسطول + سياج جغرافي"},"מיקום חי של כל משאית, התראות כניסה ויציאה מאזורים מוגדרים ודוחות נסיעה אוטומטיים — שליטה מלאה מהמשרד.":{"en":"Live location of every truck, entry/exit alerts for defined zones, and automatic trip reports — full control from the office.","ar":"موقع مباشر لكل شاحنة، وتنبيهات دخول وخروج للمناطق المحدّدة، وتقارير رحلات تلقائية — تحكّم كامل من المكتب."},"ניקוד נהיגה חכם":{"en":"Smart Driver Scoring","ar":"تقييم القيادة الذكي"},"המערכת מנתחת בלימות, מהירות ופניות ונותנת לכל נהג ציון בטיחות — מזהה סיכון מראש ומורידה תאונות ופרמיות.":{"en":"The system analyzes braking, speed and cornering and gives each driver a safety score — spotting risk early and cutting accidents and premiums.","ar":"يحلّل النظام الكبح والسرعة والمنعطفات ويمنح كل سائق درجة أمان — يرصد الخطر مبكراً ويقلّل الحوادث وأقساط التأمين."}});
 Object.assign(I18N,{"צרפת":{"en":"France","ar":"فرنسا"},"טורקיה":{"en":"Turkey","ar":"تركيا"},"יפן":{"en":"Japan","ar":"اليابان"},"עד 520 כ\"ס · תא High Sleeper":{"en":"Up to 520 hp · High Sleeper cab","ar":"حتى 520 حصان · مقصورة High Sleeper"},"נוחות וחיסכון לנהג":{"en":"Comfort & fuel economy for the driver","ar":"راحة واقتصاد في الوقود للسائق"},"מנוע Ecotorq · 500 כ\"ס":{"en":"Ecotorq engine · 500 hp","ar":"محرك Ecotorq · 500 حصان"},"משאית השנה 2019 · להיט בישראל":{"en":"Truck of the Year 2019 · a hit in Israel","ar":"شاحنة العام 2019 · الأكثر رواجاً في إسرائيل"},"דיזל חסכוני · אמינות יפנית":{"en":"Economical diesel · Japanese reliability","ar":"ديزل اقتصادي · موثوقية يابانية"},"מלכת ההפצה העירונית":{"en":"Queen of urban distribution","ar":"ملكة التوزيع داخل المدن"},"טכנולוגיית Daimler · 6 צילינדר":{"en":"Daimler technology · 6-cylinder","ar":"تقنية Daimler · 6 أسطوانات"},"אמינות יפנית לעבודה קשה":{"en":"Japanese reliability for hard work","ar":"موثوقية يابانية للعمل الشاق"},"מקבוצת Toyota · עמידות גבוהה":{"en":"From the Toyota group · highly durable","ar":"من مجموعة Toyota · متانة عالية"},"כמעט בלי תקלות":{"en":"Almost zero breakdowns","ar":"أعطال شبه معدومة"},"מכסים כל סוג":{"en":"We cover every type","ar":"نغطّي كل نوع"},"של משאית.":{"en":"of truck.","ar":"من الشاحنات."},"מארגז ועד מנוף — לכל סוג משאית פתרון מצלמות ייעודי. בסימולטור בוחרים את הסוג מתוך 11 יצרנים מובילים ורואים בדיוק איך זה נראה.":{"en":"From box trucks to cranes — every truck type has a dedicated camera solution. In the simulator you pick your type from 11 leading brands and see exactly how it looks.","ar":"من شاحنات الصندوق إلى الرافعات — لكل نوع شاحنة حلّ كاميرات مخصّص. في المحاكي تختار نوعك من بين 11 علامة رائدة وترى بالضبط كيف يبدو."},"יצרנים נתמכים:":{"en":"Supported brands:","ar":"العلامات المدعومة:"},"הובלת סחורה כללית, ריהוט ומשטחים — הנפוץ ביותר בהפצה עירונית ובין-עירונית.":{"en":"General cargo, furniture and pallets — the most common in urban and intercity distribution.","ar":"بضائع عامة وأثاث ومنصّات — الأكثر شيوعاً في التوزيع داخل المدن وبينها."},"מושך נתמכים (טריילרים) למרחקים ארוכים ולמשאות כבדים — עמוד השדרה של ההובלה.":{"en":"Pulls trailers over long distances and heavy loads — the backbone of haulage.","ar":"يجرّ المقطورات لمسافات طويلة وأحمال ثقيلة — العمود الفقري لقطاع النقل."},"פריקה הידראולית של חצץ, עפר וחומרי גלם — נפוץ באתרי בנייה ותשתית.":{"en":"Hydraulic dumping of gravel, soil and raw materials — common on construction and infrastructure sites.","ar":"تفريغ هيدروليكي للحصى والتربة والمواد الخام — شائع في مواقع البناء والبنية التحتية."},"משטח פתוח לציוד גדול, מכולות וסחורה לא סטנדרטית.":{"en":"Open deck for large equipment, containers and oversized cargo.","ar":"سطح مفتوح للمعدات الكبيرة والحاويات والبضائع غير القياسية."},"הובלת דלק, מים, מזון נוזלי וכימיקלים — דורשת בטיחות מוגברת.":{"en":"Transport of fuel, water, liquid food and chemicals — requires enhanced safety.","ar":"نقل الوقود والمياه والأغذية السائلة والمواد الكيميائية — يتطلّب أماناً معزّزاً."},"מכולות מתחלפות לפינוי פסולת, גרוטאות ומחזור.":{"en":"Swappable containers for waste removal, scrap and recycling.","ar":"حاويات قابلة للتبديل لإزالة النفايات والخردة وإعادة التدوير."},"הזרמת בטון לגובה ולמרחק באתרי בנייה.":{"en":"Pumping concrete to height and distance on construction sites.","ar":"ضخّ الخرسانة إلى الارتفاع والمسافة في مواقع البناء."},"הרמת משאות כבדים — מנופים מתקפלים לעבודות הקמה והרכבה.":{"en":"Lifting heavy loads — folding cranes for erection and assembly work.","ar":"رفع الأحمال الثقيلة — رافعات قابلة للطي لأعمال التركيب والتجميع."}});
 Object.assign(I18N,{"הכי פופולרי":{"en":"Most popular","ar":"الأكثر شيوعاً"}});
 Object.assign(I18N,{"בחר את":{"en":"Choose your","ar":"اختر"},"המצלמות שלך.":{"en":"cameras.","ar":"كاميراتك."},"מערכת צפייה מרחוק מלאה — מגוון מצלמות פנים, חוץ וצד שמשתלבות ישירות במערכת ובסימולטור. אלו האפשרויות שלך.":{"en":"A complete remote-viewing system — a range of interior, exterior and side cameras that plug straight into the system and the simulator. These are your options.","ar":"نظام مراقبة عن بُعد متكامل — مجموعة من الكاميرات الداخلية والخارجية والجانبية تتكامل مباشرة مع النظام والمحاكي. هذه هي خياراتك."},"מצלמת צד · IP69K":{"en":"Side camera · IP69K","ar":"كاميرا جانبية · IP69K"},"מצלמת צד ממוגנת Sony AHD 2MP ‏(IP69K) עם ראיית לילה ל-20 מטר, זכוכית מחוסמת ומבנה קשיח במיוחד.":{"en":"A rugged Sony AHD 2MP side camera (IP69K) with 20 m night vision, tempered glass and an extra-tough build.","ar":"كاميرا جانبية محمية Sony AHD 2MP ‏(IP69K) مع رؤية ليلية حتى 20 متراً، زجاج مقوّى وبنية صلبة للغاية."},"זרוע מראה · IP69K":{"en":"Mirror-arm · IP69K","ar":"ذراع المرآة · IP69K"},"מצלמה חיצונית לזרועות מראה, ממוגנת Sony AHD 2MP ‏(IP69K) עם 11 נורות LED לראיית לילה, זכוכית מחוסמת ורגישות גבוהה לאור.":{"en":"An exterior camera for mirror arms, protected Sony AHD 2MP (IP69K) with 11 LED night-vision lights, tempered glass and high light sensitivity.","ar":"كاميرا خارجية لأذرع المرايا، محمية Sony AHD 2MP ‏(IP69K) مع 11 مصباح LED للرؤية الليلية، زجاج مقوّى وحساسية عالية للضوء."},"חוץ · Starvis · IP67":{"en":"Exterior · Starvis · IP67","ar":"خارجية · Starvis · IP67"},"מצלמת Sony AHD 2MP עם רגישות גבוהה לאור (Starvis), עדשה רחבה במיוחד, עמידות למים (IP67) ומחבר תעופתי אמין לתנאי חוץ.":{"en":"A Sony AHD 2MP camera with high light sensitivity (Starvis), an extra-wide lens, water resistance (IP67) and a reliable aviation connector for outdoor use.","ar":"كاميرا Sony AHD 2MP بحساسية ضوء عالية (Starvis)، عدسة واسعة جداً، مقاومة للماء (IP67) وموصّل طيران موثوق للاستخدام الخارجي."},"פנים · WDR 127°":{"en":"Interior · WDR 127°","ar":"داخلية · WDR 127°"},"מצלמה פנימית קדמית/אחורית AHD 1080P עם חיישן CMOS מתקדם, עדשה רחבה (127°) וטכנולוגיית WDR לתמונה חדה בכל תנאי תאורה.":{"en":"An interior front/rear AHD 1080P camera with an advanced CMOS sensor, a wide 127° lens and WDR technology for a sharp image in any lighting.","ar":"كاميرا داخلية أمامية/خلفية AHD 1080P بمستشعر CMOS متقدّم، عدسة واسعة (127°) وتقنية WDR لصورة واضحة في كل إضاءة."},"פנים · ראיית לילה":{"en":"Interior · Night vision","ar":"داخلية · رؤية ليلية"},"מצלמה פנימית Sony AHD 2MP עם עדשה חסינת מים, 20 נורות LED לראיית לילה (עד 25 מטר), זכוכית מחוסמת ומחבר תעופתי מאובטח לעבודה מאומצת.":{"en":"An interior Sony AHD 2MP camera with a waterproof lens, 20 LED night-vision lights (up to 25 m), tempered glass and a secured aviation connector for heavy-duty work.","ar":"كاميرا داخلية Sony AHD 2MP بعدسة مقاومة للماء، 20 مصباح LED للرؤية الليلية (حتى 25 متراً)، زجاج مقوّى وموصّل طيران مؤمّن للعمل الشاق."},"מוצרים":{"en":"Products","ar":"المنتجات"}});
-Object.assign(I18N,{"כל מה שהמערכת":{"en":"Everything the system","ar":"كل ما يفعله"},"עושה בשבילך.":{"en":"does for you.","ar":"النظام من أجلك."},"מערכת צפייה מרחוק חכמה ופשוטה לתפעול — שליטה מלאה בצי מהנייד, בכל רגע ומכל מקום.":{"en":"A smart, easy-to-use remote-viewing system — full control of your fleet from your phone, anytime, anywhere.","ar":"نظام مراقبة عن بُعد ذكي وسهل الاستخدام — تحكّم كامل بأسطولك من هاتفك، في أي وقت ومن أي مكان."},"צפייה מרחוק בזמן אמת":{"en":"Real-time remote viewing","ar":"مشاهدة مباشرة عن بُعد"},"צפייה חיה בכל מצלמה מהנייד או מהמחשב — רואים בדיוק מה קורה בכל משאית, בכל רגע.":{"en":"Watch any camera live from your phone or computer — see exactly what's happening in every truck, at any moment.","ar":"شاهد أي كاميرا مباشرةً من هاتفك أو حاسوبك — اعرف بالضبط ما يحدث في كل شاحنة، في أي لحظة."},"היסטוריית נסיעה ומעקב":{"en":"Trip history & tracking","ar":"سجل الرحلات والتتبّع"},"שחזור מלא של מסלול הנסיעה עם מעקב GPS — בודקים בדיוק איפה הרכב היה ומתי.":{"en":"Full playback of the trip route with GPS tracking — check exactly where the vehicle was and when.","ar":"إعادة تشغيل كاملة لمسار الرحلة مع تتبّع GPS — تحقّق بالضبط أين كانت المركبة ومتى."},"שמירה בענן":{"en":"Cloud storage","ar":"تخزين سحابي"},"גיבוי אוטומטי בענן — מ-10 עד 14 ימים אחורה, ובחבילות מורחבות עד 4 חודשים.":{"en":"Automatic cloud backup — from 10 to 14 days back, and up to 4 months on extended plans.","ar":"نسخ احتياطي تلقائي على السحابة — من 10 إلى 14 يوماً، وحتى 4 أشهر في الباقات الموسّعة."},"עד 8 ערוצים FHD":{"en":"Up to 8 FHD channels","ar":"حتى 8 قنوات FHD"},"תמיכה ב-4 או 8 ערוצי מצלמה ברזולוציית Full HD 1080P — כיסוי מלא לכל זוויות הרכב.":{"en":"Supports 4 or 8 camera channels at Full HD 1080P — complete coverage of every angle of the vehicle.","ar":"يدعم 4 أو 8 قنوات كاميرا بدقة Full HD 1080P — تغطية كاملة لكل زوايا المركبة."},"התראות גם בחנייה":{"en":"Alerts even when parked","ar":"تنبيهات حتى أثناء الوقوف"},"אופציה לקבלת התראות בזמן אמת גם כשהרכב חונה — שמירה על המשאית גם כשלא נוהגים בה.":{"en":"Option for real-time alerts even while the vehicle is parked — protecting the truck even when no one is driving it.","ar":"خيار لتلقّي تنبيهات فورية حتى أثناء وقوف المركبة — حماية الشاحنة حتى عندما لا يقودها أحد."},"אפליקציה פשוטה":{"en":"Simple app","ar":"تطبيق بسيط"},"אפליקציה ותוכנה ידידותיות וקלות לתפעול — שליטה מלאה בלי כאב ראש טכני.":{"en":"Friendly, easy-to-use app and software — full control with no technical headaches.","ar":"تطبيق وبرنامج سهلان وودودان — تحكّم كامل دون أي تعقيدات تقنية."},"חיבור למסך ברכב":{"en":"Connect to a vehicle screen","ar":"توصيل بشاشة المركبة"},"אופציה לחיבור למסך חיצוני או למולטימדיה הקיימת ברכב (בכפוף לתאימות).":{"en":"Option to connect to an external screen or the vehicle's existing multimedia (subject to compatibility).","ar":"خيار التوصيل بشاشة خارجية أو بنظام الوسائط المتعددة الموجود في المركبة (حسب التوافق)."},"עדכוני גרסה ואבטחה":{"en":"Version & security updates","ar":"تحديثات الإصدار والأمان"},"עדכוני תוכנה ואבטחה שוטפים לשמירה על יציבות המערכת ועל אבטחת המידע לאורך זמן.":{"en":"Regular software and security updates that keep the system stable and your data secure over time.","ar":"تحديثات منتظمة للبرامج والأمان تحافظ على استقرار النظام وأمان بياناتك مع مرور الوقت."}});
+Object.assign(I18N,{"כל מה שהמערכת":{"en":"Everything the system","ar":"كل ما يفعله"},"עושה בשבילך.":{"en":"does for you.","ar":"النظام من أجلك."},"מערכת צפייה מרחוק חכמה ופשוטה לתפעול — שליטה מלאה בצי מהנייד, בכל רגע ומכל מקום.":{"en":"A smart, easy-to-use remote-viewing system — full control of your fleet from your phone, anytime, anywhere.","ar":"نظام مراقبة عن بُعد ذكي وسهل الاستخدام — تحكّم كامل بأسطولك من هاتفك، في أي وقت ومن أي مكان."},"צפייה מרחוק בזמן אמת":{"en":"Real-time remote viewing","ar":"مشاهدة مباشرة عن بُعد"},"צפייה חיה בכל מצלמה מהנייד או מהמחשב — רואים בדיוק מה קורה בכל משאית, בכל רגע.":{"en":"Watch any camera live from your phone or computer — see exactly what's happening in every truck, at any moment.","ar":"شاهد أي كاميرا مباشرةً من هاتفك أو حاسوبك — اعرف بالضبط ما يحدث في كل شاحنة، في أي لحظة."},"היסטוריית נסיעה ומעקב":{"en":"Trip history & tracking","ar":"سجل الرحلات والتتبّع"},"שחזור מלא של מסלול הנסיעה עם מעקב GPS — בודקים בדיוק איפה הרכב היה ומתי.":{"en":"Full playback of the trip route with GPS tracking — check exactly where the vehicle was and when.","ar":"إعادة تشغيل كاملة لمسار الرحلة مع تتبّع GPS — تحقّق بالضبط أين كانت المركبة ومتى."},"שמירה בענן":{"en":"Cloud storage","ar":"تخزين سحابي"},"גיבוי אוטומטי בענן — מ-10 עד 14 ימים אחורה, ובחבילות מורחבות עד 4 חודשים.":{"en":"Automatic cloud backup — from 10 to 14 days back, and up to 4 months on extended plans.","ar":"نسخ احتياطي تلقائي على السحابة — من 10 إلى 14 يوماً، وحتى 4 أشهر في الباقات الموسّعة."},"כיסוי 360° · אפס שטח מת":{"en":"360° · Zero blind spots","ar":"تغطية 360° · صفر نقاط عمياء"},"איחוד כל המצלמות לתמונת-על אחת סביב המשאית — רואים כל זווית במבט אחד, בלי נקודות עיוורות שגורמות לתאונות.":{"en":"All cameras merged into one bird's-eye view around the truck — every angle at a glance, with no blind spots that cause accidents.","ar":"دمج كل الكاميرات في رؤية علوية واحدة حول الشاحنة — كل زاوية بنظرة واحدة، بلا نقاط عمياء تسبّب الحوادث."},"התראות גם בחנייה":{"en":"Alerts even when parked","ar":"تنبيهات حتى أثناء الوقوف"},"אופציה לקבלת התראות בזמן אמת גם כשהרכב חונה — שמירה על המשאית גם כשלא נוהגים בה.":{"en":"Option for real-time alerts even while the vehicle is parked — protecting the truck even when no one is driving it.","ar":"خيار لتلقّي تنبيهات فورية حتى أثناء وقوف المركبة — حماية الشاحنة حتى عندما لا يقودها أحد."},"אפליקציה פשוטה":{"en":"Simple app","ar":"تطبيق بسيط"},"אפליקציה ותוכנה ידידותיות וקלות לתפעול — שליטה מלאה בלי כאב ראש טכני.":{"en":"Friendly, easy-to-use app and software — full control with no technical headaches.","ar":"تطبيق وبرنامج سهلان وودودان — تحكّم كامل دون أي تعقيدات تقنية."},"חיבור למסך ברכב":{"en":"Connect to a vehicle screen","ar":"توصيل بشاشة المركبة"},"אופציה לחיבור למסך חיצוני או למולטימדיה הקיימת ברכב (בכפוף לתאימות).":{"en":"Option to connect to an external screen or the vehicle's existing multimedia (subject to compatibility).","ar":"خيار التوصيل بشاشة خارجية أو بنظام الوسائط المتعددة الموجود في المركبة (حسب التوافق)."},"עדכוני גרסה ואבטחה":{"en":"Version & security updates","ar":"تحديثات الإصدار والأمان"},"עדכוני תוכנה ואבטחה שוטפים לשמירה על יציבות המערכת ועל אבטחת המידע לאורך זמן.":{"en":"Regular software and security updates that keep the system stable and your data secure over time.","ar":"تحديثات منتظمة للبرامج والأمان تحافظ على استقرار النظام وأمان بياناتك مع مرور الوقت."}});
 Object.assign(I18N,{"מ-₪4,500":{"en":"From ₪4,500","ar":"من ₪4,500"},"שבוע הקלטה לאחור (ניתן להרחבה)":{"en":"A week of footage history (expandable)","ar":"أسبوع من سجل التسجيلات (قابل للتمديد)"},"ממשאית בודדת ועד צי גדול — בוחרים את הרמה שמתאימה. המחירים הם נקודת פתיחה, וההצעה הסופית מותאמת אישית.":{"en":"From a single truck to a large fleet — choose the level that fits. Prices are a starting point, and the final offer is tailored to you.","ar":"من شاحنة واحدة إلى أسطول كبير — اختر المستوى المناسب. الأسعار نقطة بداية، والعرض النهائي مُصمّم خصيصاً لك."},"* המחירים הם נקודת פתיחה וכוללים התקנה. הצעת מחיר סופית תלויה בסוג המשאית, כמות ותצורה.":{"en":"* Prices are a starting point and include installation. The final quote depends on the truck type, quantity and configuration.","ar":"* الأسعار نقطة بداية وتشمل التركيب. يعتمد العرض النهائي على نوع الشاحنة والكمية والتهيئة."},"/ משאית":{"en":"/ truck","ar":"/ شاحنة"}});
 Object.assign(I18N,{"מערכת DVR מקצועית":{"en":"Professional DVR system","ar":"نظام DVR احترافي"},"3 מצלמות: קדמית + 2 צדדיות":{"en":"3 cameras: front + 2 sides","ar":"3 كاميرات: أمامية + جانبيتان"},"שבוע הקלטה לאחור":{"en":"A week of footage history","ar":"أسبوع من سجل التسجيلات"},"ראיית לילה Sony AHD":{"en":"Sony AHD night vision","ar":"رؤية ليلية Sony AHD"},"מצלמה אחורית":{"en":"Rear camera","ar":"كاميرا خلفية"},"GPS ושידור חי":{"en":"GPS & live streaming","ar":"GPS وبث مباشر"}});
 Object.assign(I18N,{"✋ הזז":{"en":"✋ Move","ar":"✋ تحريك"}});
@@ -1213,6 +1278,10 @@ Object.assign(I18N,{
 });
 Object.assign(I18N,{"💾 שמור":{"en":"💾 Save","ar":"💾 حفظ"},"💾 שמור מיקומים":{"en":"💾 Save positions","ar":"💾 حفظ المواضع"},"המיקומים נשמרו ✓":{"en":"Positions saved ✓","ar":"تم حفظ المواضع ✓"},"השמירה נכשלה":{"en":"Save failed","ar":"فشل الحفظ"},"נטענו מיקומים שמורים":{"en":"Saved positions loaded","ar":"تم تحميل المواضع المحفوظة"}});
 Object.assign(I18N,{"נא למלא שם וטלפון":{"en":"Please enter your name and phone","ar":"يرجى إدخال الاسم والهاتف"},"מספר טלפון לא תקין — בדקו שוב":{"en":"Invalid phone number — please check again","ar":"رقم هاتف غير صالح — يرجى التحقق مرة أخرى"}});
+Object.assign(I18N,{"גניבת דלק / סחורה":{"en":"Fuel / cargo theft","ar":"سرقة الوقود / البضائع"},"נעלם בלי עדים":{"en":"Gone, no witnesses","ar":"يختفي بلا شهود"},"מצולם · מאותר ב-GPS":{"en":"Filmed · GPS-tracked","ar":"مُصوّر · متعقّب بـGPS"}});
+Object.assign(I18N,{"עובדים עם כל יצרני המשאיות המובילים":{"en":"We work with every leading truck brand","ar":"نعمل مع كل علامات الشاحنات الرائدة"},"ההתקנה מותאמת בדיוק למחשב ולמערכת החשמל של הרכב שלך — בלי סיכון, בלי תקלות.":{"en":"Installation tailored precisely to your vehicle's computer and electrical system — no risk, no faults.","ar":"تركيب مُصمّم بدقة لكمبيوتر مركبتك ونظامها الكهربائي — بلا مخاطر، بلا أعطال."}});
+Object.assign(I18N,{"מצלמות למשאית, GPS ואבטחה":{"en":"Truck cameras, GPS & security","ar":"كاميرات للشاحنة، GPS وأمان"},"לצי ולציוד כבד":{"en":"for fleets & heavy equipment","ar":"للأساطيل والمعدات الثقيلة"}});
+Object.assign(I18N,{"מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד":{"en":"Truck Cameras — Heavy Guard | GPS & Security for Truck Fleets & Heavy Equipment","ar":"كاميرات للشاحنة — Heavy Guard | GPS وأمان لأساطيل الشاحنات والمعدات الثقيلة"}});
 Object.assign(I18N,{
 "מסכים":{"en":"Monitors","ar":"الشاشات"},
 "וצגי ניהול.":{"en":"& control displays.","ar":"وشاشات التحكّم."},
@@ -1229,7 +1298,7 @@ const RTL_LANGS=['he','ar'];
 let LANG='he';
 function TR(s){ if(s==null)return s; if(LANG==='he')return s; const k=(''+s).trim(); const e=I18N[k]; const v=(e&&e[LANG]!=null&&e[LANG]!=='')?e[LANG]:null; return v==null?s:(''+s).replace(k,v); }
 function LCAM(){ return {front:TR('קדמית'),right:TR('ימין'),left:TR('שמאל'),rear:TR('אחורית')}; }
-const TITLE_HE='Heavy Guard | מצלמות, GPS ואבטחה למשאיות וציוד כבד';
+const TITLE_HE='מצלמות למשאית — Heavy Guard | GPS ואבטחה לציי משאיות וציוד כבד';
 /* snapshot original Hebrew static text once, then translate per language */
 let __snap=false; const __txt=[]; const __att=[];
 function __snapshot(){
@@ -3095,6 +3164,7 @@ function cfgRef(){ // short, stable-ish reference from the build
 }
 function shareConfig(){
   const link=shareLink();
+  hgTrack('share_config',{ref:(typeof cfgRef==='function'?cfgRef():'')});
   const done=()=>{ try{ if(typeof toastMsg==='function') toastMsg(TR('הקישור הועתק ✓')); }catch(e){} };
   if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(done,()=>prompt(TR('העתק את הקישור:'),link)); }
   else { prompt(TR('העתק את הקישור:'),link); }
@@ -3185,6 +3255,7 @@ function sendLead(){
     : LANG==='ar'
     ? `مرحباً Heavy Guard! 👋\nالاسم: ${n}\nالهاتف: ${pRaw}\nالشاحنات: ${q||'—'}\nالفئة: ${TR(f)}\nيرجى إرسال التفاصيل 🚛${bAr}`
     : `היי Heavy Guard! 👋\nשם: ${n}\nטלפון: ${pRaw}\nמשאיות: ${q||'—'}\nקטגוריה: ${f}\nאשמח לפרטים 🚛${bHe}`;
+  hgTrack('generate_lead',{method:'contact_form', trucks:q||'', category:f, has_build:!!_simTouched});
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
   const ok=document.getElementById('fOk'); if(ok){ ok.style.display='block'; ok.scrollIntoView({behavior:'smooth',block:'center'}); }
 }
@@ -3447,7 +3518,11 @@ window.addEventListener('load',()=>{
 (function(){
   var wa=document.getElementById('fabWa');
   if(wa){ wa.href='https://wa.me/972547719070?text='+encodeURIComponent('שלום, אני מתעניין במערכת מצלמות, GPS ואבטחה למשאית. אפשר פרטים והצעת מחיר?');
-    wa.addEventListener('click',function(){ try{ if(typeof toastMsg==='function') toastMsg(TR('פותח וואטסאפ…')); }catch(e){} }); }
+    wa.addEventListener('click',function(){ if(typeof hgTrack==='function') hgTrack('whatsapp_click',{location:'floating_fab'}); try{ if(typeof toastMsg==='function') toastMsg(TR('פותח וואטסאפ…')); }catch(e){} }); }
+  // track WhatsApp clicks from the simulator ("send my build") and the CTA section ("talk now")
+  var wb1=document.getElementById('waBtn'), wb2=document.getElementById('waBtn2');
+  if(wb1) wb1.addEventListener('click',function(){ if(typeof hgTrack==='function') hgTrack('whatsapp_click',{location:'simulator_build'}); });
+  if(wb2) wb2.addEventListener('click',function(){ if(typeof hgTrack==='function') hgTrack('whatsapp_click',{location:'cta_section'}); });
   var prog=document.getElementById('scrollProg'), top=document.getElementById('toTop');
   function onScroll(){
     var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop, max=h.scrollHeight-h.clientHeight;
