@@ -479,6 +479,27 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[t
 .to-top:hover{border-color:var(--gold);transform:translateY(-3px)}
 .scroll-prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold),var(--cyan));z-index:9999;transition:width .12s ease-out}
 @media(max-width:640px){.fab-wa{width:52px;height:52px;bottom:16px;right:16px}.fab-wa .fab-tip{display:none}.to-top{width:42px;height:42px;bottom:18px;left:16px}}
+/* ── URGENCY BAR ── */
+.urg-bar{background:linear-gradient(90deg,#0d1a0f,#0a1a10,#0d1a0f);border-bottom:1px solid rgba(74,222,128,.2);padding:7px 20px;text-align:center;font-size:12px;color:#4ade80;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;z-index:999}
+.urg-bar b{color:#fff}
+.urg-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block;animation:urgPulse 1.8s infinite;flex-shrink:0}
+@keyframes urgPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.urg-bar .urg-cta{font-family:'Orbitron';font-size:10px;font-weight:700;padding:4px 12px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.4);border-radius:6px;color:#4ade80;text-decoration:none;transition:.2s;white-space:nowrap}
+.urg-bar .urg-cta:hover{background:rgba(74,222,128,.3)}
+/* ── EXIT INTENT POPUP ── */
+.exit-pop{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.exit-pop.show{opacity:1;pointer-events:auto}
+.exit-pop-bg{position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px)}
+.exit-pop-box{position:relative;background:linear-gradient(145deg,#0d1118,#111620);border:1px solid rgba(232,181,61,.35);border-radius:20px;padding:36px 32px;max-width:440px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(232,181,61,.08);text-align:center}
+.exit-pop-close{position:absolute;top:14px;left:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;transition:.2s}
+.exit-pop-close:hover{color:var(--white)}
+.exit-pop-badge{display:inline-block;font-family:'Orbitron';font-size:9px;font-weight:700;letter-spacing:1.5px;padding:4px 12px;background:rgba(232,181,61,.12);border:1px solid rgba(232,181,61,.3);border-radius:20px;color:var(--gold);margin-bottom:16px}
+.exit-pop-box h3{font-family:'Orbitron';font-size:clamp(16px,4vw,22px);font-weight:900;line-height:1.25;margin-bottom:10px;color:var(--white)}
+.exit-pop-box p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.exit-pop-wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;background:#25d366;border-radius:12px;font-family:'Orbitron';font-size:13px;font-weight:700;color:#fff;text-decoration:none;transition:.2s;box-shadow:0 0 24px rgba(37,211,102,.4)}
+.exit-pop-wa:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(37,211,102,.6)}
+.exit-pop-skip{display:block;margin-top:12px;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline}
+@media(max-width:480px){.exit-pop-box{padding:28px 20px}}
 footer{border-top:1px solid var(--line);padding:36px 0;text-align:center;color:var(--muted);font-size:12px}
 footer nav{position:static;z-index:auto;background:transparent;backdrop-filter:none;border:none;padding:0;box-shadow:none}
 
@@ -695,6 +716,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#pricing" onclick="closeMobMenu()">מחירים</a>
   <a href="#faq" onclick="closeMobMenu()">שאלות</a>
   <a href="#contact" class="mob-cta" onclick="closeMobMenu()">💬 דברו איתי</a>
+</div>
+
+<!-- URGENCY BAR -->
+<div class="urg-bar" id="urgBar">
+  <span class="urg-dot"></span>
+  <span id="urgTxt"><b>3 בעלי צי</b> קיבלו הצעת מחיר היום · תגובה תוך שעה</span>
+  <a class="urg-cta" href="#contact" onclick="document.getElementById('urgBar').style.display='none'">קבל גם אתה ←</a>
 </div>
 
 <!-- HERO -->
@@ -3613,6 +3641,95 @@ window.addEventListener('load',()=>{
       Object.keys(map).forEach(function(id){ spy.observe(document.getElementById(id)); });
     }
   }catch(e){}
+})();
+</script>
+
+<!-- EXIT INTENT POPUP -->
+<div class="exit-pop" id="exitPop" role="dialog" aria-modal="true" aria-label="הצעה מיוחדת">
+  <div class="exit-pop-bg" onclick="closeExitPop()"></div>
+  <div class="exit-pop-box">
+    <button class="exit-pop-close" onclick="closeExitPop()" aria-label="סגור">×</button>
+    <div class="exit-pop-badge">⚡ רגע לפני שאתה הולך</div>
+    <h3 id="epTitle">קבל הצעת מחיר<br><span style="color:var(--gold)">מותאמת לצי שלך</span></h3>
+    <p id="epBody">שלח הודעה עכשיו — נחזור אליך עם הצעה מפורטת תוך 24 שעות, ללא התחייבות ובלי אותיות קטנות.</p>
+    <a class="exit-pop-wa" id="epWaBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      <span id="epBtnTxt">שלח בוואטסאפ — חינם ובלי התחייבות</span>
+    </a>
+    <span class="exit-pop-skip" onclick="closeExitPop()" id="epSkip">המשך לעיין באתר</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  const POP_KEY='hg_exit_shown';
+  let shown=false;
+  function closeExitPop(){
+    const p=document.getElementById('exitPop');
+    if(p){p.classList.remove('show');}
+    shown=true;
+    try{sessionStorage.setItem(POP_KEY,'1');}catch(e){}
+  }
+  window.closeExitPop=closeExitPop;
+  function showExitPop(){
+    if(shown)return;
+    try{if(sessionStorage.getItem(POP_KEY))return;}catch(e){}
+    shown=true;
+    const p=document.getElementById('exitPop');
+    if(!p)return;
+    // apply current language
+    try{
+      if(typeof LANG!=='undefined'){
+        if(LANG==='en'){
+          document.getElementById('epTitle').innerHTML='Get a Quote<br><span style="color:var(--gold)">Tailored to Your Fleet</span>';
+          document.getElementById('epBody').textContent='Send a message now — we\'ll get back to you with a detailed quote within 24 hours, no obligation.';
+          document.getElementById('epBtnTxt').textContent='WhatsApp — Free, No Commitment';
+          document.getElementById('epSkip').textContent='Continue browsing';
+        } else if(LANG==='ar'){
+          document.getElementById('epTitle').innerHTML='احصل على عرض سعر<br><span style="color:var(--gold)">مُصمَّم لأسطولك</span>';
+          document.getElementById('epBody').textContent='أرسل رسالة الآن — سنعود إليك بعرض تفصيلي خلال 24 ساعة، دون التزام.';
+          document.getElementById('epBtnTxt').textContent='واتساب — مجاناً بلا التزام';
+          document.getElementById('epSkip').textContent='تابع تصفّح الموقع';
+        }
+      }
+    }catch(e){}
+    const waMsg=encodeURIComponent('שלום, ראיתי את האתר ואני מעוניין בהצעת מחיר למצלמות למשאית. אפשר לשלוח פרטים?');
+    const waBtn=document.getElementById('epWaBtn');
+    if(waBtn)waBtn.href='https://wa.me/972547719070?text='+waMsg;
+    p.classList.add('show');
+  }
+  // desktop: mouse leaves toward top of page
+  document.addEventListener('mouseleave',function(e){
+    if(e.clientY<30) showExitPop();
+  });
+  // mobile: show after 45 seconds of engagement
+  let mobTimer=setTimeout(function(){
+    if(window.innerWidth<=768) showExitPop();
+  },45000);
+  // also: show when user scrolls back to top quickly (bounce signal)
+  let lastY=0,scrollUps=0;
+  window.addEventListener('scroll',function(){
+    const y=window.scrollY;
+    if(y<lastY&&y<300&&lastY>600){scrollUps++;if(scrollUps>=2)showExitPop();}
+    lastY=y;
+  },{passive:true});
+  // urgency bar — rotate messages every 8 seconds
+  const msgs=[
+    '<b>3 בעלי צי</b> קיבלו הצעת מחיר היום · תגובה תוך שעה',
+    '⭐⭐⭐⭐⭐ <b>"המערכת החזירה את עצמה בפגיעה אחת"</b> — דוד מ.',
+    '<b>התקנה מקצועית</b> בכל הארץ · לא משביתים עבודה',
+    '📞 <b>מחיר מיוחד לצי</b> של 3 משאיות ומעלה — שאלו אותנו',
+  ];
+  let mi=0;
+  const urgTxt=document.getElementById('urgTxt');
+  if(urgTxt){
+    setInterval(function(){
+      mi=(mi+1)%msgs.length;
+      urgTxt.style.opacity='0';
+      setTimeout(function(){urgTxt.innerHTML=msgs[mi];urgTxt.style.opacity='1';},300);
+    },8000);
+    urgTxt.style.transition='opacity .3s';
+  }
 })();
 </script>
 </body>
